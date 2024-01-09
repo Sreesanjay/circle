@@ -1,9 +1,22 @@
 import { Link } from "react-router-dom";
 import GoogleIcon from "../../assets/GoogleIcon";
 import "./Signup.css";
-import { ChangeEvent, useEffect, useState } from "react";
+import {
+     ChangeEvent,
+     useEffect,
+     useState,
+     Dispatch,
+     SetStateAction,
+     FunctionComponent,
+} from "react";
 import validate from "../../util/formValidate";
-export default function Signup({isLoading}) {
+
+interface iprops {
+     setIsLoading: Dispatch<SetStateAction<boolean>>;
+}
+
+const Signup: FunctionComponent<iprops> = ({setIsLoading} : iprops) => {
+
      type UserData = {
           email: string;
           password: string;
@@ -47,15 +60,14 @@ export default function Signup({isLoading}) {
                          !formError.username &&
                          !formError.password
                     ) {
+                         setIsLoading(true)
                          
-
-
                     } else {
                          console.log("failed");
                     }
                })();
           }
-     }, [isSubmit, formError]);
+     }, [isSubmit, formError, setIsLoading]);
 
      return (
           <section className="signup w-screen h-screen flex justify-center md:justify-between px-3 ">
@@ -79,6 +91,7 @@ export default function Signup({isLoading}) {
                                    <label className="font-semibold text-sm text-gray-600 pb-1 block">
                                         E-mail
                                    </label>
+                                   {formError.email ? <small className="text-red-600">{formError.email}</small>: null}
                                    <input
                                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                                         type="text"
@@ -91,6 +104,7 @@ export default function Signup({isLoading}) {
                                    <label className="font-semibold text-sm text-gray-600 pb-1 block">
                                         User Name
                                    </label>
+                                   {formError.username ? <small className="text-red-600 flex">{formError.username}</small>: null}
                                    <input
                                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                                         type="text"
@@ -103,6 +117,7 @@ export default function Signup({isLoading}) {
                                    <label className="font-semibold text-sm text-gray-600 pb-1 block">
                                         Password
                                    </label>
+                                   {formError.password ? <small className="text-red-600 flex">{formError.password}</small>: null}
                                    <input
                                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                                         type="password"
@@ -149,4 +164,6 @@ export default function Signup({isLoading}) {
                </div>
           </section>
      );
-}
+};
+
+export default Signup;

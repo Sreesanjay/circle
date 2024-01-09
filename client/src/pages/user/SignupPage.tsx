@@ -1,16 +1,17 @@
 import { useState } from "react";
 import Signup from "../../components/Signup/Signup";
+import Loader from "../../components/Loader/Loader";
 
 export default function SignupPage() {
-     const [isLoading, setIsLoading] = useState(false);
+     const [isLoading, setIsLoading] = useState<boolean>(false);
 
      return (
           <>   
                {
                     isLoading ? 
-                    <h1>loading</h1>
+                    <Loader/> 
                     :
-                    <Signup props={setIsLoading} />
+                    <Signup setIsLoading={setIsLoading} />
                }
           </>
      );

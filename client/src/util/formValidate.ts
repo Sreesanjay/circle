@@ -18,10 +18,10 @@ const useValidate =  (name : string, value : unknown): string => {
             break;
         case 'password' :
                 if(!value) return "password is required";
-                else if(typeof value === 'string' && value.length < 6) return 'Password must be 6 characters or more."';
+                else if(typeof value === 'string' && value.length < 6) return 'Password must be atleast 6 characters.';
                 break;
     }
-    return null
+    return ''
 } 
 
 export default useValidate

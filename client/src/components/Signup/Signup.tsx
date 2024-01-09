@@ -1,28 +1,23 @@
 import { Link } from "react-router-dom";
-import GoogleIcon from "../../assets/GoogleIcon";
-import "./Signup.css";
 import {
      ChangeEvent,
      useEffect,
-     useState,
-     Dispatch,
-     SetStateAction,
-     FunctionComponent,
+     useState
 } from "react";
-import validate from "../../util/formValidate";
 
-interface iprops {
-     setIsLoading: Dispatch<SetStateAction<boolean>>;
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import validate from "../../util/formValidate";
+import GoogleIcon from "../../assets/GoogleIcon";
+import "./Signup.css";
+import { signup } from "../../services/authService";
+
+export type UserData= {
+     email: string;
+     password: string;
+     username: string;
 }
 
-const Signup: FunctionComponent<iprops> = ({setIsLoading} : iprops) => {
-
-     type UserData = {
-          email: string;
-          password: string;
-          username: string;
-     };
-
+const Signup = () => {
      const [userData, setUserData] = useState<UserData>({
           email: "",
           password: "",
@@ -36,6 +31,9 @@ const Signup: FunctionComponent<iprops> = ({setIsLoading} : iprops) => {
      });
 
      const [isSubmit, setIsSubmit] = useState(false);
+
+     const dispatch = useAppDispatch();
+     // const {isError,isSuccess, errorMessage} = useAppSelector((state)=>state.auth)
 
      function handleChange(e: ChangeEvent<HTMLInputElement>) {
           const { name, value } = e.target;
@@ -60,14 +58,16 @@ const Signup: FunctionComponent<iprops> = ({setIsLoading} : iprops) => {
                          !formError.username &&
                          !formError.password
                     ) {
-                         setIsLoading(true)
-                         
-                    } else {
-                         console.log("failed");
-                    }
+                         try{
+                              dispatch(signup(userData))
+                         }catch(err) {
+                              console.log(err)
+                         }
+
+                    } 
                })();
           }
-     }, [isSubmit, formError, setIsLoading]);
+     }, [isSubmit, formError, dispatch, userData]);
 
      return (
           <section className="signup w-screen h-screen flex justify-center md:justify-between px-3 ">

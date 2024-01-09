@@ -1,17 +1,16 @@
-import { useState } from "react";
 import Signup from "../../components/Signup/Signup";
 import Loader from "../../components/Loader/Loader";
+import { useAppSelector } from "../../app/hooks";
 
 export default function SignupPage() {
-     const [isLoading, setIsLoading] = useState<boolean>(false);
-
+     const {isLoading} = useAppSelector((state)=>state.auth)
      return (
           <>   
                {
                     isLoading ? 
                     <Loader/> 
                     :
-                    <Signup setIsLoading={setIsLoading} />
+                    <Signup />
                }
           </>
      );

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {signup} from "../../services/authService"
+import Cookies from "js-cookie"
 
 type userData ={
     _id : string,
@@ -15,9 +16,9 @@ interface AuthState{
     errorMessage : string
     isSuccess : boolean
 }
-
+const userData = localStorage.getItem("userData");
 const initialState: AuthState = {
-    userData : null,
+    userData : userData ? JSON.parse(userData) : null,
     isLoading : false,
     isError : false,
     errorMessage : '',
@@ -37,7 +38,15 @@ export const authSlice = createSlice({
         })
         .addCase(signup.fulfilled, (state,action)=>{
             state.isLoading = false;
-            console.log(action.payload);
+            state.isSuccess = true;
+            localStorage.setItem('userData', JSON.stringify(action.payload.user));
+            state.userData = action.payload.user;
+            Cookies.set("token", action.payload.token, { expires: 2 });
+        })
+        .addCase(signup.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.errorMessage = action.payload as string;
         })
     }
 })

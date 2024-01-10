@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan"
+import cookieParser from "cookie-parser";
 import {errorHandler, notFound} from "./middlewares/errorHandler";
 import "dotenv/config";
 import userRouter from "./routes/userRoute"
@@ -14,6 +15,7 @@ const corsConfig = {
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
+app.use(cookieParser());
 app.use(cors(corsConfig))
 
 //routes

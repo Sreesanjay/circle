@@ -1,8 +1,8 @@
 import mongoose, { Schema } from "mongoose";
-import { User } from "../Interfaces/index";
+import { IUser } from "../Interfaces/index";
 import bcrypt from "bcryptjs";
 
-const userSchema: Schema<User> = new Schema<User>({
+const userSchema: Schema<IUser> = new Schema<IUser>({
      email: {
           type: String,
           required: true,
@@ -10,6 +10,9 @@ const userSchema: Schema<User> = new Schema<User>({
      password: {
           type: String,
           required: true,
+     },
+     username : {
+          type: String,
      },
      role: {
           type: String,
@@ -24,7 +27,7 @@ const userSchema: Schema<User> = new Schema<User>({
           type: mongoose.Schema.Types.ObjectId,
           ref: "UserProfile",
      },
-});
+},{timestamps : true});
 
 userSchema.pre("save", async function (next){
      if (!this.isModified("password")) {
@@ -34,4 +37,4 @@ userSchema.pre("save", async function (next){
      this.password = await bcrypt.hash(this.password, salt);
 });
 
-export default mongoose.model<User>("User", userSchema);
+export default mongoose.model<IUser>("User", userSchema);

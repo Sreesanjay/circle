@@ -1,8 +1,9 @@
-import express,{Request, Response, NextFunction} from "express";
+import express from "express";
 import cors from "cors";
 import morgan from "morgan"
 import {errorHandler, notFound} from "./middlewares/errorHandler";
-import "dotenv/config"
+import "dotenv/config";
+import userRouter from "./routes/userRoute"
 
 const app = express();
 const corsConfig = {
@@ -11,13 +12,13 @@ const corsConfig = {
 };
 
 app.use(morgan('dev'));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}))
 app.use(cors(corsConfig))
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.get('/', (req:Request, res:Response,next:NextFunction) => {
-    console.log("request got")
-    // throw new Error('internal server error')
-})
+//routes
+app.use('/api' ,userRouter)
+
 
 //error handler
 app.use('*', notFound)

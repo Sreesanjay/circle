@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import {Suspense, lazy} from "react"
 import Loader from "./components/Loader/Loader";
-
+// import axios from "axios";
 const SignupPage = lazy(() => import("./pages/user/SignupPage"))
 const SigninPage = lazy(() => import("./pages/user/SigninPage"))
 

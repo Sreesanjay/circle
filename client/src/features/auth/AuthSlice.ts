@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import {signup} from "../../services/authService"
 import Cookies from "js-cookie"
 
-type userData ={
+type user ={
     _id : string,
     email : string,
     username : string,
@@ -10,15 +10,15 @@ type userData ={
     role : string,
 }
 interface AuthState{
-    userData : userData | null,
-    isLoading : boolean,
-    isError : boolean,
-    errorMessage : string
-    isSuccess : boolean
+    user : user | null;
+    isLoading : boolean;
+    isError : boolean;
+    errorMessage : string;
+    isSuccess : boolean;
 }
-const userData = localStorage.getItem("userData");
+const user = localStorage.getItem("user");
 const initialState: AuthState = {
-    userData : userData ? JSON.parse(userData) : null,
+    user : user ? JSON.parse(user) : null,
     isLoading : false,
     isError : false,
     errorMessage : '',
@@ -35,18 +35,22 @@ export const authSlice = createSlice({
         builder
         .addCase(signup.pending, (state)=>{
             state.isLoading = true;
+            state.isError = false;
+            state.errorMessage = '';
+            state.isSuccess = false;
         })
         .addCase(signup.fulfilled, (state,action)=>{
             state.isLoading = false;
             state.isSuccess = true;
-            localStorage.setItem('userData', JSON.stringify(action.payload.user));
-            state.userData = action.payload.user;
+            localStorage.setItem('user', JSON.stringify(action.payload.user));
+            state.user = action.payload.user;
             Cookies.set("token", action.payload.token, { expires: 2 });
         })
         .addCase(signup.rejected, (state,action)=>{
             state.isLoading = false;
             state.isError = true;
-            state.errorMessage = action.payload as string;
+            const error =action.payload as {message: string};
+            state.errorMessage = error?.message;
         })
     }
 })

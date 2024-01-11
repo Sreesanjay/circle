@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import {
-     ChangeEvent,
-     useEffect,
-     useState
-} from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
+import { useNavigate } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import validate from "../../util/formValidate";
@@ -11,11 +10,11 @@ import GoogleIcon from "../../assets/GoogleIcon";
 import "./Signup.css";
 import { signup } from "../../services/authService";
 
-export type UserData= {
+export type UserData = {
      email: string;
      password: string;
      username: string;
-}
+};
 
 const Signup = () => {
      const [userData, setUserData] = useState<UserData>({
@@ -31,9 +30,11 @@ const Signup = () => {
      });
 
      const [isSubmit, setIsSubmit] = useState(false);
-
+     const navigate = useNavigate()
      const dispatch = useAppDispatch();
-     // const {isError,isSuccess, errorMessage} = useAppSelector((state)=>state.auth)
+     const { user, isError, isSuccess, errorMessage } = useAppSelector(
+          (state) => state.auth
+     );
 
      function handleChange(e: ChangeEvent<HTMLInputElement>) {
           const { name, value } = e.target;
@@ -58,16 +59,18 @@ const Signup = () => {
                          !formError.username &&
                          !formError.password
                     ) {
-                         try{
-                              dispatch(signup(userData))
-                         }catch(err) {
-                              console.log(err)
-                         }
-
-                    } 
+                         dispatch(signup(userData));
+                    }
                })();
           }
      }, [isSubmit, formError, dispatch, userData]);
+     useEffect(()=>{
+          if(isSuccess){
+               if(user?.role === 'USER'){
+                    navigate('/')
+               }
+          }
+     },[isSuccess, user?.role, navigate])
 
      return (
           <section className="signup w-screen h-screen flex justify-center md:justify-between px-3 ">
@@ -83,15 +86,28 @@ const Signup = () => {
                <div className="right-area md:w-1/2 flex justify-center items-center">
                     <div className="relative px-4 py-10 bg-white md:mx-0 shadow rounded-3xl sm:p-10 h-min">
                          <div className="max-w-md mx-auto">
-                              <div className="flex items-center space-x-5 justify-center text-2xl">
+                              <div className="flex items-center space-x-5 justify-center text-2xl mb-5">
                                    Signup
                               </div>
-
+                              {isError ? (
+                                   <Stack sx={{ width: "100%" }} spacing={2}>
+                                        <Alert
+                                             variant="filled"
+                                             severity="error"
+                                        >
+                                             {errorMessage}
+                                        </Alert>
+                                   </Stack>
+                              ) : null}
                               <div className="mt-5">
                                    <label className="font-semibold text-sm text-gray-600 pb-1 block">
                                         E-mail
                                    </label>
-                                   {formError.email ? <small className="text-red-600">{formError.email}</small>: null}
+                                   {formError.email ? (
+                                        <small className="text-red-600">
+                                             {formError.email}
+                                        </small>
+                                   ) : null}
                                    <input
                                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                                         type="text"
@@ -104,7 +120,11 @@ const Signup = () => {
                                    <label className="font-semibold text-sm text-gray-600 pb-1 block">
                                         User Name
                                    </label>
-                                   {formError.username ? <small className="text-red-600 flex">{formError.username}</small>: null}
+                                   {formError.username ? (
+                                        <small className="text-red-600 flex">
+                                             {formError.username}
+                                        </small>
+                                   ) : null}
                                    <input
                                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                                         type="text"
@@ -117,7 +137,11 @@ const Signup = () => {
                                    <label className="font-semibold text-sm text-gray-600 pb-1 block">
                                         Password
                                    </label>
-                                   {formError.password ? <small className="text-red-600 flex">{formError.password}</small>: null}
+                                   {formError.password ? (
+                                        <small className="text-red-600 flex">
+                                             {formError.password}
+                                        </small>
+                                   ) : null}
                                    <input
                                         className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                                         type="password"

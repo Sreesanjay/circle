@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from "react";
 
 import Loader from "./components/Loader/Loader";
-import { useAppSelector } from "./app/hooks";
+// import { useAppSelector } from "./app/hooks";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import Demo from "./components/Demo";
 import IsAuthenticated from "./components/Route/IsAuthenticated";
@@ -14,7 +14,7 @@ function App() {
           <>
                <Suspense fallback={<Loader />}>
                     <Routes>
-                         <Route element={<IsAuthenticated/>}>
+                         <Route element={<IsAuthenticated />}>
                               <Route path="/signup" element={<SignupPage />} />
                               <Route path="/login" element={<SigninPage />} />
                          </Route>

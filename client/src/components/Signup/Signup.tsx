@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import validate from "../../util/formValidate";
-import GoogleIcon from "../../assets/GoogleIcon";
+// import GoogleIcon from "../../assets/GoogleIcon";
 import "./Signup.css";
 import { signup } from "../../services/authService";
+import GoogleAuth from "../GoogleAuth/GoogleAuth";
 
 export type UserData = {
      email: string;
@@ -164,12 +165,9 @@ const Signup = () => {
 
                               <div className="flex justify-center w-full items-center">
                                    <div>
-                                        <button className="flex items-center justify-between py-2 px-10 bg-white hover:bg-gray-200 focus:ring-blue-500 focus:ring-offset-blue-200 text-gray-700 transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg my-5">
-                                             <GoogleIcon />
-                                             <span className="ml-2 text-nowrap">
-                                                  Continue with Google
-                                             </span>
-                                        </button>
+                                        {/* <button className="flex items-center justify-between px-10 bg-white hover:bg-gray-200 focus:ring-blue-500 focus:ring-offset-blue-200 text-gray-700 transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg my-5"> */}
+                                        <GoogleAuth/>
+                                        {/* </button>  */}
                                    </div>
                               </div>
 

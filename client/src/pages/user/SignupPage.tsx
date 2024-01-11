@@ -10,7 +10,7 @@ export default function SignupPage() {
                     isLoading ? 
                     <Loader/> 
                     :
-                    <Signup />
+                    <Signup/>
                }
           </>
      );

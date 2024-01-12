@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import {signup} from "../../services/authService"
+import {signup, googleAuth} from "../../services/authService"
 import Cookies from "js-cookie"
 
 type user ={
@@ -35,9 +35,6 @@ export const authSlice = createSlice({
         builder
         .addCase(signup.pending, (state)=>{
             state.isLoading = true;
-            state.isError = false;
-            state.errorMessage = '';
-            state.isSuccess = false;
         })
         .addCase(signup.fulfilled, (state,action)=>{
             state.isLoading = false;
@@ -47,6 +44,22 @@ export const authSlice = createSlice({
             Cookies.set("token", action.payload.token, { expires: 2 });
         })
         .addCase(signup.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            const error =action.payload as {message: string};
+            state.errorMessage = error?.message;
+        })
+        .addCase(googleAuth.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(googleAuth.fulfilled, (state,action)=>{
+            state.isLoading = false;
+            state.isSuccess = true;
+            localStorage.setItem('user', JSON.stringify(action.payload.user));
+            state.user = action.payload.user;
+            Cookies.set("token", action.payload.token, { expires: 2 });
+        })
+        .addCase(googleAuth.rejected, (state,action)=>{
             state.isLoading = false;
             state.isError = true;
             const error =action.payload as {message: string};

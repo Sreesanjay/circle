@@ -18,7 +18,25 @@ export const signup = createAsyncThunk(
                     status: err.response?.data?.status,
                     message: err.response?.data?.message,
                };
-               console.log(payload , "=>service");
+               return thunkAPI.rejectWithValue(payload);
+          }
+     }
+);
+export const googleAuth = createAsyncThunk(
+     "auth/googleAuth",
+     async (credential: string, thunkAPI) => {
+          try {
+               const response = await API.post("/google-auth", credential);
+               return response.data;
+          } catch (error) {
+               const err = error as AxiosError<{
+                    status?: string;
+                    message?: string;
+               }>;
+               const payload = {
+                    status: err.response?.data?.status,
+                    message: err.response?.data?.message,
+               };
                return thunkAPI.rejectWithValue(payload);
           }
      }

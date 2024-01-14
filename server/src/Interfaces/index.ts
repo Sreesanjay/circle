@@ -11,6 +11,7 @@ export interface IUser extends Document {
      password: string;
      role: string;
      wallet: number;
+     profile_img : string;
      user_profile : ObjectId
 }
 export interface UserProfile extends Document {

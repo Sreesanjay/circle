@@ -15,6 +15,7 @@ const useValidate =  (name : string, value : unknown): string => {
         case 'username' : 
             if (!value) return "Username is required";
             else if(typeof value === 'string' && value.length < 4) return 'Username must be 4 characters or more."';
+            else if(typeof value === 'string' && value.indexOf(' ') >= 0) return "Whitespace not allowed"
             break;
         case 'password' :
                 if(!value) return "password is required";

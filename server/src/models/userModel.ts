@@ -8,8 +8,7 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
           required: true,
      },
      password: {
-          type: String,
-          required: true,
+          type: String
      },
      username : {
           type: String,
@@ -22,6 +21,9 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
      wallet: {
           type: Number,
           default: 0,
+     },
+     profile_img:{
+          type : String
      },
      user_profile: {
           type: mongoose.Schema.Types.ObjectId,

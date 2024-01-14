@@ -11,14 +11,15 @@ export interface IUser extends Document {
      password: string;
      role: string;
      wallet: number;
+     profile_img : string;
+     is_blocked : boolean;
      user_profile : ObjectId
 }
-export interface UserProfile extends Document {
+export interface IUserProfile extends Document {
      fullname: string;
      gender: string;
      bio: string;
      profile_img: string;
-     is_blocked: boolean;
      reports: Report[];
      is_premium : boolean;
      account_type : string;

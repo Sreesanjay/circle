@@ -1,18 +1,29 @@
-import {GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
+import { useAppDispatch } from "../../app/hooks";
+import { googleAuth } from "../../services/authService";
 export default function GoogleAuth() {
-    const responseGoogle = async (response: CredentialResponse): Promise<void> =>{
-       console.log(response);
-      };                     
-    const responseError = async (): Promise<void> => {
-       console.log("error occured");
-      };
+     const dispatch = useAppDispatch();
+
+     const responseGoogle = async (response: CredentialResponse) => {
+          console.log(response)
+          if (response.credential) {
+               dispatch(googleAuth(response.credential));
+          }
+     };
+     const responseError = async (): Promise<void> => {
+          console.log("error occured");
+     };
      return (
           <>
-               <GoogleLogin
-                    onSuccess={responseGoogle}
-                    onError={responseError}
-               />
+               <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENTID}>
+                    <GoogleLogin
+                         onSuccess={responseGoogle}
+                         onError={responseError}
+                         width="300"
+                    />
+               </GoogleOAuthProvider>
           </>
      );
 }

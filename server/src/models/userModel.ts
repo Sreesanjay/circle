@@ -18,6 +18,10 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
           enum: ["ADMIN", "USER"],
           default: "USER",
      },
+     is_blocked : {
+          type : Boolean,
+          default: false,
+     },
      wallet: {
           type: Number,
           default: 0,

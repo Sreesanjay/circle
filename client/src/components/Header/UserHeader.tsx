@@ -8,6 +8,7 @@ import ProfileIcon from "../../assets/ProfileIcon";
 import SearchBox from "../SearchBox/SearchBox";
 import "./UserHeader.css";
 import UserHeaderProfile from "./UserHeaderProfile";
+import { Link } from "react-router-dom";
 
 export default function UserHeader() {
      const { user } = useAppSelector((state) => state.auth);
@@ -24,10 +25,12 @@ export default function UserHeader() {
                     <div className="grow hidden sm:flex justify-end">
                         <SearchBox/>
                     </div>
+                    <Link to="/">
                          <HomeIcon />
+                    </Link>
                          <Notification />
-                    <div className="user-proifle relative">
-                         <div className="cursor-pointer" onClick={()=>setisProfileToggle(currentState=>!currentState)}>
+                    <div className="user-proifle relative"  onClick={()=>setisProfileToggle(currentState=>!currentState)}>
+                         <div className="cursor-pointer">
                               <ProfileIcon size="medium"/>
                          </div>
                          <div className="profile-dropdown cursor-context-menu absolute right-0">

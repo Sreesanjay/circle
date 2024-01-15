@@ -8,6 +8,7 @@ export type userProfile = {
     profile_img: string;
     is_premium: boolean;
     account_type: string;
+    cover_img : string;
 };
 interface IUserProfile {
     userProfile: userProfile | null;
@@ -23,13 +24,20 @@ const initialState: IUserProfile = {
     isError: false,
     errorMessage: "",
     isSuccess: false,
-    status: null,
+    status :  null
 };
 
 export const userSlice = createSlice({
     name: "user",
     initialState,
-    reducers: {},
+    reducers: {
+        resetUser : (state)=>{
+            state.isSuccess = false;
+            state.isLoading = false;
+            state.isError = false;
+            state.errorMessage = ""
+        }
+    },
     extraReducers: (builder) => {
         builder
         .addCase(getUserProfile.pending, (state)=>{
@@ -50,5 +58,7 @@ export const userSlice = createSlice({
         })
     }
 })
+
+export const { resetUser} = userSlice.actions;
 
 export default userSlice.reducer;

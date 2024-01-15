@@ -11,7 +11,7 @@ const ProfileSchema: Schema<IUserProfile> = new Schema<IUserProfile>({
     bio: {
         type: "string"
     },
-    profile_img: {
+    cover_img :{
         type: "string",
     },
     reports: [

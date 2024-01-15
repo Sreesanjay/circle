@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import UserIcon from "../../assets/Icons";
+import {UserIcon} from "../../assets/Icons";
 import ProfileIcon from "../../assets/ProfileIcon";
 import { logout } from "../../features/auth/AuthSlice";
 import "./UserHeader.css";

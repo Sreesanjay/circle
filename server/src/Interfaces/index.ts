@@ -19,9 +19,9 @@ export interface IUserProfile extends Document {
      fullname: string;
      gender: string;
      bio: string;
-     profile_img: string;
      reports: Report[];
      is_premium : boolean;
      account_type : string;
+     cover_img: string;
 }
 

@@ -3,7 +3,10 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import PortraitIcon from '@mui/icons-material/Portrait';
+import GridViewIcon from '@mui/icons-material/GridView';
 import { IconButton } from "@mui/material";
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import { useEffect, useState } from "react";
 export function Notification() {
      return (
@@ -63,10 +66,29 @@ export function ProfileIconWithText({ email, size }: ProfileIconWithTextProps) {
 }
 
 
-export default function UserIcon({size} : {size: number}) {
+export function UserIcon({size} : {size: number}) {
      return (
         <IconButton>
           <AccountCircleOutlinedIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
         </IconButton>
      );
 }
+
+//profile icon 
+export  function Profile({size} : {size: number}) {
+     return (
+          <PortraitIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+     );
+}
+export  function PostIcon({size} : {size: number}) {
+     return (
+          <GridViewIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+     );
+}
+export  function SavedIcon({size} : {size: number}) {
+     return (
+          <BookmarkBorderIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+     );
+}
+
+export default null;

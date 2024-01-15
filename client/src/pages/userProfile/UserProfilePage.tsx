@@ -10,7 +10,7 @@ import Loader from "../../components/Loader/Loader";
 import "./UserProfile.css";
 import { resetUser } from "../../features/user/UserSlice";
 import { Profile, PostIcon, SavedIcon } from "../../assets/Icons";
-import UploadImage from "../../components/Modal/ImageUpload";
+import ImageUpload from "../../components/Modal/ImageUpload";
 
 export default function UserProfilePage() {
      const dispatch = useAppDispatch();
@@ -21,7 +21,7 @@ export default function UserProfilePage() {
 
      const [showModal, setShowModal] = useState(false);
      const [showUploadImage, setshowUploadImage] = useState(false);
-     const [coverImgae, setcoverImgae] = useState("");
+     const [coverImgae, setcoverImgae] = useState<Blob | undefined>();
 
      useEffect(() => {
           (async () => {
@@ -40,10 +40,14 @@ export default function UserProfilePage() {
           dispatch(resetUser());
      }, [isError, errorMessage, isSuccess, userProfile, dispatch]);
 
-     //cover-imgage
+     //cover-imgage update
      useEffect(() => {
           console.log(coverImgae)
           setshowUploadImage(false)
+          if(coverImgae){
+               const file = new File([coverImgae] , "cover_img")
+               
+          }
      }, [coverImgae]);
 
      function updateProfile() {
@@ -53,7 +57,7 @@ export default function UserProfilePage() {
      return (
           <>
                {showUploadImage && (
-                    <UploadImage setcoverImgae={setcoverImgae} />
+                    <ImageUpload setcoverImgae={setcoverImgae} />
                )}
                {showModal && (
                     <PopupModal

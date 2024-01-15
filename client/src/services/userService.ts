@@ -22,3 +22,24 @@ export const getUserProfile = createAsyncThunk(
         }
 
     })
+
+export const updateCoverImg = createAsyncThunk(
+    "auth/updateCoverImg",
+    async (cover_img,thunkAPI) => {
+        try {
+
+            // const userDetails = await API.get("/profile", {
+            //     withCredentials: true,
+            // });
+            // return userDetails.data
+        } catch (error) {
+            const err = error as AxiosError<{
+                message?: string;
+            }>
+            const payload = {
+                message: err.response?.data?.message,
+            };
+            return thunkAPI.rejectWithValue(payload);
+        }
+
+    })

@@ -1,12 +1,15 @@
 import { Button, Modal, FileInput } from "flowbite-react";
 import { useState, ChangeEvent, Dispatch, SetStateAction } from "react";
+import ImageCrop from "../ImageCrop/ImageCrop";
 
 export default function UploadImage({
      setcoverImgae,
 }: {
-     setcoverImgae : Dispatch<SetStateAction<string>> 
+     setcoverImgae: Dispatch<SetStateAction<Blob | undefined>>;
 }) {
      const [openModal, setOpenModal] = useState(true);
+     const [isCrop, setisCrop] = useState(false);
+     const [inputImg, setInputImg] = useState<string>()
 
      function onCloseModal() {
           setOpenModal(false);
@@ -18,13 +21,14 @@ export default function UploadImage({
 
      function handleChange(e: ChangeEvent<HTMLInputElement>) {
           if (e.target.files) {
-               onCloseModal()
-               console.log(e.target.files[0])
-            //    setcoverImgae(e.target.files[0]);
+               onCloseModal();
+               setInputImg(URL.createObjectURL(e.target.files[0]));
+               setisCrop(true);
           }
      }
      return (
           <>
+               {isCrop && <ImageCrop src={inputImg} setcoverImgae={setcoverImgae}/>}
                <Modal show={openModal} size="md" onClose={onCloseModal} popup>
                     <Modal.Header />
                     <Modal.Body>

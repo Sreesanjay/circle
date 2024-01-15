@@ -9,7 +9,7 @@ export default function UploadImage({
 }) {
      const [openModal, setOpenModal] = useState(true);
      const [isCrop, setisCrop] = useState(false);
-     const [inputImg, setInputImg] = useState<string>()
+     const [inputImg, setInputImg] = useState<string>("")
 
      function onCloseModal() {
           setOpenModal(false);
@@ -28,7 +28,7 @@ export default function UploadImage({
      }
      return (
           <>
-               {isCrop && <ImageCrop src={inputImg} setcoverImgae={setcoverImgae}/>}
+               {isCrop && <ImageCrop src={inputImg} aspect={16/9}  setcoverImgae={setcoverImgae}/>}
                <Modal show={openModal} size="md" onClose={onCloseModal} popup>
                     <Modal.Header />
                     <Modal.Body>

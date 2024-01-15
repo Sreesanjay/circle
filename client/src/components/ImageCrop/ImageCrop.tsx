@@ -1,51 +1,83 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState, FC } from "react";
 import { Button, Modal } from "flowbite-react";
-import ReactCrop, { type Crop } from "react-image-crop";
+import ReactCrop, { Crop, PixelCrop} from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
-export default function CropDemo({
-     src,
-     setcoverImgae,
-}: {
-     src: string | undefined;
+interface ICropDemo {
+     src: string;
+     aspect : number | undefined;
      setcoverImgae: Dispatch<SetStateAction<Blob | undefined>>;
-}) {
-
-     const [crop, setCrop] = useState<Crop>();
-     const [openModal, setOpenModal] = useState(false);
-    
+}
+const CropDemo: FC<ICropDemo> = ({ src, aspect, setcoverImgae }) => {
+     const [openModal, setOpenModal] = useState(true);
      const buttonStyle = {
           width: "150px",
           height: "40px",
      };
 
-     function handleCrop() {
-          if (crop) {
+     const [crop, setCrop] = useState<Crop>();
+     const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+     const imgRef = useRef<HTMLImageElement>(null);
+
+     const getCroppedImg = async (
+          image: HTMLImageElement,
+          crop: PixelCrop
+     ): Promise<Blob> => {
+          return new Promise((resolve) => {
                const canvas = document.createElement("canvas");
-               const context = canvas.getContext("2d");
-               if (context) {
-                    context.fillRect(crop.x, crop.y, crop.width, crop.height);
+               const scaleX = image.naturalWidth / image.width;
+               const scaleY = image.naturalHeight / image.height;
+               canvas.width = crop.width!;
+               canvas.height = crop.height!;
+               const ctx = canvas.getContext("2d");
+
+               if (ctx) {
+                    ctx.drawImage(
+                         image,
+                         crop.x! * scaleX,
+                         crop.y! * scaleY,
+                         crop.width! * scaleX,
+                         crop.height! * scaleY,
+                         0,
+                         0,
+                         crop.width!,
+                         crop.height!
+                    );
                     canvas.toBlob((blob) => {
-                        if(blob){
-                         setcoverImgae(blob);
-                        }
-                    });
+                         if (blob) {
+                              resolve(blob);
+                         }
+                    }, "image/jpeg"); // You can change the second argument to adjust the format (e.g., "image/png")
                }
+          });
+     };
+
+     async function handleCrop() {
+          if (completedCrop && imgRef.current) {
+               const croppedImageBlob = await getCroppedImg(
+                    imgRef.current,
+                    completedCrop
+               );
+               setcoverImgae(croppedImageBlob);
           }
           setOpenModal(false);
      }
+
      return (
           <>
-               <Button onClick={() => setOpenModal(true)}>Toggle modal</Button>
                <Modal show={openModal} onClose={() => setOpenModal(false)}>
                     <Modal.Header>Terms of Service</Modal.Header>
                     <Modal.Body>
                          <div className="space-y-6">
                               <ReactCrop
                                    crop={crop}
-                                   onChange={(c) => setCrop(c)}
+                                   onChange={(_, percentCrop) =>
+                                        setCrop(percentCrop)
+                                   }
+                                   onComplete={(c) => setCompletedCrop(c)}
+                                   aspect={aspect}
                               >
-                                   <img src={src} />
+                                   <img src={src} alt="" ref={imgRef} />
                               </ReactCrop>
                          </div>
                     </Modal.Body>
@@ -67,4 +99,6 @@ export default function CropDemo({
                </Modal>
           </>
      );
-}
+};
+
+export default CropDemo;

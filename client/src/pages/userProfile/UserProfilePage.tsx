@@ -5,7 +5,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import PopupModal from "../../components/Modal/PopupModal";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { getUserProfile } from "../../services/userService";
+import { getUserProfile, updateCoverImg } from "../../services/userService";
 import Loader from "../../components/Loader/Loader";
 import "./UserProfile.css";
 import { resetUser } from "../../features/user/UserSlice";
@@ -42,13 +42,13 @@ export default function UserProfilePage() {
 
      //cover-imgage update
      useEffect(() => {
-          console.log(coverImgae)
           setshowUploadImage(false)
           if(coverImgae){
-               const file = new File([coverImgae] , "cover_img")
-               
+               const file = new File([coverImgae] , "cover_img", {type : coverImgae.type})
+               dispatch(updateCoverImg(file))
+
           }
-     }, [coverImgae]);
+     }, [coverImgae,dispatch]);
 
      function updateProfile() {
           console.log("updateProfile");

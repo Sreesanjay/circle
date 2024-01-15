@@ -13,9 +13,9 @@ export interface IUser extends Document {
      wallet: number;
      profile_img : string;
      is_blocked : boolean;
-     user_profile : ObjectId
 }
 export interface IUserProfile extends Document {
+     user_id : ObjectId
      fullname: string;
      gender: string;
      bio: string;

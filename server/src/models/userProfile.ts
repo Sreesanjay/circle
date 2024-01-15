@@ -31,7 +31,11 @@ const ProfileSchema: Schema<IUserProfile> = new Schema<IUserProfile>({
         type : "string",
         enum : ["DEFAULT", "BUSINESS", "CREATER"],
         default : "DEFAULT"
-    }
+    },
+    user_id: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "User",
+    },
 
 }, { timestamps: true });
 

@@ -28,11 +28,7 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
      },
      profile_img:{
           type : String
-     },
-     user_profile: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "UserProfile",
-     },
+     }
 },{timestamps : true});
 
 userSchema.pre("save", async function (next){

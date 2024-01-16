@@ -22,10 +22,6 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
           type : Boolean,
           default: false,
      },
-     wallet: {
-          type: Number,
-          default: 0,
-     },
      profile_img:{
           type : String
      }

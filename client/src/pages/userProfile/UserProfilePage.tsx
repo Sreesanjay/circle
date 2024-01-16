@@ -36,6 +36,7 @@ export default function UserProfilePage() {
                if (!userProfile) {
                     setShowModal(true);
                }
+               
           }
           dispatch(resetUser());
      }, [isError, errorMessage, isSuccess, userProfile, dispatch]);

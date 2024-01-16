@@ -23,5 +23,6 @@ export interface IUserProfile extends Document {
      is_premium : boolean;
      account_type : string;
      cover_img: string;
+     wallet: number;
 }
 

@@ -36,6 +36,10 @@ const ProfileSchema: Schema<IUserProfile> = new Schema<IUserProfile>({
          type: mongoose.Schema.Types.ObjectId,
          ref: "User",
     },
+    wallet: {
+        type: Number,
+        default: 0,
+   },
 
 }, { timestamps: true });
 

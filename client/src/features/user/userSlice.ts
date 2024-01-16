@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
+
 import { getUserProfile, updateCoverImg } from "../../services/userService";
 
 export type userProfile = {
@@ -46,6 +48,7 @@ export const userSlice = createSlice({
             .addCase(getUserProfile.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
+                console.log(action.payload);
                 state.userProfile = action.payload.userProfile;
             })
             .addCase(getUserProfile.rejected, (state, action) => {
@@ -62,11 +65,15 @@ export const userSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.userProfile = action.payload.userProfile
+                toast("Cover image  updated")
             })
             .addCase(updateCoverImg.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                console.log(action.payload)
+                const error = action.payload as {
+                    message: string
+                };
+                state.errorMessage = error.message;
             })
     }
 })

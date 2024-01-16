@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { storage } from "../app/firebase";
 import API from "../api";
-import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const getUserProfile = createAsyncThunk(
     "auth/getUserProfile",
@@ -33,7 +33,6 @@ export const updateCoverImg = createAsyncThunk(
             const snapshot = await uploadBytes(storageRef, file)
             if (snapshot) {
                 const url = await getDownloadURL(storageRef);
-                console.log(url)
                 const response = await API.patch("/profile/update-cover-img", {url}, {
                     withCredentials: true,
                 });

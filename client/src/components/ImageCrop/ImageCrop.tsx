@@ -1,15 +1,22 @@
 import { Dispatch, SetStateAction, useRef, useState, FC } from "react";
 import { Button, Modal } from "flowbite-react";
-import ReactCrop, { Crop, PixelCrop} from "react-image-crop";
+import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
 interface ICropDemo {
      src: string;
-     aspect : number | undefined;
-     setcoverImgae: Dispatch<SetStateAction<Blob | undefined>>;
+     aspect: number | undefined;
+     isCrop: boolean;
+     setisCrop: Dispatch<SetStateAction<boolean>>;
+     setImage: Dispatch<SetStateAction<Blob | undefined>>;
 }
-const CropDemo: FC<ICropDemo> = ({ src, aspect, setcoverImgae }) => {
-     const [openModal, setOpenModal] = useState(true);
+const CropDemo: FC<ICropDemo> = ({
+     src,
+     aspect,
+     isCrop,
+     setisCrop,
+     setImage,
+}) => {
      const buttonStyle = {
           width: "150px",
           height: "40px",
@@ -47,7 +54,7 @@ const CropDemo: FC<ICropDemo> = ({ src, aspect, setcoverImgae }) => {
                          if (blob) {
                               resolve(blob);
                          }
-                    }, "image/jpeg"); // You can change the second argument to adjust the format (e.g., "image/png")
+                    }, "image/jpeg");
                }
           });
      };
@@ -58,15 +65,18 @@ const CropDemo: FC<ICropDemo> = ({ src, aspect, setcoverImgae }) => {
                     imgRef.current,
                     completedCrop
                );
-               setcoverImgae(croppedImageBlob);
+               setImage(croppedImageBlob);
+               setisCrop(false);
           }
-          setOpenModal(false);
+     }
+     function cancelCrop() {
+          setisCrop(false);
      }
 
      return (
           <>
-               <Modal show={openModal} onClose={() => setOpenModal(false)}>
-                    <Modal.Header>Terms of Service</Modal.Header>
+               <Modal show={isCrop} onClose={() => setisCrop(false)}>
+                    <Modal.Header>Image crop</Modal.Header>
                     <Modal.Body>
                          <div className="space-y-6">
                               <ReactCrop
@@ -86,11 +96,11 @@ const CropDemo: FC<ICropDemo> = ({ src, aspect, setcoverImgae }) => {
                               onClick={() => handleCrop()}
                               style={buttonStyle}
                          >
-                              I accept
+                              Crop
                          </Button>
                          <Button
                               color="gray"
-                              onClick={() => handleCrop()}
+                              onClick={() => cancelCrop()}
                               style={buttonStyle}
                          >
                               Decline

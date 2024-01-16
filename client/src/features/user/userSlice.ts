@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
-import { getUserProfile, updateCoverImg } from "../../services/userService";
+import { deleteCover, getUserProfile, updateCoverImg } from "../../services/userService";
 
 export type userProfile = {
     fullname: string;
@@ -48,7 +48,6 @@ export const userSlice = createSlice({
             .addCase(getUserProfile.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                console.log(action.payload);
                 state.userProfile = action.payload.userProfile;
             })
             .addCase(getUserProfile.rejected, (state, action) => {
@@ -60,6 +59,8 @@ export const userSlice = createSlice({
             })
             .addCase(updateCoverImg.pending, (state) => {
                 state.isLoading = true;
+                console.log("before",state.userProfile)
+
             })
             .addCase(updateCoverImg.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -68,6 +69,24 @@ export const userSlice = createSlice({
                 toast("Cover image  updated")
             })
             .addCase(updateCoverImg.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                const error = action.payload as {
+                    message: string
+                };
+                state.errorMessage = error.message;
+            })
+            //delete cover image
+            .addCase(deleteCover.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteCover.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.userProfile = action.payload.userProfile
+                toast("Cover image  deleted")
+            })
+            .addCase(deleteCover.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 const error = action.payload as {

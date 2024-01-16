@@ -1,5 +1,9 @@
+.cover-photo{
+    max-height: 300px;
+    min-height: 100px;
+}
 .user-profile .cover-photo img{
-    max-height: 200px;
+    max-height: 300px;
     width: 100vw;
 }
 .user-profile .left-area{  
@@ -17,8 +21,14 @@
     position:absolute;
     right: 10px;
     top : 80px;
-    background-color:#D05DD2;
+    border-radius: 10px;
+    background-color: rgba(128, 128, 128, 0.292);
 }
 .add-cover-btn:hover{
-    background-color:#b949bb;
+    background-color: rgba(128, 128, 128, 0.432);
 }
+
+/*edit profile img button*/
+.edit-profileImg{
+    background-color: rgba(202, 199, 199, 0.427);
+}  

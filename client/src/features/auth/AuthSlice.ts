@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signup, googleAuth, signin } from "../../services/authService";
+import { signup, googleAuth, signin, updateProfileImg, deleteProfile } from "../../services/authService";
 
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 export type user = {
      _id: string;
@@ -122,6 +123,59 @@ export const authSlice = createSlice({
                     state.errorMessage = error?.message;
                     state.status = error?.status;
                })
+               //update user profile image
+               .addCase(updateProfileImg.pending , (state) => {
+                    state.isLoading = true;
+               })
+               .addCase(updateProfileImg.fulfilled , (state,action)=>{
+                    state.isLoading = false;
+                    state.isSuccess = true;
+                    localStorage.setItem(
+                         "user",
+                         JSON.stringify(action.payload.user)
+                    );
+                    state.user = action.payload.user;
+                    toast("Profile image  updated")
+
+               })
+               .addCase(updateProfileImg.rejected, (state, action) => {
+                    state.isLoading = false;
+                    state.isError = true;
+                    const error = action.payload as {
+                         message: string;
+                         status: number;
+                    };
+                    state.errorMessage = error?.message;
+                    state.status = error?.status;
+                    toast.error(error.message);
+               })
+               //delete profile image
+               .addCase(deleteProfile.pending , (state) => {
+                    state.isLoading = true;
+               })
+               .addCase(deleteProfile.fulfilled , (state,action)=>{
+                    state.isLoading = false;
+                    state.isSuccess = true;
+                    localStorage.setItem(
+                         "user",
+                         JSON.stringify(action.payload.user)
+                    );
+                    state.user = action.payload.user;
+                    toast("Profile image  deleted")
+
+               })
+               .addCase(deleteProfile.rejected, (state, action) => {
+                    state.isLoading = false;
+                    state.isError = true;
+                    const error = action.payload as {
+                         message: string;
+                         status: number;
+                    };
+                    state.errorMessage = error?.message;
+                    state.status = error?.status;
+                    toast.error(error.message);
+               })
+
      },
 });
 

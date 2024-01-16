@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import UserProfile from "../models/userProfile"
-// import User from "../models/userModel";
+import User from "../models/userModel";
 // import { IUser } from "../Interfaces";
 
 export const getUserProfile: RequestHandler = asyncHandler(
@@ -22,12 +22,73 @@ export const getUserProfile: RequestHandler = asyncHandler(
  */
 export const updateCoverImg: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const userProfile = await UserProfile.findByIdAndUpdate(req.user?._id, { $set: { cover_img: req.body.url, user_id: req.user?._id } }, { upsert: true })
+        const userProfile = await UserProfile.findByIdAndUpdate(req.user?._id, { $set: { cover_img: req.body.url, user_id: req.user?._id } }, { upsert: true, new: true })
         if (userProfile) {
+            console.log(userProfile)
             res.status(200).json({
                 status: 'OK',
                 message: "User cover image updated",
                 userProfile
+            });
+        } else {
+            next(new Error('Internal Error'))
+        }
+    }
+)
+
+/**
+ * @desc function for deleting user cover image.
+ * @route POST /api/profile/update-cover-img
+ * @access private
+ */
+export const deleteCoverImg: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const userProfile = await UserProfile.findByIdAndUpdate(req.user?._id, { $unset: { cover_img: 1} },{new: true})
+        if (userProfile) {
+            res.status(200).json({
+                status: 'OK',
+                message: "User cover image deleted",
+                userProfile
+            });
+        } else {
+            next(new Error('Internal Error'))
+        }
+    }
+)
+
+/**
+ * @desc function for update user profile image.
+ * @route POST /api/profile/update-profile_img
+ * @access private
+ */
+export const updateProfileImg: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const user = await User.findByIdAndUpdate(req.user?._id, { $set: { profile_img: req.body.url} },{new: true})
+        if (user) {
+            res.status(200).json({
+                status: 'OK',
+                message: "Profile image updated successfully",
+                user
+            });
+        } else {
+            next(new Error('Internal Error'))
+        }
+    }
+)
+
+/**
+ * @desc function for deleting user profile image.
+ * @route POST /api/profile/update-cover-img
+ * @access private
+ */
+export const deleteProfileImg: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const user = await User.findByIdAndUpdate(req.user?._id, { $unset: { profile_img: 1} },{new: true})
+        if (user) {
+            res.status(200).json({
+                status: 'OK',
+                message: "User profile image deleted",
+                user
             });
         } else {
             next(new Error('Internal Error'))

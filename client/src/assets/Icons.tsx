@@ -3,6 +3,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 import PortraitIcon from '@mui/icons-material/Portrait';
 import GridViewIcon from '@mui/icons-material/GridView';
 import { IconButton } from "@mui/material";
@@ -71,6 +72,11 @@ export function UserIcon({size} : {size: number}) {
         <IconButton>
           <AccountCircleOutlinedIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
         </IconButton>
+     );
+}
+export function EditPenIcon({size} : {size: number}) {
+     return (
+          <EditIcon sx={{ fontSize: size, color : '#000000' }}/>
      );
 }
 

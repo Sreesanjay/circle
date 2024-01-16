@@ -73,6 +73,9 @@ export const googleAuth: RequestHandler = asyncHandler(
           const existingUser = await User.findOne({ email: email });
 
           if (existingUser) {
+               if(existingUser.password){
+                    return next(Error("Invalid Email"))
+               }
                const token = generateToken(
                     existingUser.email,
                     existingUser._id

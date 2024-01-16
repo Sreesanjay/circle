@@ -5,7 +5,7 @@ import API from "../api";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const getUserProfile = createAsyncThunk(
-    "auth/getUserProfile",
+    "user/getUserProfile",
     async (_, thunkAPI) => {
         try {
             const userDetails = await API.get("/profile", {
@@ -25,7 +25,7 @@ export const getUserProfile = createAsyncThunk(
     })
 
 export const updateCoverImg = createAsyncThunk(
-    "auth/updateCoverImg",
+    "user/updateCoverImg",
     async (file: File, thunkAPI) => {
         try {
             const filename = new Date().getTime() + file.name
@@ -51,3 +51,25 @@ export const updateCoverImg = createAsyncThunk(
         }
 
     })
+
+    export const deleteCover = createAsyncThunk(
+        "user/deleteCover",
+        async (_, thunkAPI) => {
+            try {
+                const userDetails = await API.delete("/profile/delete-cover-img", {
+                    withCredentials: true,
+                });
+                return userDetails.data
+            } catch (error) {
+                const err = error as AxiosError<{
+                    message?: string;
+                }>
+                const payload = {
+                    message: err.response?.data?.message,
+                };
+                return thunkAPI.rejectWithValue(payload);
+            }
+    
+        })
+
+    

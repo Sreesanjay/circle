@@ -14,7 +14,7 @@ export default function UserHeader() {
      const { user } = useAppSelector((state) => state.auth);
      const [isProfileToggle, setisProfileToggle] = useState(false)
      return (
-          <section className="user-header px-6 grid grid-cols-6 items-center">
+          <section className="user-header px-6 grid grid-cols-6 items-center shadow-sm">
                <div className="logo col-span-1">
                     <h1 className="text-4xl md:text-5xl">Circle</h1>
                </div>

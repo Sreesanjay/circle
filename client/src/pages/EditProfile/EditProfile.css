@@ -1,0 +1,7 @@
+.edit-profile{
+    margin-left: 270px;
+}
+.text-field :first-child{
+    height: 40px;
+    max-width: 500px;
+}

@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/Route/ProtectedRoute";
 import Demo from "./components/Demo";
 import IsAuthenticated from "./components/Route/IsAuthenticated";
 import Header from "./pages/user/Header";
+import EditProfile from "./pages/EditProfile/EditProfile";
 const UserProfilePage =lazy(() => import("./pages/userProfile/UserProfilePage"));
 const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));
@@ -26,6 +27,9 @@ function App() {
                          <Route element={<ProtectedRoute allowedRole={"USER"} />}>
                               <Route path="/" element={<Demo />} />
                               <Route path="/profile" element={<UserProfilePage/>}/>
+                              <Route path="/profile/manage-account">
+                                   <Route path="/profile/manage-account"  element={<EditProfile/>}/>
+                              </Route>
                          </Route>
                     </Routes>
                </Suspense>

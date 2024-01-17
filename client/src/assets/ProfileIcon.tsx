@@ -7,7 +7,7 @@ export default function ProfileIcon({size}:{size:string}) {
      return (
           <div className="profile-img-icon">
                {user?.profile_img ? (
-                    <img src="" alt="" />
+                    <img src={user?.profile_img} alt="" style={{}} className="w-12 rounded-lg"/>
                ) : (
                     <ProfileIconWithText email={user?.email || ""} size={size} />
                )}

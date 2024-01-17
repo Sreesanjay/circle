@@ -5,6 +5,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import PortraitIcon from '@mui/icons-material/Portrait';
+import SettingsIcon from '@mui/icons-material/Settings';
 import GridViewIcon from '@mui/icons-material/GridView';
 import { IconButton } from "@mui/material";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
@@ -71,6 +72,14 @@ export function UserIcon({size} : {size: number}) {
      return (
         <IconButton>
           <AccountCircleOutlinedIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+        </IconButton>
+     );
+}
+
+export function IconSetting({size} : {size: number}) {
+     return (
+        <IconButton>
+          <SettingsIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
         </IconButton>
      );
 }

@@ -48,6 +48,7 @@ export const signup: RequestHandler = asyncHandler(
                          username: newUser.username,
                          email: newUser.email,
                          role: newUser.role,
+                         profile_img: newUser.profile_img
                     },
                     token,
                });
@@ -82,12 +83,13 @@ export const googleAuth: RequestHandler = asyncHandler(
                );
                res.status(201).json({
                     status: "created",
-                    message: "User registered successfully",
+                    message: "User loged in successfully",
                     user: {
                          _id: existingUser._id,
                          username: existingUser.username,
                          email: existingUser.email,
                          role: existingUser.role,
+                         profile_img: existingUser.profile_img
                     },
                     token,
                });
@@ -108,6 +110,7 @@ export const googleAuth: RequestHandler = asyncHandler(
                               username: newUser.username,
                               email: newUser.email,
                               role: newUser.role,
+                              profile_img: user.profile_img
                          },
                          token,
                     });
@@ -140,6 +143,7 @@ export const signin = asyncHandler(
                          username: user.username,
                          email: user.email,
                          role: user.role,
+                         profile_img: user.profile_img
                     },
                     token,
                });

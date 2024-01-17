@@ -11,6 +11,9 @@ import { Profile, PostIcon, SavedIcon, EditPenIcon } from "../../assets/Icons";
 import CoverImageUpload from "../../components/Modal/CoverUpload";
 import UploadProfileImg from "../../components/Modal/ProfileUpload";
 import { reset } from "../../features/auth/AuthSlice";
+import FriendList from "../../components/FriendList/FriendList";
+import CloseFriends from "../../components/CloseFriend/CloseFriends";
+import ProfileSection from "../../components/Profile/ProfileSection";
 
 export default function UserProfilePage() {
      const dispatch = useAppDispatch();
@@ -21,7 +24,6 @@ export default function UserProfilePage() {
      const [showModal, setShowModal] = useState(false);
      const [showUploadImage, setshowUploadImage] = useState(false);
      const [showUploadProfile, setshowUploadProfile] = useState(false);
-     // const [coverImgae, setcoverImgae] = useState<Blob | undefined>();
      const [showEditProfImgIcon, setshowEditProfIcon] = useState("hidden");
 
      useEffect(() => {
@@ -130,7 +132,7 @@ export default function UserProfilePage() {
                                         {user?.username}
                                    </h1>
                               </div>
-                              <div className="right-nav grow ps-10 flex">
+                              <div className="right-nav grow ps-14 flex">
                                    <div className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 me-9">
                                         <Profile size={28} />
                                         <h3 className="">Profile</h3>
@@ -145,8 +147,16 @@ export default function UserProfilePage() {
                                    </div>
                               </div>
                          </section>
-                         <section className="profile-body">
-                              
+                         <section className="profile-body bg-slate-50 w-screen px-6 md:grid md:grid-cols-12 pt-5">
+                              <div className="left-section col-span-3 px-5 ">
+                              <FriendList/>
+                              <hr className="my-3"/>
+                              <h1 className="font-medium text-center mb-3">Close Friends</h1>
+                                   <CloseFriends/>
+                              </div>
+                              <div className="right-section col-span-9">
+                                   <ProfileSection/>
+                              </div>
                          </section>
                     </section>
                )}

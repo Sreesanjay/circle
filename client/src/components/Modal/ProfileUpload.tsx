@@ -8,7 +8,7 @@ import {
 } from "react";
 import ImageCrop from "../ImageCrop/ImageCrop";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { updateProfileImg } from "../../services/authService";
+import { updateProfileImg } from "../../services/userService";
 
 export default function UploadProfileImg({
      showUploadProfile,
@@ -20,7 +20,8 @@ export default function UploadProfileImg({
      const [isCrop, setisCrop] = useState(false);
      const dispatch = useAppDispatch();
      const [inputImg, setInputImg] = useState<string>("");
-     const { user } = useAppSelector((state) => state.auth);
+     // const { user } = useAppSelector((state) => state.auth);
+     const { userProfile } = useAppSelector((state) => state.user);
      const [profileImg, setprofileImg] = useState<Blob | undefined>();
 
      useEffect(() => {
@@ -88,7 +89,7 @@ export default function UploadProfileImg({
                                         />
                                    </div>
                               </div>
-                              {user?.profile_img && (
+                              {userProfile?.profile_img && (
                                    <div className="w-full">
                                         <Button
                                              style={DltButtonStyle}

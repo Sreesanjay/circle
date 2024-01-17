@@ -5,10 +5,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Loader from "./components/Loader/Loader";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
-import Demo from "./components/Demo";
 import IsAuthenticated from "./components/Route/IsAuthenticated";
 import Header from "./pages/user/Header";
 import EditProfile from "./pages/EditProfile/EditProfile";
+import HomePage from "./pages/HomePage/HomePage";
 const UserProfilePage =lazy(() => import("./pages/userProfile/UserProfilePage"));
 const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));
@@ -25,7 +25,7 @@ function App() {
                               <Route path="/login" element={<SigninPage />} />
                          </Route>
                          <Route element={<ProtectedRoute allowedRole={"USER"} />}>
-                              <Route path="/" element={<Demo />} />
+                              <Route path="/" element={<HomePage/>} />
                               <Route path="/profile" element={<UserProfilePage/>}/>
                               <Route path="/profile/manage-account">
                                    <Route path="/profile/manage-account"  element={<EditProfile/>}/>

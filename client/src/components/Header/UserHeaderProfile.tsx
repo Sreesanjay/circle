@@ -8,13 +8,14 @@ import "./UserHeader.css";
 export default function UserHeaderProfile() {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
+    const {userProfile} = useAppSelector((state)=>state.user)
     const {user} = useAppSelector((state)=>state.auth)
         return (
           <div className="dropdown p-3 mt-3">
                <div className="profile-details mb-5 flex">
                     <ProfileIcon size="medium" />
                     <div className="right-area ms-3">
-                        <h3>{user?.username}</h3>
+                        <h3>{userProfile?.username}</h3>
                         <p className="text-xs">{user?.email}</p>
                     </div>
                </div>

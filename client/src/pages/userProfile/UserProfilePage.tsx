@@ -3,34 +3,28 @@ import { toast } from "react-toastify";
 
 import PopupModal from "../../components/Modal/PopupModal";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { getUserProfile } from "../../services/userService";
+// import { getUserProfile } from "../../services/userService";
 import Loader from "../../components/Loader/Loader";
 import "./UserProfile.css";
 import { resetUser } from "../../features/user/UserSlice";
 import { Profile, PostIcon, SavedIcon, EditPenIcon } from "../../assets/Icons";
 import CoverImageUpload from "../../components/Modal/CoverUpload";
 import UploadProfileImg from "../../components/Modal/ProfileUpload";
-import { reset } from "../../features/auth/AuthSlice";
+// import { reset } from "../../features/auth/AuthSlice";
 import FriendList from "../../components/FriendList/FriendList";
 import CloseFriends from "../../components/CloseFriend/CloseFriends";
 import ProfileSection from "../../components/Profile/ProfileSection";
+import { getUserProfile } from "../../services/userService";
 
 export default function UserProfilePage() {
      const dispatch = useAppDispatch();
      const { userProfile, isLoading, isError, isSuccess, errorMessage } =
           useAppSelector((state) => state.user);
-     const { user, ...auth } = useAppSelector((state) => state.auth);
 
      const [showModal, setShowModal] = useState(false);
      const [showUploadImage, setshowUploadImage] = useState(false);
      const [showUploadProfile, setshowUploadProfile] = useState(false);
      const [showEditProfImgIcon, setshowEditProfIcon] = useState("hidden");
-
-     useEffect(() => {
-          (async () => {
-               dispatch(getUserProfile());
-          })();
-     }, [dispatch]);
 
      useEffect(() => {
           if (isError) {
@@ -43,10 +37,15 @@ export default function UserProfilePage() {
           dispatch(resetUser());
      }, [isError, errorMessage, isSuccess, userProfile, dispatch]);
      useEffect(() => {
-          if (auth.isError || auth.isSuccess) {
-               dispatch(reset());
-          }
-     }, [user, auth, dispatch]);
+          (async () => {
+               dispatch(getUserProfile());
+          })();
+     }, [dispatch]);
+     // useEffect(() => {
+     //      if (auth.isError || auth.isSuccess) {
+     //           dispatch(reset());
+     //      }
+     // }, [user, auth, dispatch]);
 
      function updateProfile() {
           console.log("updateProfile");
@@ -70,7 +69,7 @@ export default function UserProfilePage() {
                     successCallback={updateProfile}
                     cancelCallback={null}
                />
-               {isLoading || auth.isLoading ? (
+               {isLoading ? (
                     <Loader />
                ) : (
                     <section className="user-profile flex flex-col items-center sm:items-start">
@@ -114,9 +113,9 @@ export default function UserProfilePage() {
                                         >
                                              <EditPenIcon size={30} />
                                         </button>
-                                        {user?.profile_img ? (
+                                        {userProfile?.profile_img ? (
                                              <img
-                                                  src={user?.profile_img}
+                                                  src={userProfile?.profile_img}
                                                   alt=""
                                                   className="w-full shadow-lg rounded-md"
                                              />
@@ -129,7 +128,7 @@ export default function UserProfilePage() {
                                         )}
                                    </div>
                                    <h1 className="text-center mt-3 text-xl font-medium">
-                                        {user?.username}
+                                        {userProfile?.username}
                                    </h1>
                               </div>
                               <div className="right-nav grow ps-14 flex">

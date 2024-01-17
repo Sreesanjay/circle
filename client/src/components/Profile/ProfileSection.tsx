@@ -20,7 +20,7 @@ const {userProfile} = useAppSelector((state) => state.user)
           
           <div className="wrapper grid grid-cols-2 mb-4">
             <h1 className="key font-medium col-span-1">Username</h1>
-            <h1 className="value col-span-1">{user?.username}</h1>
+            <h1 className="value col-span-1">{userProfile?.username}</h1>
           </div>
 
           <div className="wrapper grid grid-cols-2 mb-4">

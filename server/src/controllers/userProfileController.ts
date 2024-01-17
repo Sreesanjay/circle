@@ -22,9 +22,8 @@ export const getUserProfile: RequestHandler = asyncHandler(
  */
 export const updateCoverImg: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const userProfile = await UserProfile.findByIdAndUpdate(req.user?._id, { $set: { cover_img: req.body.url, user_id: req.user?._id } }, { upsert: true, new: true })
+        const userProfile = await UserProfile.findOneAndUpdate({ user_id: req.user?._id }, { $set: { cover_img: req.body.url, user_id: req.user?._id } }, { new: true });
         if (userProfile) {
-            console.log(userProfile)
             res.status(200).json({
                 status: 'OK',
                 message: "User cover image updated",
@@ -43,7 +42,7 @@ export const updateCoverImg: RequestHandler = asyncHandler(
  */
 export const deleteCoverImg: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const userProfile = await UserProfile.findByIdAndUpdate(req.user?._id, { $unset: { cover_img: 1} },{new: true})
+        const userProfile = await UserProfile.findOneAndUpdate({ user_id: req.user?._id }, { $unset: { cover_img: 1 } }, { new: true })
         if (userProfile) {
             res.status(200).json({
                 status: 'OK',
@@ -63,7 +62,7 @@ export const deleteCoverImg: RequestHandler = asyncHandler(
  */
 export const updateProfileImg: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const user = await User.findByIdAndUpdate(req.user?._id, { $set: { profile_img: req.body.url} },{new: true})
+        const user = await UserProfile.findOneAndUpdate({ user_id: req.user?._id }, { $set: { profile_img: req.body.url } }, { new: true })
         if (user) {
             res.status(200).json({
                 status: 'OK',
@@ -83,7 +82,7 @@ export const updateProfileImg: RequestHandler = asyncHandler(
  */
 export const deleteProfileImg: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const user = await User.findByIdAndUpdate(req.user?._id, { $unset: { profile_img: 1} },{new: true})
+        const user = await User.findOneAndUpdate({ user_id: req.user?._id }, { $unset: { profile_img: 1 } }, { new: true })
         if (user) {
             res.status(200).json({
                 status: 'OK',

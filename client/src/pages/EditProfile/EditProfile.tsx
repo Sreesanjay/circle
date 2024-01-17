@@ -7,7 +7,7 @@ import { EditPenIcon } from "../../assets/Icons";
 import { Label, TextInput } from "flowbite-react";
 
 export default function EditProfile() {
-     const { user } = useAppSelector((state) => state.auth);
+     // const { user } = useAppSelector((state) => state.auth);
      const { userProfile } = useAppSelector((state) => state.user);
      const [showProfileUpload, setshowProfileUpload] = useState(false);
      const [showEditProfImgIcon, setshowEditProfIcon] = useState("hidden");
@@ -40,9 +40,9 @@ export default function EditProfile() {
                                    >
                                         <EditPenIcon size={30} />
                                    </button>
-                                   {user?.profile_img ? (
+                                   {userProfile?.profile_img ? (
                                         <img
-                                             src={user?.profile_img}
+                                             src={userProfile?.profile_img}
                                              alt=""
                                              className="w-full shadow-lg rounded-md"
                                         />
@@ -81,7 +81,7 @@ export default function EditProfile() {
                                    <TextInput
                                         id="username"
                                         type="text"
-                                        placeholder={user?.username ? user?.username :"Enter the new username"}
+                                        placeholder={userProfile?.username ? userProfile?.username :"Enter the new username"}
                                         required
                                         className="text-field"
                                    />

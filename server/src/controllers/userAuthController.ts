@@ -89,10 +89,8 @@ export const googleAuth: RequestHandler = asyncHandler(
                     message: "User loged in successfully",
                     user: {
                          _id: existingUser._id,
-                         username: existingUser.username,
                          email: existingUser.email,
-                         role: existingUser.role,
-                         profile_img: existingUser.profile_img
+                         role: existingUser.role
                     },
                     token,
                });
@@ -100,23 +98,24 @@ export const googleAuth: RequestHandler = asyncHandler(
                const username = await generateUsername();
                const user = new User({
                     email: email,
-                    username: username,
                });
                if (user) {
                     const newUser: IUser = await user.save();
-                    const token = generateToken(newUser.email, newUser._id);
-                    res.status(201).json({
-                         status: "created",
-                         message: "User registered successfully",
-                         user: {
-                              _id: newUser._id,
-                              username: newUser.username,
-                              email: newUser.email,
-                              role: newUser.role,
-                              profile_img: user.profile_img
-                         },
-                         token,
-                    });
+                    const userProfile = new UserProfile({ username, user_id: newUser._id })
+                    const newUserProfile: IUserProfile = await userProfile.save();
+                    if (newUserProfile) {
+                         const token = generateToken(newUser.email, newUser._id);
+                         res.status(201).json({
+                              status: "created",
+                              message: "User registered successfully",
+                              user: {
+                                   _id: newUser._id,
+                                   email: newUser.email,
+                                   role: newUser.role
+                              },
+                              token,
+                         });
+                    }
                }
           }
      }

@@ -66,7 +66,7 @@ export default function EditProfile() {
                                    <TextInput
                                         id="email1"
                                         type="text"
-                                        placeholder={user"Enter your full name"}
+                                        placeholder="Enter your full name"
                                         required
                                         className="text-field "
                                    />

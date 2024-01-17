@@ -138,14 +138,12 @@ export const signin = asyncHandler(
           if (match) {
                const token = generateToken(user.email, user._id);
                res.status(201).json({
-                    status: "created",
-                    message: "User registered successfully",
+                    status: "ok",
+                    message: "User loged in successfully",
                     user: {
                          _id: user._id,
-                         username: user.username,
                          email: user.email,
-                         role: user.role,
-                         profile_img: user.profile_img
+                         role: user.role
                     },
                     token,
                });

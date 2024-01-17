@@ -10,9 +10,6 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
      password: {
           type: String
      },
-     username : {
-          type: String,
-     },
      role: {
           type: String,
           enum: ["ADMIN", "USER"],
@@ -22,9 +19,7 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
           type : Boolean,
           default: false,
      },
-     profile_img:{
-          type : String
-     }
+    
 },{timestamps : true});
 
 userSchema.pre("save", async function (next){

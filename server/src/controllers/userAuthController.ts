@@ -4,7 +4,8 @@ import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
 import generateToken from "../util/generateJwt";
 import User from "../models/userModel";
-import { IUser } from "../Interfaces";
+import UserProfile from "../models/userProfile"
+import { IUser, IUserProfile } from "../Interfaces";
 import generateUsername from "../util/generateUsername";
 
 interface JwtPayload {
@@ -36,22 +37,24 @@ export const signup: RequestHandler = asyncHandler(
                return next(Error("Username Already exists"));
           }
 
-          const user = new User({ email, username, password });
+          const user = new User({ email, password });
           if (user) {
                const newUser: IUser = await user.save();
-               const token = generateToken(newUser.email, newUser._id);
-               res.status(201).json({
-                    status: "created",
-                    message: "User registered successfully",
-                    user: {
-                         _id: newUser._id,
-                         username: newUser.username,
-                         email: newUser.email,
-                         role: newUser.role,
-                         profile_img: newUser.profile_img
-                    },
-                    token,
-               });
+               const userProfile = new UserProfile({ username, user_id: newUser._id })
+               const newUserProfile: IUserProfile = await userProfile.save();
+               if (newUserProfile) {
+                    const token = generateToken(newUser.email, newUser._id);
+                    res.status(201).json({
+                         status: "created",
+                         message: "User registered successfully",
+                         user: {
+                              _id: newUser._id,
+                              email: newUser.email,
+                              role: newUser.role
+                         },
+                         token,
+                    });
+               }
           }
      }
 );
@@ -70,11 +73,11 @@ export const googleAuth: RequestHandler = asyncHandler(
                return next(Error("Invalid credentials"));
           }
 
-          const { email}: JwtPayload = jwtDecode(credential);
+          const { email }: JwtPayload = jwtDecode(credential);
           const existingUser = await User.findOne({ email: email });
 
           if (existingUser) {
-               if(existingUser.password){
+               if (existingUser.password) {
                     return next(Error("Invalid Email"))
                }
                const token = generateToken(
@@ -94,7 +97,7 @@ export const googleAuth: RequestHandler = asyncHandler(
                     token,
                });
           } else {
-               const username =await generateUsername();
+               const username = await generateUsername();
                const user = new User({
                     email: email,
                     username: username,
@@ -147,7 +150,7 @@ export const signin = asyncHandler(
                     },
                     token,
                });
-          }else{
+          } else {
                res.status(401);
                next(Error("Email or password not valid"));
           }

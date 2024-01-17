@@ -5,6 +5,12 @@ const ProfileSchema: Schema<IUserProfile> = new Schema<IUserProfile>({
     fullname: {
         type: "string",
     },
+    username : {
+        type: String,
+   },
+   profile_img:{
+        type : String
+   },
     gender: {
         type: "string",
     },

@@ -6,17 +6,17 @@ interface Report {
 }
 
 export interface IUser extends Document {
-     username: string;
      email: string;
      password: string;
      role: string;
      wallet: number;
-     profile_img : string;
      is_blocked : boolean;
 }
 export interface IUserProfile extends Document {
      user_id : ObjectId
      fullname: string;
+     username: string;
+     profile_img : string;
      gender: string;
      bio: string;
      reports: Report[];

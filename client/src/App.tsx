@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/Route/ProtectedRoute";
 import IsAuthenticated from "./components/Route/IsAuthenticated";
 import Header from "./pages/user/Header";
 import EditProfile from "./pages/EditProfile/EditProfile";
-import HomePage from "./pages/HomePage/HomePage";
+import HomePage from "./pages/Home/HomePage";
 const UserProfilePage =lazy(() => import("./pages/userProfile/UserProfilePage"));
 const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));

@@ -21,6 +21,8 @@ const useValidate =  (name : string, value : unknown): string => {
                 if(!value) return "password is required";
                 else if(typeof value === 'string' && value.length < 6) return 'Password must be atleast 6 characters.';
                 break;
+        case 'bio' :
+            if(typeof value === 'string' && value.length > 60) return "bio should be less than 100 characters"
     }
     return ''
 } 

@@ -122,3 +122,24 @@ export const deleteCover = createAsyncThunk(
 
     })
 
+export const updateProfile = createAsyncThunk(
+    "user/updateProfile",
+    async (formData, thunkAPI) => {
+        try {
+            const userDetails = await API.put("/profile",formData, {
+                withCredentials: true,
+            });
+            return userDetails.data
+        } catch (error) {
+            const err = error as AxiosError<{
+                message?: string;
+            }>
+            const payload = {
+                message: err.response?.data?.message,
+                status:err.response?.status
+            };
+            return thunkAPI.rejectWithValue(payload);
+        }
+
+    })
+

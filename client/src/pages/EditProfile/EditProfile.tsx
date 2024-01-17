@@ -1,17 +1,59 @@
-import { useState } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import ManageAccSidebar from "../../components/ManageAccountSidebar/ManageAccSidebar";
 import UploadProfileImg from "../../components/Modal/ProfileUpload";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import validate from "../../util/formValidate";
 import "./EditProfile.css";
 import { EditPenIcon } from "../../assets/Icons";
-import { Label, TextInput } from "flowbite-react";
+import { Label, Radio, TextInput, Textarea } from "flowbite-react";
+import { updateProfile } from "../../services/userService";
 
 export default function EditProfile() {
-     // const { user } = useAppSelector((state) => state.auth);
+     const dispatch = useAppDispatch()
      const { userProfile } = useAppSelector((state) => state.user);
      const [showProfileUpload, setshowProfileUpload] = useState(false);
      const [showEditProfImgIcon, setshowEditProfIcon] = useState("hidden");
+     const [isSubmit, setisSubmit] = useState(false);
+     type IProfileInp = {
+          username: string;
+          fullname: string;
+          gender: string;
+          bio: string;
+     };
+     const [formData, setFormData] = useState<IProfileInp>({
+          username:userProfile?.username ? userProfile?.username : "",
+          fullname: userProfile?.fullname || "",
+          gender: userProfile?.gender || "",
+          bio: userProfile?.bio || "",
+     });
+     const [formError, setformError] = useState({
+          username: "",
+          bio: "",
+     });
+     function handleChange(
+          e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
+     ) {
+          console.log(e.target.value);
+          const { name, value } = e.target;
+          setFormData({ ...formData, [name]: value });
+     }
 
+     function handleSubmit() {
+          setformError({
+               ...formError,
+               username: validate("username", formData.username),
+               bio: validate("bio", formData.bio),
+          });
+          setisSubmit(true);
+     }
+
+     useEffect(() => {
+          if (isSubmit) {
+               if (!formError.username && !formError.bio) {
+                    dispatch(updateProfile);
+               }
+          }
+     }, [isSubmit, formData, formError,dispatch]);
      return (
           <section className="manage-account flex">
                <ManageAccSidebar />
@@ -33,7 +75,7 @@ export default function EditProfile() {
                                    }
                               >
                                    <button
-                                        className={`edit-profileImg bg-gray-50 w-full h-full absolute top-0 ${showEditProfImgIcon}`}
+                                        className={`edit-profileImg bg-gray-100 w-full h-full absolute top-0 ${showEditProfImgIcon}`}
                                         onClick={() =>
                                              setshowProfileUpload(true)
                                         }
@@ -55,17 +97,20 @@ export default function EditProfile() {
                                    )}
                               </div>
                          </div>
-                         <div className="form col-span-4 p-5">
+                         <form className="form col-span-4 p-5">
                               <div>
                                    <div className="mb-2 block">
                                         <Label
-                                             htmlFor="email1"
+                                             htmlFor="fullname"
                                              value="Your Full Name"
                                         />
                                    </div>
                                    <TextInput
-                                        id="email1"
+                                        id="fullname"
+                                        name="fullname"
                                         type="text"
+                                        onChange={handleChange}
+                                        value={userProfile?.fullname}
                                         placeholder="Enter your full name"
                                         required
                                         className="text-field "
@@ -78,15 +123,113 @@ export default function EditProfile() {
                                              value="User name"
                                         />
                                    </div>
+                                   {formError.username && (
+                                        <span className="text-sm text-red-600">
+                                             {formError.username}
+                                        </span>
+                                   )}
                                    <TextInput
                                         id="username"
                                         type="text"
-                                        placeholder={userProfile?.username ? userProfile?.username :"Enter the new username"}
+                                        name="username"
+                                        value={formData.username}
+                                        onChange={handleChange}
+                                        placeholder={
+                                             userProfile?.username
+                                                  ? userProfile?.username
+                                                  : "Enter the new username"
+                                        }
                                         required
                                         className="text-field"
                                    />
                               </div>
-                         </div>
+                              <div className="mt-5">
+                                   <div className="mb-2 block">
+                                        <Label
+                                             htmlFor="gender"
+                                             value="Gender"
+                                        />
+                                   </div>
+
+                                   <div className="w-64">
+                                        <div className="flex items-center gap-2">
+                                             <Radio
+                                                  id="male"
+                                                  name="gender"
+                                                  onChange={handleChange}
+                                                  defaultChecked ={formData.gender==='Male'}
+                                                  value="Male"
+                                             />
+                                             <Label htmlFor="united-state">
+                                                  Male
+                                             </Label>
+                                             <Radio
+                                                  id="male"
+                                                  name="gender"
+                                                  value="Female"
+                                                  defaultChecked ={formData.gender==='Female'}
+                                                  onChange={handleChange}
+                                             />
+                                             <Label htmlFor="united-state">
+                                                  Female
+                                             </Label>
+                                             <Radio
+                                                  id="male"
+                                                  name="gender"
+                                                  value="Other"
+                                                  defaultChecked ={formData.gender==='Other'}
+                                                  onChange={handleChange}
+                                             />
+                                             <Label htmlFor="united-state">
+                                                  Other
+                                             </Label>
+                                        </div>
+                                   </div>
+                              </div>
+
+                              <div className="mt-5">
+                                   <div className="mb-2 block">
+                                        <Label htmlFor="bio" value="Bio" />
+                                   </div>
+                                   {formError.bio && (
+                                        <span className="text-sm text-red-600">
+                                             {formError.bio}
+                                        </span>
+                                   )}
+                                   <Textarea
+                                        id="bio"
+                                        style={{ maxWidth: "500px" }}
+                                        placeholder="Add your bio"
+                                        name="bio"
+                                        required
+                                        onChange={handleChange}
+                                        value={userProfile?.bio}
+                                        rows={4}
+                                   />
+                              </div>
+                              <div
+                                   className="btn-group flex justify-end mt-5"
+                                   style={{ maxWidth: "500px" }}
+                              >
+                                   <button
+                                        className="button  bg-red-600 p-2 px-5 rounded-lg"
+                                        type="reset"
+                                        onClick={()=>setformError({
+                                             username: "",
+                                             bio: "",
+                                        })}
+                                   >
+                                        Reset
+                                   </button>
+                                   <button
+                                        className="button bg-primary p-2 px-5 rounded-lg ms-2"
+                                        type="button"
+                                        onClick={() => handleSubmit()}
+                                   >
+                                        Update
+                                   </button>
+                              </div>
+                         </form>
                     </div>
                </div>
           </section>

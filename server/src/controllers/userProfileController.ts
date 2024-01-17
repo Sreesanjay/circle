@@ -62,12 +62,12 @@ export const deleteCoverImg: RequestHandler = asyncHandler(
  */
 export const updateProfileImg: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const user = await UserProfile.findOneAndUpdate({ user_id: req.user?._id }, { $set: { profile_img: req.body.url } }, { new: true })
-        if (user) {
+        const userProfile = await UserProfile.findOneAndUpdate({ user_id: req.user?._id }, { $set: { profile_img: req.body.url } }, { new: true })
+        if (userProfile) {
             res.status(200).json({
                 status: 'OK',
                 message: "Profile image updated successfully",
-                user
+                userProfile
             });
         } else {
             next(new Error('Internal Error'))
@@ -82,12 +82,12 @@ export const updateProfileImg: RequestHandler = asyncHandler(
  */
 export const deleteProfileImg: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const user = await User.findOneAndUpdate({ user_id: req.user?._id }, { $unset: { profile_img: 1 } }, { new: true })
-        if (user) {
+        const userProfile = await User.findOneAndUpdate({ user_id: req.user?._id }, { $unset: { profile_img: 1 } }, { new: true })
+        if (userProfile) {
             res.status(200).json({
                 status: 'OK',
                 message: "User profile image deleted",
-                user
+                userProfile
             });
         } else {
             next(new Error('Internal Error'))

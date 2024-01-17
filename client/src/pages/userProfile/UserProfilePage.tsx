@@ -14,7 +14,7 @@ import UploadProfileImg from "../../components/Modal/ProfileUpload";
 import FriendList from "../../components/FriendList/FriendList";
 import CloseFriends from "../../components/CloseFriend/CloseFriends";
 import ProfileSection from "../../components/Profile/ProfileSection";
-import { getUserProfile } from "../../services/userService";
+// import { getUserProfile } from "../../services/userService";
 
 export default function UserProfilePage() {
      const dispatch = useAppDispatch();
@@ -36,17 +36,6 @@ export default function UserProfilePage() {
           }
           dispatch(resetUser());
      }, [isError, errorMessage, isSuccess, userProfile, dispatch]);
-     useEffect(() => {
-          (async () => {
-               dispatch(getUserProfile());
-          })();
-     }, [dispatch]);
-     // useEffect(() => {
-     //      if (auth.isError || auth.isSuccess) {
-     //           dispatch(reset());
-     //      }
-     // }, [user, auth, dispatch]);
-
      function updateProfile() {
           console.log("updateProfile");
      }

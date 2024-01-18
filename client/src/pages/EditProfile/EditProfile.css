@@ -1,7 +1,13 @@
 .edit-profile{
     margin-left: 270px;
+    position: relative;
 }
+/* .text-field{
+} */
 .text-field :first-child{
+    /* z-index: -1; */
+    position: relative;
     height: 40px;
     max-width: 500px;
+    
 }

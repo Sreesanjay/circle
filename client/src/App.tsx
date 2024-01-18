@@ -9,27 +9,44 @@ import IsAuthenticated from "./components/Route/IsAuthenticated";
 import Header from "./pages/user/Header";
 import EditProfile from "./pages/EditProfile/EditProfile";
 import HomePage from "./pages/Home/HomePage";
-const UserProfilePage =lazy(() => import("./pages/userProfile/UserProfilePage"));
+import Dashboard from "./pages/Admin/Dashboard/Dashboard";
+import Interest from "./pages/Admin/Interest/Interest";
+const UserProfilePage = lazy(
+     () => import("./pages/userProfile/UserProfilePage")
+);
 const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 
 function App() {
      console.log("reloaded");
      return (
-          <>   
-               <Header/>
+          <>
+               <Header />
                <Suspense fallback={<Loader />}>
                     <Routes>
                          <Route element={<IsAuthenticated />}>
                               <Route path="/signup" element={<SignupPage />} />
                               <Route path="/login" element={<SigninPage />} />
                          </Route>
-                         <Route element={<ProtectedRoute allowedRole={"USER"} />}>
-                              <Route path="/" element={<HomePage/>} />
-                              <Route path="/profile" element={<UserProfilePage/>}/>
-                              <Route path="/profile/manage-account">
-                                   <Route path="/profile/manage-account"  element={<EditProfile/>}/>
-                              </Route>
+                         <Route
+                              element={<ProtectedRoute allowedRole={"USER"} />}
+                         >
+                              <Route path="/" element={<HomePage />} />
+                              <Route
+                                   path="/profile"
+                                   element={<UserProfilePage />}
+                              />
+                              <Route
+                                   path="/profile/manage-account"
+                                   element={<EditProfile />}
+                              />
+                         </Route>
+                         <Route
+                              element={<ProtectedRoute allowedRole={"ADMIN"} />}
+                         >
+                              <Route path="/admin" element={<Dashboard/>} />
+                              <Route path="/admin/interest" element={<Interest/>} />
+                              
                          </Route>
                     </Routes>
                </Suspense>

@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { storage } from "../app/firebase";
 import API from "../api";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { IProfileInp } from "../pages/EditProfile/EditProfile";
 
 export const getUserProfile = createAsyncThunk(
     "user/getUserProfile",
@@ -124,7 +125,7 @@ export const deleteCover = createAsyncThunk(
 
 export const updateProfile = createAsyncThunk(
     "user/updateProfile",
-    async (formData, thunkAPI) => {
+    async (formData :IProfileInp , thunkAPI) => {
         try {
             const userDetails = await API.put("/profile",formData, {
                 withCredentials: true,

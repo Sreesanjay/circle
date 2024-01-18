@@ -37,7 +37,7 @@ export const updateCoverImg: RequestHandler = asyncHandler(
 
 /**
  * @desc function for deleting user cover image.
- * @route POST /api/profile/update-cover-img
+ * @route POST /api/profile/delete-cover-img
  * @access private
  */
 export const deleteCoverImg: RequestHandler = asyncHandler(
@@ -77,7 +77,7 @@ export const updateProfileImg: RequestHandler = asyncHandler(
 
 /**
  * @desc function for deleting user profile image.
- * @route POST /api/profile/update-cover-img
+ * @route PUT /api/profile
  * @access private
  */
 export const deleteProfileImg: RequestHandler = asyncHandler(
@@ -92,5 +92,32 @@ export const deleteProfileImg: RequestHandler = asyncHandler(
         } else {
             next(new Error('Internal Error'))
         }
+    }
+)
+
+
+
+/**
+ * @desc function for deleting user profile image.
+ * @route POST /api/profile/update-cover-img
+ * @access private
+ */
+export const updateProfile: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        if(!req.body?.username){
+            res.status(400);
+            return next(Error("Username is required"))
+        }
+        const existingUser  = await UserProfile.findOne({ username: req.body.username, user_id:{$ne:req.user?._id}})
+        if(existingUser){
+            res.status(409)
+            return next(Error("Username already exists"))
+        }
+        const userProfile = await UserProfile.findOneAndUpdate({user_id: req.user?._id}, {$set:req.body},{new :true})
+        res.status(200).json({
+            status: "ok",
+            message: "User profile updated successfully",
+            userProfile
+        })
     }
 )

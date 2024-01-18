@@ -5,14 +5,13 @@ import { BiBuoy } from "react-icons/bi";
 import {
      HiArrowSmRight,
      HiChartPie,
-     HiInbox,
      HiShoppingBag,
      HiTable,
      HiUser,
      HiViewBoards,
 } from "react-icons/hi";
 import { FaRegUserCircle } from "react-icons/fa";
-import { MdOutlineSecurity } from "react-icons/md";
+import { MdOutlineSecurity ,MdOutlineInterests } from "react-icons/md";
 
 export default function ManageAccSidebar() {
      return (
@@ -28,14 +27,14 @@ export default function ManageAccSidebar() {
                          <Sidebar.Item icon={MdOutlineSecurity}>
                               Password & Security
                          </Sidebar.Item>
-                         <Sidebar.Item href="#" icon={HiInbox}>
-                              Inbox
+                         <Sidebar.Item icon={MdOutlineInterests}>
+                              Preferences
                          </Sidebar.Item>
                          <Sidebar.Item href="#" icon={HiUser}>
-                              Users
+                              Account
                          </Sidebar.Item>
                          <Sidebar.Item href="#" icon={HiShoppingBag}>
-                              Products
+                              Blocked Users
                          </Sidebar.Item>
                          <Sidebar.Item href="#" icon={HiArrowSmRight}>
                               Sign In

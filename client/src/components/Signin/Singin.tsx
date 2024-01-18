@@ -60,6 +60,9 @@ export default function Singin() {
                if (user?.role === "USER") {
                     navigate("/");
                }
+               else if(user?.role === "ADMIN"){
+                    navigate("/admin");
+               }
           }
      }, [
           isSuccess,

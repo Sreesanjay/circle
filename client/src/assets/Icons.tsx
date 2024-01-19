@@ -9,6 +9,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import GridViewIcon from '@mui/icons-material/GridView';
 import { IconButton } from "@mui/material";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CreateIcon from '@mui/icons-material/Create';
 import { useEffect, useState } from "react";
 export function Notification() {
      return (
@@ -80,6 +82,21 @@ export function IconSetting({size} : {size: number}) {
      return (
         <IconButton>
           <SettingsIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+        </IconButton>
+     );
+}
+export function DeleteBin({size} : {size: number}) {
+     return (
+        <IconButton>
+          <DeleteIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+        </IconButton>
+     );
+}
+// edit icon with background hover
+export function Edit({size} : {size: number}) {
+     return (
+        <IconButton>
+          <CreateIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
         </IconButton>
      );
 }

@@ -42,6 +42,12 @@ const ProfileSchema: Schema<IUserProfile> = new Schema<IUserProfile>({
          type: mongoose.Schema.Types.ObjectId,
          ref: "User",
     },
+    interest:[
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'interests',
+        },
+      ],
     wallet: {
         type: Number,
         default: 0,

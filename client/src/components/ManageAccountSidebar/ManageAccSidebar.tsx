@@ -11,7 +11,8 @@ import {
      HiViewBoards,
 } from "react-icons/hi";
 import { FaRegUserCircle } from "react-icons/fa";
-import { MdOutlineSecurity ,MdOutlineInterests } from "react-icons/md";
+import { MdOutlineSecurity, MdOutlineInterests } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export default function ManageAccSidebar() {
      return (
@@ -28,7 +29,9 @@ export default function ManageAccSidebar() {
                               Password & Security
                          </Sidebar.Item>
                          <Sidebar.Item icon={MdOutlineInterests}>
-                              Preferences
+                              <Link to="/manage-account/preference">
+                                   Preferences
+                              </Link>
                          </Sidebar.Item>
                          <Sidebar.Item href="#" icon={HiUser}>
                               Account

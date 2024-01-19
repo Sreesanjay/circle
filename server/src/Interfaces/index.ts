@@ -24,6 +24,7 @@ export interface IUserProfile extends Document {
      account_type : string;
      cover_img: string;
      wallet: number;
+     interest : ObjectId[]
 }
 
 export interface IInterest extends Document {

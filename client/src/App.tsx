@@ -11,6 +11,7 @@ import EditProfile from "./pages/EditProfile/EditProfile";
 import HomePage from "./pages/Home/HomePage";
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 import Interest from "./pages/Admin/Interest/Interest";
+import Preference from "./pages/Preference/Preference";
 const UserProfilePage = lazy(
      () => import("./pages/userProfile/UserProfilePage")
 );
@@ -37,8 +38,12 @@ function App() {
                                    element={<UserProfilePage />}
                               />
                               <Route
-                                   path="/profile/manage-account"
+                                   path="/manage-account"
                                    element={<EditProfile />}
+                              />
+                              <Route
+                                   path="/manage-account/preference"
+                                   element={<Preference/>}
                               />
                          </Route>
                          <Route

@@ -25,7 +25,7 @@ export default function UserHeaderProfile() {
                     My profile
                </div>
               
-               <div className="value mt-3" onClick={()=>navigate('/profile/manage-account')}>
+               <div className="value mt-3" onClick={()=>navigate('/manage-account')}>
                     <IconSetting size={25} />
                     Manage Account
                </div>

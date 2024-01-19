@@ -9,7 +9,7 @@ import { EditPenIcon } from "../../assets/Icons";
 import { Alert, Label, Radio, TextInput, Textarea } from "flowbite-react";
 import { updateProfile } from "../../services/userService";
 import Loader from "../../components/Loader/Loader";
-import { resetUser } from "../../features/user/UserSlice";
+import { resetUser } from "../../features/user/userSlice";
 import { toast } from "react-toastify";
 export type IProfileInp = {
      username: string;

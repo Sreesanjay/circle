@@ -2,6 +2,8 @@ import { Router } from "express";
 import { getUserProfile, updateCoverImg, deleteCoverImg, updateProfileImg, deleteProfileImg, updateProfile } from "../controllers/userProfileController";
 import { protect } from "../middlewares/authMiddleware";
 const router: Router = Router();
+
+
 router.route('/')
 .get(protect, getUserProfile)
 .put(protect,updateProfile)

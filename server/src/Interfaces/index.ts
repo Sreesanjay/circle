@@ -26,3 +26,9 @@ export interface IUserProfile extends Document {
      wallet: number;
 }
 
+export interface IInterest extends Document {
+     interest : string,
+     image : string,
+     discription : string
+}
+

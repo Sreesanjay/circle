@@ -46,6 +46,7 @@ export default function Singin() {
                          dispatch(signin(credentials));
                     }
                })();
+               setIsSubmit(false)
           }
      }, [isSubmit, credentials, dispatch, formError]);
 
@@ -64,6 +65,7 @@ export default function Singin() {
                     navigate("/admin");
                }
           }
+          
      }, [
           isSuccess,
           user?.role,

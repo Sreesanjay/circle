@@ -7,6 +7,7 @@ import { useState } from "react";
 import NewInterest from "../../../components/Modal/NewInterest";
 export default function Interest() {
     const [showModal, setShowModal] = useState(false)
+    
     return (
         <div className="">
                <NewInterest showModal={showModal} setShowModal={setShowModal}/>

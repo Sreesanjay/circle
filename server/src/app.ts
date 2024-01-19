@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import {errorHandler, notFound} from "./middlewares/errorHandler";
 import "dotenv/config";
 import userRouter from "./routes/userRoute"
+import adminRouter from './routes/adminRoute'
 
 const app = express();
 const corsConfig = {
@@ -20,6 +21,7 @@ app.use(cors(corsConfig))
 
 //routes
 app.use('/api' ,userRouter)
+app.use('/api/admin' ,adminRouter)
 
 
 //error handler

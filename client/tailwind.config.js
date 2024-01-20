@@ -1,17 +1,20 @@
+/* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html",
-  "./src/**/*.{js,ts,jsx,tsx}"],
+    "./node_modules/flowbite-react/lib/**/*.{js,ts}",
+    "./src/**/*.{ts,tsx}",],
   theme: {
     extend: {
-      colors : {
-        "primary" : "#D05DD2",
-        ["primary-hover"] : "#C25DD2",
-        "secondary" : "#FFFFFF",
-        "tertiary" : "#E2E3F4"
+      colors: {
+        // "primary": "#D05DD2",
+        "primary": "#cc5de8",
+        ["primary-hover"]: "#C25DD2",
+        "secondary": "#FFFFFF",
+        "tertiary": "#E2E3F4"
       }
     },
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
 }
 

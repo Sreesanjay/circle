@@ -46,6 +46,7 @@ export default function Singin() {
                          dispatch(signin(credentials));
                     }
                })();
+               setIsSubmit(false)
           }
      }, [isSubmit, credentials, dispatch, formError]);
 
@@ -60,7 +61,11 @@ export default function Singin() {
                if (user?.role === "USER") {
                     navigate("/");
                }
+               else if(user?.role === "ADMIN"){
+                    navigate("/admin");
+               }
           }
+          
      }, [
           isSuccess,
           user?.role,

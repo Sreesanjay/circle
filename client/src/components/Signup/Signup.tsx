@@ -12,6 +12,9 @@ import "./Signup.css";
 import { signup } from "../../services/authService";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
 import Loader from "../Loader/Loader";
+import SignupOtp from "../Modal/SignupOtp";
+import API from "../../api";
+import { AxiosError } from "axios";
 
 export type UserData = {
      email: string;
@@ -20,6 +23,8 @@ export type UserData = {
 };
 
 const Signup = () => {
+     const [openModal, setOpenModal] = useState(false);
+     const [verifyMail, setVerifyMail] = useState(false);
      const [userData, setUserData] = useState<UserData>({
           email: "",
           password: "",
@@ -43,6 +48,36 @@ const Signup = () => {
           setUserData({ ...userData, [name]: value });
      }
 
+     useEffect(() => {
+          (async () => {
+               if (verifyMail) {
+                    if (
+                         !formError.email &&
+                         !formError.username &&
+                         !formError.password
+                    ) {
+                         try {
+                              const response = await API.post("/verify-mail", {
+                                   email: userData.email,
+                              });
+                              setVerifyMail(false);
+                              if (!response.data.exists) {
+                                   setOpenModal(true);
+                              } else {
+                                   toast.error("Email already exists");
+                              }
+                         } catch (error) {
+                              setVerifyMail(false);
+                              const err = error as AxiosError<{
+                                   message?: string;
+                              }>;
+                              toast.error(err.response?.data.message);
+                         }
+                    }
+               }
+          })();
+     }, [verifyMail, formError, userData]);
+
      function handleSubmit() {
           setFormError({
                ...formError,
@@ -50,7 +85,7 @@ const Signup = () => {
                username: validate("username", userData.username),
                password: validate("password", userData.password),
           });
-          setIsSubmit(true);
+          setVerifyMail(true);
      }
 
      useEffect(() => {
@@ -62,6 +97,7 @@ const Signup = () => {
                          !formError.password
                     ) {
                          dispatch(signup(userData));
+                         setIsSubmit(false);
                     }
                })();
           }
@@ -91,6 +127,12 @@ const Signup = () => {
 
      return (
           <>
+               <SignupOtp
+                    openModal={openModal}
+                    setOpenModal={setOpenModal}
+                    setIsSubmit={setIsSubmit}
+                    email={userData.email}
+               />
                {isLoading ? (
                     <Loader />
                ) : (
@@ -102,7 +144,6 @@ const Signup = () => {
                                    alt="signup"
                                    className="signup-img absolute sm:bottom-20 md:bottom-10 md:right-15"
                               />
-                            
                          </div>
 
                          <div className="right-area md:w-1/2 flex justify-center items-center">

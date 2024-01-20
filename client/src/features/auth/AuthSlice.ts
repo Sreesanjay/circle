@@ -1,13 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signup, googleAuth, signin } from "../../services/authService";
+import { signup, googleAuth, signin} from "../../services/authService";
 
 import Cookies from "js-cookie";
+// import { toast } from "react-toastify";
 
 export type user = {
      _id: string;
      email: string;
-     username: string;
-     profile_img: string;
      role: string;
 };
 interface AuthState {
@@ -122,6 +121,7 @@ export const authSlice = createSlice({
                     state.errorMessage = error?.message;
                     state.status = error?.status;
                })
+
      },
 });
 

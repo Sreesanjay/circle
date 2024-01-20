@@ -6,22 +6,40 @@ interface Report {
 }
 
 export interface IUser extends Document {
-     username: string;
      email: string;
      password: string;
      role: string;
      wallet: number;
-     profile_img : string;
      is_blocked : boolean;
-     user_profile : ObjectId
 }
 export interface IUserProfile extends Document {
+     user_id : ObjectId
      fullname: string;
+     username: string;
+     profile_img : string;
      gender: string;
      bio: string;
-     profile_img: string;
      reports: Report[];
      is_premium : boolean;
      account_type : string;
+     cover_img: string;
+     wallet: number;
+     interest : ObjectId[]
 }
 
+export interface IInterest extends Document {
+     interest : string,
+     image : string,
+     discription : string
+}
+export interface IOtp extends Document {
+     email : string;
+     otp : string;
+     createdAt:Date
+}
+
+export interface IMailOptions {
+     from : string;
+     to : string;
+     text : string;
+}

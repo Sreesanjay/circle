@@ -1,9 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 import API from "../api";
 import { UserData } from "../components/Signup/Signup";
-import { AxiosError } from "axios";
-
 export const signup = createAsyncThunk(
      "auth/signup",
      async (userData: UserData, thunkAPI) => {
@@ -16,7 +15,7 @@ export const signup = createAsyncThunk(
                }>
                const payload = {
                     message: err.response?.data?.message,
-                    status :err.response?.status
+                    status: err.response?.status
                };
                return thunkAPI.rejectWithValue(payload);
           }
@@ -29,7 +28,7 @@ export const googleAuth = createAsyncThunk(
      "auth/googleAuth",
      async (credential: string, thunkAPI) => {
           try {
-               const response = await API.post("/google-auth", {credential});
+               const response = await API.post("/google-auth", { credential });
                return response.data;
           } catch (error) {
                const err = error as AxiosError<{
@@ -45,9 +44,9 @@ export const googleAuth = createAsyncThunk(
      }
 );
 
-interface Credentials{
-     email : string;
-     password : string;
+interface Credentials {
+     email: string;
+     password: string;
 }
 export const signin = createAsyncThunk(
      "auth/signin",

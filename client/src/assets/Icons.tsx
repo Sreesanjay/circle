@@ -3,7 +3,15 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import PortraitIcon from '@mui/icons-material/Portrait';
+import SettingsIcon from '@mui/icons-material/Settings';
+import GridViewIcon from '@mui/icons-material/GridView';
 import { IconButton } from "@mui/material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CreateIcon from '@mui/icons-material/Create';
 import { useEffect, useState } from "react";
 export function Notification() {
      return (
@@ -19,6 +27,13 @@ export function HomeIcon() {
      return (
           <IconButton>
                <HomeOutlinedIcon sx={{ fontSize: 35, color : '#D05DD2' }} />
+          </IconButton>
+     );
+}
+export function AddIcon({size} : {size: number}) {
+     return (
+          <IconButton>
+               <AddCircleIcon sx={{ fontSize:size, color : '#D05DD2' }} />
           </IconButton>
      );
 }
@@ -63,10 +78,57 @@ export function ProfileIconWithText({ email, size }: ProfileIconWithTextProps) {
 }
 
 
-export default function UserIcon({size} : {size: number}) {
+export function UserIcon({size} : {size: number}) {
      return (
         <IconButton>
           <AccountCircleOutlinedIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
         </IconButton>
      );
 }
+
+export function IconSetting({size} : {size: number}) {
+     return (
+        <IconButton>
+          <SettingsIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+        </IconButton>
+     );
+}
+export function DeleteBin({size} : {size: number}) {
+     return (
+        <IconButton>
+          <DeleteIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+        </IconButton>
+     );
+}
+// edit icon with background hover
+export function Edit({size} : {size: number}) {
+     return (
+        <IconButton>
+          <CreateIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+        </IconButton>
+     );
+}
+export function EditPenIcon({size} : {size: number}) {
+     return (
+          <EditIcon sx={{ fontSize: size, color : '#000000' }}/>
+     );
+}
+
+//profile icon 
+export  function Profile({size} : {size: number}) {
+     return (
+          <PortraitIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+     );
+}
+export  function PostIcon({size} : {size: number}) {
+     return (
+          <GridViewIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+     );
+}
+export  function SavedIcon({size} : {size: number}) {
+     return (
+          <BookmarkBorderIcon sx={{ fontSize: size, color : '#D05DD2' }}/>
+     );
+}
+
+export default null;

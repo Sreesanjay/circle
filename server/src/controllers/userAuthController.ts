@@ -4,13 +4,82 @@ import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
 import generateToken from "../util/generateJwt";
 import User from "../models/userModel";
-import { IUser } from "../Interfaces";
+import OTP from "../models/otpSchema"
+import UserProfile from "../models/userProfile"
+import { IUser, IUserProfile } from "../Interfaces";
 import generateUsername from "../util/generateUsername";
+import generateFourDigitOTP from "../util/generateOtp";
+import { sendMail } from "../config/nodeMailer";
 
 interface JwtPayload {
      email: string;
      given_name: string;
 }
+export const verifyMail: RequestHandler = asyncHandler(
+     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+          if(!req.body.email) {
+               res.status(400)
+               return next(Error("Invalid email address"))
+          }
+          const user = await User.findOne({ email: req.body.email });
+          if(user){
+
+               res.status(200).json({
+                    status: 'OK',
+                    message:"email exist",
+                    exists : true
+               })
+          }else{
+               const otp = await generateFourDigitOTP();
+               const salt = await bcrypt.genSalt(10);
+               const hashedOtp = await bcrypt.hash(otp.toString(), salt);
+               await OTP.updateOne(
+                    { email: req.body.email },
+                    { $set: { email:req.body.email , otp: hashedOtp } },
+                    { upsert: true }
+               );
+               const mailOptions = {
+                    from:"sreesanjay7592sachu@gmail.com",
+                    to:req.body.email as string,
+                    subject: "Registration to Circle",
+                    text: `Your otp for registration is ${otp}`,
+               }
+               sendMail(mailOptions);
+
+               res.status(201).json({
+                    status:"created",
+                    message:"OTP send successfully",
+               })
+          }
+     })
+
+export const verifyOtp: RequestHandler = asyncHandler(
+     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+          if(!req.body.otp) {
+               res.status(400)
+               return next(Error("Invalid otp"))
+          }
+          const otp = await OTP.findOne({ email: req.body.email });
+          if(otp){
+               const match = await bcrypt.compare(req.body.otp, otp.otp);
+               if(match){
+                    res.status(200).json({
+                         status:"ok",
+                         message: "otp matched",
+                         matchOtp :true
+                    })
+               }else{
+                    res.status(200).json({
+                         status:"ok",
+                         message: "Wrong otp",
+                         matchOtp : false
+                    })
+               }
+          }else{
+              res.status(404);
+              next(Error("Email not found"))
+          }
+     })
 
 /**
  * @desc User registration and authentication
@@ -36,21 +105,24 @@ export const signup: RequestHandler = asyncHandler(
                return next(Error("Username Already exists"));
           }
 
-          const user = new User({ email, username, password });
+          const user = new User({ email, password });
           if (user) {
                const newUser: IUser = await user.save();
-               const token = generateToken(newUser.email, newUser._id);
-               res.status(201).json({
-                    status: "created",
-                    message: "User registered successfully",
-                    user: {
-                         _id: newUser._id,
-                         username: newUser.username,
-                         email: newUser.email,
-                         role: newUser.role,
-                    },
-                    token,
-               });
+               const userProfile = new UserProfile({ username, user_id: newUser._id })
+               const newUserProfile: IUserProfile = await userProfile.save();
+               if (newUserProfile) {
+                    const token = generateToken(newUser.email, newUser._id);
+                    res.status(201).json({
+                         status: "created",
+                         message: "User registered successfully",
+                         user: {
+                              _id: newUser._id,
+                              email: newUser.email,
+                              role: newUser.role
+                         },
+                         token,
+                    });
+               }
           }
      }
 );
@@ -69,45 +141,49 @@ export const googleAuth: RequestHandler = asyncHandler(
                return next(Error("Invalid credentials"));
           }
 
-          const { email}: JwtPayload = jwtDecode(credential);
+          const { email }: JwtPayload = jwtDecode(credential);
           const existingUser = await User.findOne({ email: email });
 
           if (existingUser) {
+               if (existingUser.password) {
+                    return next(Error("Invalid Email"))
+               }
                const token = generateToken(
                     existingUser.email,
                     existingUser._id
                );
                res.status(201).json({
                     status: "created",
-                    message: "User registered successfully",
+                    message: "User loged in successfully",
                     user: {
                          _id: existingUser._id,
-                         username: existingUser.username,
                          email: existingUser.email,
-                         role: existingUser.role,
+                         role: existingUser.role
                     },
                     token,
                });
           } else {
-               const username =await generateUsername();
+               const username = await generateUsername();
                const user = new User({
                     email: email,
-                    username: username,
                });
                if (user) {
                     const newUser: IUser = await user.save();
-                    const token = generateToken(newUser.email, newUser._id);
-                    res.status(201).json({
-                         status: "created",
-                         message: "User registered successfully",
-                         user: {
-                              _id: newUser._id,
-                              username: newUser.username,
-                              email: newUser.email,
-                              role: newUser.role,
-                         },
-                         token,
-                    });
+                    const userProfile = new UserProfile({ username, user_id: newUser._id })
+                    const newUserProfile: IUserProfile = await userProfile.save();
+                    if (newUserProfile) {
+                         const token = generateToken(newUser.email, newUser._id);
+                         res.status(201).json({
+                              status: "created",
+                              message: "User registered successfully",
+                              user: {
+                                   _id: newUser._id,
+                                   email: newUser.email,
+                                   role: newUser.role
+                              },
+                              token,
+                         });
+                    }
                }
           }
      }
@@ -130,17 +206,16 @@ export const signin = asyncHandler(
           if (match) {
                const token = generateToken(user.email, user._id);
                res.status(201).json({
-                    status: "created",
-                    message: "User registered successfully",
+                    status: "ok",
+                    message: "User loged in successfully",
                     user: {
                          _id: user._id,
-                         username: user.username,
                          email: user.email,
-                         role: user.role,
+                         role: user.role
                     },
                     token,
                });
-          }else{
+          } else {
                res.status(401);
                next(Error("Email or password not valid"));
           }

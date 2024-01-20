@@ -10,9 +10,6 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
      password: {
           type: String
      },
-     username : {
-          type: String,
-     },
      role: {
           type: String,
           enum: ["ADMIN", "USER"],
@@ -21,18 +18,8 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
      is_blocked : {
           type : Boolean,
           default: false,
-     },
-     wallet: {
-          type: Number,
-          default: 0,
-     },
-     profile_img:{
-          type : String
-     },
-     user_profile: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "UserProfile",
-     },
+     }
+    
 },{timestamps : true});
 
 userSchema.pre("save", async function (next){

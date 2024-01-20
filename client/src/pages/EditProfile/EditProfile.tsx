@@ -81,13 +81,13 @@ export default function EditProfile() {
                {isLoading ? (
                     <Loader />
                ) : (
-                    <section className="manage-account flex">
+                    <section className="manage-account flex flex-col">
                          <ManageAccSidebar />
-                         <div className="edit-profile p-3 w-screen">
+                         <div className="edit-profile p-3  sm:ms-64     ">
                               <h1 className="text-lg font-medium mb-5">
                                    Edit profile
                               </h1>
-                              <div className="container grid grid-cols-6">
+                              <div className="container flex flex-col lg:grid lg:grid-cols-6">
                                    <div className="profile-change col-span-2 p-5">
                                         <UploadProfileImg
                                              showUploadProfile={
@@ -98,7 +98,7 @@ export default function EditProfile() {
                                              }
                                         />
                                         <div
-                                             className="profile-img relative"
+                                             className="profile-img relative flex flex-col items-center"
                                              onMouseOverCapture={() =>
                                                   setshowEditProfIcon("block")
                                              }
@@ -122,13 +122,13 @@ export default function EditProfile() {
                                                             userProfile?.profile_img
                                                        }
                                                        alt=""
-                                                       className="w-full shadow-lg rounded-md"
+                                                       className="w-72 lg:w-full shadow-lg rounded-md"
                                                   />
                                              ) : (
                                                   <img
                                                        src="https://static.vecteezy.com/system/resources/thumbnails/010/260/479/small/default-avatar-profile-icon-of-social-media-user-in-clipart-style-vector.jpg"
                                                        alt=""
-                                                       className="w-full shadow-lg rounded-md"
+                                                       className="w-20 lg:w-full shadow-lg rounded-md"
                                                   />
                                              )}
                                              <h1 className="text-center mt-3 font-medium">Profile Image</h1>
@@ -164,7 +164,7 @@ export default function EditProfile() {
                                                   className="text-field"
                                              />
                                         </div>
-                                        <div className="mt-5">
+                                        <div className="mt-5 w-full">
                                              <div className="mb-2 block">
                                                   <Label
                                                        htmlFor="username"

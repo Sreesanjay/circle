@@ -32,4 +32,14 @@ export interface IInterest extends Document {
      image : string,
      discription : string
 }
+export interface IOtp extends Document {
+     email : string;
+     otp : string;
+     createdAt:Date
+}
 
+export interface IMailOptions {
+     from : string;
+     to : string;
+     text : string;
+}

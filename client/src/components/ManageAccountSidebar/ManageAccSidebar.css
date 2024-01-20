@@ -1,6 +1,6 @@
-.manage-acc-sidebar{
+/* .manage-acc-sidebar{
     position: fixed;
-}
+} */
 .manage-acc-sidebar .sidebar{
     height: calc(100vh - 70px)
 }

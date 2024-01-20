@@ -18,7 +18,7 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
      is_blocked : {
           type : Boolean,
           default: false,
-     },
+     }
     
 },{timestamps : true});
 

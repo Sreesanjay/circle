@@ -4,14 +4,82 @@ import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
 import generateToken from "../util/generateJwt";
 import User from "../models/userModel";
+import OTP from "../models/otpSchema"
 import UserProfile from "../models/userProfile"
 import { IUser, IUserProfile } from "../Interfaces";
 import generateUsername from "../util/generateUsername";
+import generateFourDigitOTP from "../util/generateOtp";
+import { sendMail } from "../config/nodeMailer";
 
 interface JwtPayload {
      email: string;
      given_name: string;
 }
+export const verifyMail: RequestHandler = asyncHandler(
+     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+          if(!req.body.email) {
+               res.status(400)
+               return next(Error("Invalid email address"))
+          }
+          const user = await User.findOne({ email: req.body.email });
+          if(user){
+
+               res.status(200).json({
+                    status: 'OK',
+                    message:"email exist",
+                    exists : true
+               })
+          }else{
+               const otp = await generateFourDigitOTP();
+               const salt = await bcrypt.genSalt(10);
+               const hashedOtp = await bcrypt.hash(otp.toString(), salt);
+               await OTP.updateOne(
+                    { email: req.body.email },
+                    { $set: { email:req.body.email , otp: hashedOtp } },
+                    { upsert: true }
+               );
+               const mailOptions = {
+                    from:"sreesanjay7592sachu@gmail.com",
+                    to:req.body.email as string,
+                    subject: "Registration to Circle",
+                    text: `Your otp for registration is ${otp}`,
+               }
+               sendMail(mailOptions);
+
+               res.status(201).json({
+                    status:"created",
+                    message:"OTP send successfully",
+               })
+          }
+     })
+
+export const verifyOtp: RequestHandler = asyncHandler(
+     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+          if(!req.body.otp) {
+               res.status(400)
+               return next(Error("Invalid otp"))
+          }
+          const otp = await OTP.findOne({ email: req.body.email });
+          if(otp){
+               const match = await bcrypt.compare(req.body.otp, otp.otp);
+               if(match){
+                    res.status(200).json({
+                         status:"ok",
+                         message: "otp matched",
+                         matchOtp :true
+                    })
+               }else{
+                    res.status(200).json({
+                         status:"ok",
+                         message: "Wrong otp",
+                         matchOtp : false
+                    })
+               }
+          }else{
+              res.status(404);
+              next(Error("Email not found"))
+          }
+     })
 
 /**
  * @desc User registration and authentication

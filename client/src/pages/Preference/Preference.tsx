@@ -11,11 +11,13 @@ import { useAppSelector } from "../../app/hooks";
 import MyInterest from "../../components/MyInterest/MyInterest";
 import { IInterest } from "../../types";
 import { AddIcon } from "../../assets/Icons";
+import AddInterest from "../../components/Modal/AddInterest";
 //preference page
 export default function Preference() {
      const [myInterest, setmyInterest] = useState([]);
      const [isLoading, setIsLoading] = useState(false);
      const { userProfile } = useAppSelector((state) => state.user);
+     const [openAddInterest, setOpenAddInterest] = useState(false);
      //fetching all the interests
      useEffect(() => {
           (async () => {
@@ -30,27 +32,28 @@ export default function Preference() {
                     );
                     setIsLoading(false);
                     if (response.data) {
+                         console.log(response.data);
                          setmyInterest(response.data.interest);
                     }
                } catch (error) {
                     setIsLoading(false);
                     const err = error as AxiosError<{
                          message?: string;
-                         status?: string;
+                         dfstatus?: string;
                     }>;
                     toast.error(err.message);
                }
           })();
-     }, [userProfile]);
+     }, [userProfile, openAddInterest]);
 
      return (
           <>
                {isLoading ? (
                     <Loader />
                ) : (
-                    <section className="preference-container">
+                    <section className="preference-container flex flex-col">
                          <ManageAccSidebar />
-                         <div className="preference p-5">
+                         <div className="preference p-5 m-0 sm:ms-64">
                               <Breadcrumb aria-label="Default breadcrumb example">
                                    <Breadcrumb.Item
                                         href="#"
@@ -62,15 +65,25 @@ export default function Preference() {
 
                               <div className="text-lg my-5 font-medium flex items-center justify-between">
                                    My Interest
-                                   <div>
+                                   <div
+                                        onClick={() => setOpenAddInterest(true)}
+                                   >
                                         <AddIcon size={58} />
                                    </div>
+                                   <AddInterest
+                                        openModal={openAddInterest}
+                                        setOpenModal={setOpenAddInterest}
+                                        myInterest={myInterest}
+                                   />
                               </div>
-                              <section className="my-interest">
+                              <section className="my-interest flex gap-3 flex-wrap">
                                    {myInterest.map((item: IInterest) => {
                                         if (item) {
                                              return (
-                                                  <MyInterest interest={item} />
+                                                  <MyInterest
+                                                       interest={item}
+                                                       key={item._id}
+                                                  />
                                              );
                                         }
                                    })}

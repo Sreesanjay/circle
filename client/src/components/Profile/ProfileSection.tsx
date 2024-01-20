@@ -13,24 +13,24 @@ const {userProfile} = useAppSelector((state) => state.user)
             <h1 className="value col-span-1">{userProfile?.fullname}</h1>
           </div>
           
-          <div className="wrapper grid grid-cols-2 mb-4">
-            <h1 className="key font-medium col-span-1">Email</h1>
-            <h1 className="value col-span-1">{user?.email}</h1>
+          <div className="wrapper grid grid-cols-4 mb-4">
+            <h1 className="key font-medium col-span-4 sm:col-span-1">Email</h1>
+            <h1 className="value sm:col-span-3 text-sm">{user?.email}</h1>
           </div>
           
-          <div className="wrapper grid grid-cols-2 mb-4">
-            <h1 className="key font-medium col-span-1">Username</h1>
-            <h1 className="value col-span-1">{userProfile?.username}</h1>
+          <div className="wrapper grid grid-cols-4 mb-4">
+            <h1 className="key font-medium col-span-4 sm:col-span-1">Username</h1>
+            <h1 className="value sm:col-span-3 text-sm">{userProfile?.username}</h1>
           </div>
 
-          <div className="wrapper grid grid-cols-2 mb-4">
-            <h1 className="key font-medium col-span-1">Gender</h1>
-            <h1 className="value col-span-1">{userProfile?.gender}</h1>
+          <div className="wrapper grid grid-cols-4 mb-4">
+            <h1 className="key font-medium col-span-4 sm:col-span-1">Gender</h1>
+            <h1 className="value sm:col-span-3 text-sm">{userProfile?.gender}</h1>
           </div>
           
           <div className="wrapper mb-4">
             <h1 className="key font-medium mb-2">Bio</h1>
-            <h1 className="value">{userProfile?.bio}</h1>
+            <h1 className="value text-sm">{userProfile?.bio}</h1>
           </div>
           
       </div>

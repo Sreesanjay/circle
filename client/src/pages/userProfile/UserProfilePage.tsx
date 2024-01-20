@@ -6,7 +6,7 @@ import { useAppSelector, useAppDispatch } from "../../app/hooks";
 // import { getUserProfile } from "../../services/userService";
 import Loader from "../../components/Loader/Loader";
 import "./UserProfile.css";
-import { resetUser } from "../../features/user/UserSlice";
+
 import { Profile, PostIcon, SavedIcon, EditPenIcon } from "../../assets/Icons";
 import CoverImageUpload from "../../components/Modal/CoverUpload";
 import UploadProfileImg from "../../components/Modal/ProfileUpload";
@@ -14,6 +14,7 @@ import UploadProfileImg from "../../components/Modal/ProfileUpload";
 import FriendList from "../../components/FriendList/FriendList";
 import CloseFriends from "../../components/CloseFriend/CloseFriends";
 import ProfileSection from "../../components/Profile/ProfileSection";
+import { resetUser } from "../../features/user/userSlice";
 // import { getUserProfile } from "../../services/userService";
 
 export default function UserProfilePage() {
@@ -120,16 +121,16 @@ export default function UserProfilePage() {
                                         {userProfile?.username}
                                    </h1>
                               </div>
-                              <div className="right-nav grow ps-14 flex">
-                                   <div className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 me-9">
+                              <div className="right-nav grow ps-7 sm:ps-14 flex">
+                                   <div className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9">
                                         <Profile size={28} />
                                         <h3 className="">Profile</h3>
                                    </div>
-                                   <div className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 me-9">
+                                   <div className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9">
                                         <PostIcon size={28} />
                                         <h3 className="">Posts</h3>
                                    </div>
-                                   <div className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 me-9">
+                                   <div className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9">
                                         <SavedIcon size={28} />
                                         <h3 className="">Saved</h3>
                                    </div>

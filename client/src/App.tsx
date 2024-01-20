@@ -7,11 +7,11 @@ import Loader from "./components/Loader/Loader";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import IsAuthenticated from "./components/Route/IsAuthenticated";
 import Header from "./pages/user/Header";
-import EditProfile from "./pages/EditProfile/EditProfile";
-import HomePage from "./pages/Home/HomePage";
-import Dashboard from "./pages/Admin/Dashboard/Dashboard";
-import Interest from "./pages/Admin/Interest/Interest";
-import Preference from "./pages/Preference/Preference";
+const EditProfile = lazy(() => import("./pages/EditProfile/EditProfile"));
+const HomePage = lazy(() => import("./pages/Home/HomePage"));
+const Dashboard = lazy(() => import( "./pages/Admin/Dashboard/Dashboard"));
+const Interest = lazy(() => import("./pages/Admin/Interest/Interest"));
+const Preference = lazy(() => import("./pages/Preference/Preference"));
 const UserProfilePage = lazy(
      () => import("./pages/userProfile/UserProfilePage")
 );
@@ -19,7 +19,6 @@ const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 
 function App() {
-     console.log("reloaded");
      return (
           <>
                <Header />
@@ -43,15 +42,17 @@ function App() {
                               />
                               <Route
                                    path="/manage-account/preference"
-                                   element={<Preference/>}
+                                   element={<Preference />}
                               />
                          </Route>
                          <Route
                               element={<ProtectedRoute allowedRole={"ADMIN"} />}
                          >
-                              <Route path="/admin" element={<Dashboard/>} />
-                              <Route path="/admin/interest" element={<Interest/>} />
-                              
+                              <Route path="/admin" element={<Dashboard />} />
+                              <Route
+                                   path="/admin/interest"
+                                   element={<Interest />}
+                              />
                          </Route>
                     </Routes>
                </Suspense>

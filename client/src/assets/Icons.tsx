@@ -8,6 +8,7 @@ import PortraitIcon from '@mui/icons-material/Portrait';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GridViewIcon from '@mui/icons-material/GridView';
 import { IconButton } from "@mui/material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CreateIcon from '@mui/icons-material/Create';
@@ -26,6 +27,13 @@ export function HomeIcon() {
      return (
           <IconButton>
                <HomeOutlinedIcon sx={{ fontSize: 35, color : '#D05DD2' }} />
+          </IconButton>
+     );
+}
+export function AddIcon({size} : {size: number}) {
+     return (
+          <IconButton>
+               <AddCircleIcon sx={{ fontSize:size, color : '#D05DD2' }} />
           </IconButton>
      );
 }

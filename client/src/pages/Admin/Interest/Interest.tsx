@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import NewInterest from "../../../components/Modal/NewInterest";
 import { getAllInterests } from "../../../services/interestService";
 import Loader from "../../../components/Loader/Loader";
-import InterestCard from "../../../components/IntrestCard/InterestCard";
+import InterestCard from "../../../components/InterestCard/InterestCard";
 import { resetInterest } from "../../../features/interest/interestSlice";
 export default function Interest() {
      const [showModal, setShowModal] = useState(false);

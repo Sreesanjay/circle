@@ -12,6 +12,7 @@ export type userProfile = {
     is_premium: boolean;
     account_type: string;
     cover_img: string;
+    interest :string[]
 };
 interface IUserProfile {
     userProfile: userProfile | null;

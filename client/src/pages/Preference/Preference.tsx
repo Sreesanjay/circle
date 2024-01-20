@@ -7,21 +7,30 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import Loader from "../../components/Loader/Loader";
-
+import { useAppSelector } from "../../app/hooks";
+import MyInterest from "../../components/MyInterest/MyInterest";
+import { IInterest } from "../../types";
+import { AddIcon } from "../../assets/Icons";
+//preference page
 export default function Preference() {
-     const [interest, setInterest] = useState();
+     const [myInterest, setmyInterest] = useState([]);
      const [isLoading, setIsLoading] = useState(false);
+     const { userProfile } = useAppSelector((state) => state.user);
      //fetching all the interests
      useEffect(() => {
           (async () => {
                try {
                     setIsLoading(true);
-                    const response = await API.get(`/manage-account/interest`, {
-                         withCredentials: true,
-                    });
+                    const response = await API.post(
+                         `/manage-account/interest`,
+                         { interest: userProfile?.interest },
+                         {
+                              withCredentials: true,
+                         }
+                    );
                     setIsLoading(false);
                     if (response.data) {
-                         setInterest(response.data);
+                         setmyInterest(response.data.interest);
                     }
                } catch (error) {
                     setIsLoading(false);
@@ -32,11 +41,13 @@ export default function Preference() {
                     toast.error(err.message);
                }
           })();
-     }, []);
+     }, [userProfile]);
+
      return (
           <>
-               {
-                isLoading ? <Loader/> :
+               {isLoading ? (
+                    <Loader />
+               ) : (
                     <section className="preference-container">
                          <ManageAccSidebar />
                          <div className="preference p-5">
@@ -49,12 +60,24 @@ export default function Preference() {
                                    </Breadcrumb.Item>
                               </Breadcrumb>
 
-                              <h1 className="text-lg my-5 font-medium">
+                              <div className="text-lg my-5 font-medium flex items-center justify-between">
                                    My Interest
-                              </h1>
+                                   <div>
+                                        <AddIcon size={58} />
+                                   </div>
+                              </div>
+                              <section className="my-interest">
+                                   {myInterest.map((item: IInterest) => {
+                                        if (item) {
+                                             return (
+                                                  <MyInterest interest={item} />
+                                             );
+                                        }
+                                   })}
+                              </section>
                          </div>
                     </section>
-               }
+               )}
           </>
      );
 }

@@ -30,12 +30,13 @@ const ProfileSchema: Schema<IUserProfile> = new Schema<IUserProfile>({
             reason : "string"
         }
     ],
-    is_premium : {
+    verified : {
         type : "boolean",
+        default : false
     },
     account_type : {
         type : "string",
-        enum : ["DEFAULT", "BUSINESS", "CREATER"],
+        enum : ["DEFAULT", "PROFESSIONAL"],
         default : "DEFAULT"
     },
     user_id: {

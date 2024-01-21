@@ -20,11 +20,12 @@ export interface IUserProfile extends Document {
      gender: string;
      bio: string;
      reports: Report[];
-     is_premium : boolean;
      account_type : string;
      cover_img: string;
      wallet: number;
-     interest : ObjectId[]
+     interest : ObjectId[];
+     verified : boolean;
+     user_typs: string;
 }
 
 export interface IInterest extends Document {

@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signup, googleAuth, signin} from "../../services/authService";
+import { signup, googleAuth, signin, passwordReset} from "../../services/authService";
 
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 // import { toast } from "react-toastify";
 
 export type user = {
@@ -112,6 +113,25 @@ export const authSlice = createSlice({
                     }
                })
                .addCase(signin.rejected, (state, action) => {
+                    state.isLoading = false;
+                    state.isError = true;
+                    const error = action.payload as {
+                         message: string;
+                         status: number;
+                    };
+                    state.errorMessage = error?.message;
+                    state.status = error?.status;
+               })
+               //reset password
+               .addCase(passwordReset.pending, (state) => {
+                    state.isLoading = true;
+               })
+               .addCase(passwordReset.fulfilled, (state, action) => {
+                    state.isLoading = false;
+                    state.isSuccess = true;
+                    toast(action.payload.message);
+               })
+               .addCase(passwordReset.rejected, (state, action) => {
                     state.isLoading = false;
                     state.isError = true;
                     const error = action.payload as {

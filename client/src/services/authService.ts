@@ -67,3 +67,23 @@ export const signin = createAsyncThunk(
           }
      }
 );
+
+//reset password
+export const passwordReset = createAsyncThunk(
+     "auth/passwordReset",
+     async (password: { old_password: string, new_password: string }, thunkAPI) => {
+          try {
+               const response = await API.post("/reset-password",  password , { withCredentials: true });
+               return response.data;
+          } catch (error) {
+               const err = error as AxiosError<{
+                    message?: string;
+               }>
+               const payload = {
+                    message: err.response?.data?.message,
+                    status: err.response?.status
+               };
+               return thunkAPI.rejectWithValue(payload);
+          }
+     }
+);

@@ -73,7 +73,7 @@ export const passwordReset = createAsyncThunk(
      "auth/passwordReset",
      async (password: { old_password: string, new_password: string }, thunkAPI) => {
           try {
-               const response = await API.post("/reset-password",  password , { withCredentials: true });
+               const response = await API.post("/manage-account/reset-password",  password , { withCredentials: true });
                return response.data;
           } catch (error) {
                const err = error as AxiosError<{

@@ -7,7 +7,10 @@ import Loader from "./components/Loader/Loader";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import IsAuthenticated from "./components/Route/IsAuthenticated";
 import Header from "./pages/user/Header";
-import PasswordPrivacy from "./pages/PasswordPrivacy/PasswordPrivacy";
+import PasswordPrivacy from "./pages/PasswordSecurity/PasswordPrivacy";
+import FindFriends from "./pages/FindFriends/FindFriends";
+import AddStory from "./pages/AddStory/AddStory";
+import MyStory from "./pages/MyStory/MyStory";
 const EditProfile = lazy(() => import("./pages/EditProfile/EditProfile"));
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const Dashboard = lazy(() => import("./pages/Admin/Dashboard/Dashboard"));
@@ -48,6 +51,18 @@ function App() {
                               <Route
                                    path="/manage-account/password&security"
                                    element={<PasswordPrivacy />}
+                              />
+                              <Route
+                                   path="/find-friends"
+                                   element={<FindFriends />}
+                              />
+                              <Route
+                                   path="/add-story"
+                                   element={<AddStory/>}
+                              />
+                              <Route
+                                   path="/my-story"
+                                   element={<MyStory/>}
                               />
                          </Route>
                          <Route

@@ -1,8 +1,9 @@
 import {Router} from "express";
-import { signup,googleAuth,signin,verifyMail,verifyOtp, resetPassword } from "../controllers/userAuthController";
+import { signup,googleAuth,signin,verifyMail,verifyOtp} from "../controllers/userAuthController";
 import userProfile from "./userProfile";
 import manageAccRoute from "./manageAccRoute";
-import { protect } from "../middlewares/authMiddleware";
+import usersRoute from "./usersRoute";
+import storyRoute from "./storyRoute";
 const router:Router = Router();
 
 router.post('/signup',signup)
@@ -12,5 +13,6 @@ router.post('/verify-otp',verifyOtp)
 router.post('/signin', signin)
 router.use('/profile', userProfile)
 router.use('/manage-account',manageAccRoute)
-router.post('/reset-password',protect, resetPassword)
+router.use('/users',usersRoute)
+router.use('/story',storyRoute)
 export default router;  

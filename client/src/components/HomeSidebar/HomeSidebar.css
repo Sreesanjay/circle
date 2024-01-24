@@ -1,0 +1,7 @@
+.home-sidebar .sidebar{
+    height: calc(100vh - 70px)
+}
+
+.icon svg{
+    color:#cc5de8;
+}

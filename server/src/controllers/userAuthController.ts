@@ -152,8 +152,8 @@ export const googleAuth: RequestHandler = asyncHandler(
                     existingUser.email,
                     existingUser._id
                );
-               res.status(201).json({
-                    status: "created",
+               res.status(200).json({
+                    status: "ok",
                     message: "User loged in successfully",
                     user: {
                          _id: existingUser._id,

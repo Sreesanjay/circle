@@ -39,7 +39,7 @@ export default function Preference() {
                     setIsLoading(false);
                     const err = error as AxiosError<{
                          message?: string;
-                         dfstatus?: string;
+                         status?: string;
                     }>;
                     toast.error(err.message);
                }

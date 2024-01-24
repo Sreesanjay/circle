@@ -15,7 +15,8 @@ import FriendList from "../../components/FriendList/FriendList";
 import CloseFriends from "../../components/CloseFriend/CloseFriends";
 import ProfileSection from "../../components/Profile/ProfileSection";
 import { resetUser } from "../../features/user/userSlice";
-// import { getUserProfile } from "../../services/userService";
+
+
 
 export default function UserProfilePage() {
      const dispatch = useAppDispatch();
@@ -37,6 +38,8 @@ export default function UserProfilePage() {
           }
           dispatch(resetUser());
      }, [isError, errorMessage, isSuccess, userProfile, dispatch]);
+
+    
      function updateProfile() {
           console.log("updateProfile");
      }
@@ -84,7 +87,7 @@ export default function UserProfilePage() {
                                    </div>
                               )}
                          </section>
-                         <section className="header flex flex-col items-center sm:flex-row sm:items-end w-screen border-solid border-2 pb-1">
+                         <section className="header flex flex-col items-center sm:flex-row sm:items-end w-full border-solid border-2 pb-1">
                               <div className="left-area sm:ms-20 pb-2">
                                    <div
                                         className="profile-img relative"
@@ -136,7 +139,7 @@ export default function UserProfilePage() {
                                    </div>
                               </div>
                          </section>
-                         <section className="profile-body bg-slate-50 w-screen px-6 md:grid md:grid-cols-12 pt-5">
+                         <section className="profile-body h-screen w-full px-3 md:grid md:grid-cols-12 pt-5">
                               <div className="left-section col-span-3 px-5 ">
                               <FriendList/>
                               <hr className="my-3"/>

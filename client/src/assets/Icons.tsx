@@ -69,7 +69,7 @@ export function ProfileIconWithText({ email, size }: ProfileIconWithTextProps) {
                          ? "text-2xl"
                          : size === "medium"
                          ? "text-4xl"
-                         : "text-6xl"
+                         :size === 'large'? "text-9xl px-8":null
                } bg-gray-200 hover:bg-gray-300 px-3 rounded-lg w-min`}
           >
                {firstLetter}

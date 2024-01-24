@@ -1,9 +1,14 @@
 import { Modal } from "flowbite-react";
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+     Dispatch,
+     SetStateAction,
+     useCallback,
+     useEffect,
+     useState,
+} from "react";
 import API from "../../api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { userProfile } from "../../features/user/userSlice";
 export default function ConnectionList({
      openModal,
      setOpenModal,
@@ -14,57 +19,57 @@ export default function ConnectionList({
      title: string;
 }) {
      type userList = {
-          username : string;
-          fullName : string;
-          user_id : string;
-          verified : boolean;
-          profile_img : string;
-     }
+          username: string;
+          fullname: string;
+          user_id: string;
+          verified: boolean;
+          profile_img: string;
+     };
      const [users, setUsers] = useState<userList[]>([]);
-     const [searchList, setSearchList] = useState([]);
-     useEffect(() => {
-          if (openModal) {
+     const fetchUserList = useCallback(
+          async (searchKey: string) => {
+               console.log("got request");
                const url =
                     title === "Following"
-                         ? "/users/following"
+                         ? `/users/following?search=${searchKey}`
                          : "/users/followers";
-               (async () => {
-                    try {
-                         const response = await API.get(url, {
-                              withCredentials: true,
-                         });
-                         if (response.data) {
-                              setUsers(response.data.userList);
-                              setSearchList(response.data.userList);
-                         }
-                    } catch (error) {
-                         const err = error as AxiosError<{
-                              message?: string;
-                              status?: string;
-                         }>;
-                         toast.error(err.message);
+               try {
+                    const response = await API.get(url, {
+                         withCredentials: true,
+                    });
+                    if (response.data) {
+                         setUsers(response.data.userList);
                     }
-               })();
+               } catch (error) {
+                    const err = error as AxiosError<{
+                         message?: string;
+                         status?: string;
+                    }>;
+                    toast.error(err.message);
+               }
+          },
+          [title]
+     );
+     useEffect(() => {
+          if (openModal) {
+               fetchUserList("");
           }
-     }, [title, openModal]);
+     }, [openModal, fetchUserList]);
 
-     function handleSearch(e:ChangeEvent<HTMLInputElement>) {
-          if (users.length > 0) {
-               const search = users.filter((item)=>item.username === e.target.value)
-               console.log(typeof(search));
-               setSearchList(search);
-          }
-     }
      return (
           <Modal show={openModal} size="md" onClose={() => setOpenModal(false)}>
                <Modal.Header>
                     <div className="space-y-6 text-center">{title}</div>
                </Modal.Header>
                <Modal.Body>
-                    <input type="text" className="rounded-md w-full" onChange={handleSearch} />
+                    <input
+                         type="text"
+                         className="rounded-md w-full"
+                         onChange={(e) => fetchUserList(e.target.value)}
+                    />
                     <div className="users-list">
-                         {searchList &&
-                              searchList.map((user: userProfile) => {
+                         {users &&
+                              users.map((user: userList) => {
                                    return (
                                         <div className="user-card my-4 bg-gray-100 p-2 rounded-md flex items-center gap-3 justify-between">
                                              <div className="left flex gap-3">

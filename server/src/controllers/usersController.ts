@@ -165,10 +165,23 @@ export const unFollow: RequestHandler = asyncHandler(
  */
 export const getFollowing: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const searchKey = req.query.search;
+        console.log("search=>", searchKey);
         const connection = await Connection.findOne({ user_id: req.user?._id }, { _id: 0, user_id: 0, close_friend: 0 })
         const following = connection?.following
-        const userList = await UserProfile.find({ user_id: { $in: following } }, { user_id: 1, username: 1, verified: 1, profile_img: 1, fullname:1});
+        let userList = await UserProfile.find({ user_id: { $in: following } }, { user_id: 1, username: 1, verified: 1, profile_img: 1, fullname: 1 });
         if (userList) {
+            userList = userList.filter((item) => {
+                return searchKey === ""
+                    ? item
+                    : item.username
+                        .toLowerCase()
+                        .includes(searchKey as string) ||
+                    item.fullname
+                        ?.toLowerCase()
+                        .includes(searchKey as string);
+            })
+            console.log(userList)
             res.status(200).json({
                 status: 'ok',
                 message: 'following details fetched',

@@ -9,6 +9,7 @@ import {
 import API from "../../api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { userList } from "../../types";
 export default function ConnectionList({
      openModal,
      setOpenModal,
@@ -18,17 +19,14 @@ export default function ConnectionList({
      setOpenModal: Dispatch<SetStateAction<boolean>>;
      title: string;
 }) {
-     type userList = {
-          username: string;
-          fullname: string;
-          user_id: string;
-          verified: boolean;
-          profile_img: string;
-     };
+
+
      const [users, setUsers] = useState<userList[]>([]);
+     const [isLoading, setIsLoading] = useState(false)
+
      const fetchUserList = useCallback(
           async (searchKey: string) => {
-               console.log("got request");
+               setIsLoading(true)
                const url =
                     title === "Following"
                          ? `/users/following?search=${searchKey}`
@@ -40,16 +38,19 @@ export default function ConnectionList({
                     if (response.data) {
                          setUsers(response.data.userList);
                     }
+                    setIsLoading(false);
                } catch (error) {
                     const err = error as AxiosError<{
                          message?: string;
                          status?: string;
                     }>;
                     toast.error(err.message);
+                    setIsLoading(false);
                }
           },
           [title]
      );
+
      useEffect(() => {
           if (openModal) {
                fetchUserList("");

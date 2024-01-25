@@ -31,4 +31,10 @@ export interface IStory{
         comment:string
     }]
 }
-
+export interface userList{
+    username: string;
+    fullname: string;
+    user_id: string;
+    verified: boolean;
+    profile_img: string;
+}

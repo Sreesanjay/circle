@@ -1,0 +1,6 @@
+.story-section{
+    overflow-x: scroll;
+}
+.story-section::-webkit-scrollbar {
+    display: none;
+  }

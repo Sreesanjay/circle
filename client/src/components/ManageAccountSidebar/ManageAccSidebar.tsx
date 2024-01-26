@@ -43,9 +43,12 @@ export default function ManageAccSidebar() {
                               Edit Profile
                               </Link>
                          </div>
-                         <Sidebar.Item icon={MdOutlineSecurity}>
+                         <div className="flex items-center p-3 gap-4">
+                              <MdOutlineSecurity />
+                              <Link to="/manage-account/password&security">
                               Password & Security
-                         </Sidebar.Item>
+                              </Link>
+                         </div>
                          <div className="flex items-center p-3 gap-4">
                               <MdOutlineInterests />
                               <Link to="/manage-account/preference">
@@ -62,14 +65,14 @@ export default function ManageAccSidebar() {
                          <Sidebar.Item icon={HiTable}>Sign Up</Sidebar.Item>
                     </Sidebar.ItemGroup>
                     <Sidebar.ItemGroup>
+                         <Sidebar.Item href="#" icon={BiBuoy}>
+                              Professional Account
+                         </Sidebar.Item>
                          <Sidebar.Item href="#" icon={HiChartPie}>
-                              Upgrade to Pro
+                              Subscribers
                          </Sidebar.Item>
                          <Sidebar.Item href="#" icon={HiViewBoards}>
-                              Documentation
-                         </Sidebar.Item>
-                         <Sidebar.Item href="#" icon={BiBuoy}>
-                              Help
+                              Insights
                          </Sidebar.Item>
                     </Sidebar.ItemGroup>
                </Sidebar.Items>

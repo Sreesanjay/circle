@@ -77,6 +77,7 @@ export default function SignupOtp({
                                    value="Please input the OTP that has been sent to you."
                               />
                          </div>
+                         <div className="inputs flex justify-around py-5">
                          <input
                               type="number"
                               size={1}
@@ -151,6 +152,7 @@ export default function SignupOtp({
                                    verifyOtp();
                               }}
                          />
+                         </div>
                     </div>
                </Modal.Body>
           </Modal>

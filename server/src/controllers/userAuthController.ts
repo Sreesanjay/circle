@@ -17,67 +17,67 @@ interface JwtPayload {
 }
 export const verifyMail: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-          if(!req.body.email) {
+          if (!req.body.email) {
                res.status(400)
                return next(Error("Invalid email address"))
           }
           const user = await User.findOne({ email: req.body.email });
-          if(user){
+          if (user) {
 
                res.status(200).json({
                     status: 'OK',
-                    message:"email exist",
-                    exists : true
+                    message: "email exist",
+                    exists: true
                })
-          }else{
+          } else {
                const otp = await generateFourDigitOTP();
                const salt = await bcrypt.genSalt(10);
                const hashedOtp = await bcrypt.hash(otp.toString(), salt);
                await OTP.updateOne(
                     { email: req.body.email },
-                    { $set: { email:req.body.email , otp: hashedOtp } },
+                    { $set: { email: req.body.email, otp: hashedOtp } },
                     { upsert: true }
                );
                const mailOptions = {
-                    from:"sreesanjay7592sachu@gmail.com",
-                    to:req.body.email as string,
+                    from: "sreesanjay7592sachu@gmail.com",
+                    to: req.body.email as string,
                     subject: "Registration to Circle",
                     text: `Your otp for registration is ${otp}`,
                }
                sendMail(mailOptions);
 
                res.status(201).json({
-                    status:"created",
-                    message:"OTP send successfully",
+                    status: "created",
+                    message: "OTP send successfully",
                })
           }
      })
 
 export const verifyOtp: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-          if(!req.body.otp) {
+          if (!req.body.otp) {
                res.status(400)
                return next(Error("Invalid otp"))
           }
           const otp = await OTP.findOne({ email: req.body.email });
-          if(otp){
+          if (otp) {
                const match = await bcrypt.compare(req.body.otp, otp.otp);
-               if(match){
+               if (match) {
                     res.status(200).json({
-                         status:"ok",
+                         status: "ok",
                          message: "otp matched",
-                         matchOtp :true
+                         matchOtp: true
                     })
-               }else{
+               } else {
                     res.status(200).json({
-                         status:"ok",
+                         status: "ok",
                          message: "Wrong otp",
-                         matchOtp : false
+                         matchOtp: false
                     })
                }
-          }else{
-              res.status(404);
-              next(Error("Email not found"))
+          } else {
+               res.status(404);
+               next(Error("Email not found"))
           }
      })
 
@@ -152,8 +152,8 @@ export const googleAuth: RequestHandler = asyncHandler(
                     existingUser.email,
                     existingUser._id
                );
-               res.status(201).json({
-                    status: "created",
+               res.status(200).json({
+                    status: "ok",
                     message: "User loged in successfully",
                     user: {
                          _id: existingUser._id,
@@ -222,3 +222,35 @@ export const signin = asyncHandler(
 
      }
 )
+
+export const resetPassword = asyncHandler(
+     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+          console.log(req.body)
+          const { old_password, new_password } = req.body;
+          if (!old_password || !new_password) {
+               res.status(400);
+               return next(Error("Invlalid Credentials"));
+          }
+          const user = await User.findById(req.user?._id);
+          if (user) {
+               const match = await bcrypt.compare(old_password, user.password)
+               if (!match) {
+                    res.status(406)
+                    return next(Error("Invalid Old Password"));
+               } else {
+                    user.password = new_password;
+                    await user.save();
+                    res.status(200).json({
+                         status: "ok",
+                         message: "Password reset successfully"
+                    })
+               }
+
+          } else {
+               next(Error("server error"))
+          }
+
+     }
+)
+
+

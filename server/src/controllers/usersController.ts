@@ -4,6 +4,13 @@ import UserProfile from "../models/userProfile"
 import Connection from "../models/connectionSchema";
 import { ObjectId } from 'mongodb'
 
+interface IUserList {
+    user_id: {
+        _id: ObjectId,
+        email: string
+    }, username: string, verified: boolean, profile_img: string, fullname: string
+}
+
 /**
  * @desc function for fetching friend suggestions
  * @route GET /api/users
@@ -163,12 +170,7 @@ export const unFollow: RequestHandler = asyncHandler(
  * @route POST /api/users/following
  * @access private
  */
-interface IUserList {
-    user_id: {
-        _id: ObjectId,
-        email: string
-    }, username: string, verified: boolean, profile_img: string, fullname: string
-}
+
 export const getFollowing: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const searchKey = req.query.search;
@@ -184,7 +186,6 @@ export const getFollowing: RequestHandler = asyncHandler(
             profile_img,
             fullname,
         }));
-        console.log(modifiedUserList)
         if (modifiedUserList) {
             modifiedUserList = modifiedUserList.filter((item: { username: string; fullname: string; }) => {
                 return searchKey === ""
@@ -256,7 +257,6 @@ export const getFollowers: RequestHandler = asyncHandler(
                 },
             },
         ])
-        console.log(connection)
         if (connection) {
             let userList = connection?.filter((item) => {
                 return searchKey === ""
@@ -273,6 +273,73 @@ export const getFollowers: RequestHandler = asyncHandler(
                 status: 'ok',
                 message: 'followers details fetched',
                 userList
+            })
+        } else {
+            next(new Error("Server error"))
+        }
+    }
+)
+
+/**
+ * @desc for fetching close friends
+ * @route GET /api/users/close-friends
+ * @access private
+ */
+export const getCloseFriends: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const connection = await Connection.findOne({ user_id: req.user?._id }, { _id: 0, user_id: 0, following: 0 });
+        const closeFriends = connection?.close_friend
+        const userList: IUserList[] = await UserProfile.find({ user_id: { $in: closeFriends } }, { user_id: 1, username: 1, verified: 1, profile_img: 1, fullname: 1 }).populate({ path: 'user_id', select: "email" })
+        if (connection) {
+            res.status(200).json({
+                status: "ok",
+                message: "close friends fetched",
+                userList
+            })
+        } else {
+            next(new Error())
+        }
+    }
+)
+
+/**
+ * @desc function for fetching following details without close friends
+ * @route GET /api/users/get-following
+ * @access private
+ */
+
+export const getFollowingWithoutCloseFriends: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        console.log("request got")
+        const connection = await Connection.aggregate([
+            {
+                $match: {
+                    user_id: req.user?._id
+                }
+            },
+            {
+                $project: {
+                    followingNotInCloseFriends: {
+                        $setDifference: ['$following', '$close_friend'],
+                    },
+                },
+            }
+        ]) 
+        const closeFriends = connection[0]?.followingNotInCloseFriends
+        const userList: IUserList[] = await UserProfile.find({ user_id: { $in: closeFriends } }, { user_id: 1, username: 1, verified: 1, profile_img: 1, fullname: 1 }).populate({ path: 'user_id', select: "email" })
+        const modifiedUserList = userList.map(({ username, verified, user_id, profile_img, fullname }) => ({
+            username,
+            verified,
+            user_id: user_id._id,
+            email: user_id.email,
+            profile_img,
+            fullname,
+        }))
+        if (modifiedUserList) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'following details fetched',
+                userList: modifiedUserList
             })
         } else {
             next(new Error("Server error"))

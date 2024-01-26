@@ -7,7 +7,13 @@ import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import Loader from "../../components/Loader/Loader";
 import "./UserProfile.css";
 
-import { Profile, PostIcon, SavedIcon, EditPenIcon } from "../../assets/Icons";
+import {
+     Profile,
+     PostIcon,
+     SavedIcon,
+     EditPenIcon,
+     AddIcon,
+} from "../../assets/Icons";
 import CoverImageUpload from "../../components/Modal/CoverUpload";
 import UploadProfileImg from "../../components/Modal/ProfileUpload";
 // import { reset } from "../../features/auth/AuthSlice";
@@ -15,8 +21,7 @@ import FriendList from "../../components/FriendList/FriendList";
 import CloseFriends from "../../components/CloseFriend/CloseFriends";
 import ProfileSection from "../../components/Profile/ProfileSection";
 import { resetUser } from "../../features/user/userSlice";
-
-
+import AddCloseFriends from "../../components/Modal/addCloseFriends";
 
 export default function UserProfilePage() {
      const dispatch = useAppDispatch();
@@ -24,6 +29,7 @@ export default function UserProfilePage() {
           useAppSelector((state) => state.user);
 
      const [showModal, setShowModal] = useState(false);
+     const [addCloseFriends, setAddCloseFriends] = useState(false)
      const [showUploadImage, setshowUploadImage] = useState(false);
      const [showUploadProfile, setshowUploadProfile] = useState(false);
      const [showEditProfImgIcon, setshowEditProfIcon] = useState("hidden");
@@ -39,7 +45,6 @@ export default function UserProfilePage() {
           dispatch(resetUser());
      }, [isError, errorMessage, isSuccess, userProfile, dispatch]);
 
-    
      function updateProfile() {
           console.log("updateProfile");
      }
@@ -141,13 +146,21 @@ export default function UserProfilePage() {
                          </section>
                          <section className="profile-body h-screen w-full px-3 md:grid md:grid-cols-12 pt-5">
                               <div className="left-section col-span-3 px-5 ">
-                              <FriendList/>
-                              <hr className="my-3"/>
-                              <h1 className="font-medium text-center mb-3">Close Friends</h1>
-                                   <CloseFriends/>
+                                   <FriendList />
+                                   <hr className="my-3" />
+                                   <div className="flex items-center mb-3 justify-between">
+                                        <h1 className="font-medium text-center">
+                                             Close Friends
+                                        </h1>
+                                        <div onClick={()=>setAddCloseFriends(true)}>
+                                             <AddIcon size={25} />
+                                        </div>
+                                        <AddCloseFriends openModal={addCloseFriends} setOpenModal={setAddCloseFriends}/>
+                                   </div>
+                                   <CloseFriends />
                               </div>
                               <div className="right-section col-span-9">
-                                   <ProfileSection/>
+                                   <ProfileSection />
                               </div>
                          </section>
                     </section>

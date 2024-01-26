@@ -55,6 +55,12 @@ export default function ManageAccSidebar() {
                                    Preferences
                               </Link>
                          </div>
+                         <div className="flex items-center p-3 gap-4">
+                              <MdOutlineInterests />
+                              <Link to="/manage-account/close-friends">
+                                   CloseFriends
+                              </Link>
+                         </div>
                          <Sidebar.Item icon={HiUser}>Account</Sidebar.Item>
                          <Sidebar.Item icon={HiShoppingBag}>
                               Blocked Users

@@ -128,9 +128,9 @@ export default function ConnectionList({
                          />
                          <div className="users-list">
                               {users &&
-                                   users.map((user: userList) => {
+                                   users.map((user: userList, index) => {
                                         return (
-                                             <div className="user-card my-4 bg-gray-100 p-2 rounded-md flex items-center gap-3 justify-between">
+                                             <div className="user-card my-4 bg-gray-100 p-2 rounded-md flex items-center gap-3 justify-between" key={index}>
                                                   <div className="left flex gap-3">
                                                        {user.profile_img ? (
                                                             <img

@@ -11,6 +11,7 @@ import PasswordPrivacy from "./pages/PasswordSecurity/PasswordPrivacy";
 import FindFriends from "./pages/FindFriends/FindFriends";
 import AddStory from "./pages/AddStory/AddStory";
 import MyStory from "./pages/MyStory/MyStory";
+import CloseFriends from "./components/CloseFriend/CloseFriends";
 const EditProfile = lazy(() => import("./pages/EditProfile/EditProfile"));
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const Dashboard = lazy(() => import("./pages/Admin/Dashboard/Dashboard"));
@@ -63,6 +64,10 @@ function App() {
                               <Route
                                    path="/my-story"
                                    element={<MyStory/>}
+                              />
+                              <Route
+                                   path="/manage-account/close-friends"
+                                   element={<CloseFriends/>}
                               />
                          </Route>
                          <Route

@@ -37,4 +37,5 @@ export interface userList{
     user_id: string;
     verified: boolean;
     profile_img: string;
+    email: string;
 }

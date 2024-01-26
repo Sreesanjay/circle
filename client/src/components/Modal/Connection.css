@@ -1,0 +1,3 @@
+.userList::-webkit-scrollbar{
+    display: none;
+}

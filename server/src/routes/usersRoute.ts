@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { protect } from "../middlewares/authMiddleware";
-import { getUserList, addFriend, unFollow,getFollowing } from "../controllers/usersController";
+import { getUserList, addFriend, unFollow,getFollowing,getFollowers } from "../controllers/usersController";
 const router: Router = Router();
 
 router.route('/')
@@ -8,4 +8,5 @@ router.route('/')
     .post(protect, addFriend)
 router.post('/unfollow',protect,unFollow)
 router.get('/following',protect,getFollowing)
+router.get('/followers',protect,getFollowers)
 export default router

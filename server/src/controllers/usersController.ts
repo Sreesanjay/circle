@@ -163,15 +163,30 @@ export const unFollow: RequestHandler = asyncHandler(
  * @route POST /api/users/following
  * @access private
  */
+interface IUserList {
+    user_id: {
+        _id: ObjectId,
+        email: string
+    }, username: string, verified: boolean, profile_img: string, fullname: string
+}
 export const getFollowing: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const searchKey = req.query.search;
-        console.log("search=>", searchKey);
+        const page = typeof req.query.page === 'string' ? parseInt(req.query.page) : 0;
         const connection = await Connection.findOne({ user_id: req.user?._id }, { _id: 0, user_id: 0, close_friend: 0 })
         const following = connection?.following
-        let userList = await UserProfile.find({ user_id: { $in: following } }, { user_id: 1, username: 1, verified: 1, profile_img: 1, fullname: 1 });
-        if (userList) {
-            userList = userList.filter((item) => {
+        const userList: IUserList[] = await UserProfile.find({ user_id: { $in: following } }, { user_id: 1, username: 1, verified: 1, profile_img: 1, fullname: 1 }).populate({ path: 'user_id', select: "email" })
+        let modifiedUserList = userList.map(({ username, verified, user_id, profile_img, fullname }) => ({
+            username,
+            verified,
+            user_id: user_id._id,
+            email: user_id.email,
+            profile_img,
+            fullname,
+        }));
+        console.log(modifiedUserList)
+        if (modifiedUserList) {
+            modifiedUserList = modifiedUserList.filter((item: { username: string; fullname: string; }) => {
                 return searchKey === ""
                     ? item
                     : item.username
@@ -181,10 +196,82 @@ export const getFollowing: RequestHandler = asyncHandler(
                         ?.toLowerCase()
                         .includes(searchKey as string);
             })
-            console.log(userList)
+            modifiedUserList = modifiedUserList.slice(page, page + 10)
             res.status(200).json({
                 status: 'ok',
                 message: 'following details fetched',
+                userList: modifiedUserList
+            })
+        } else {
+            next(new Error("Server error"))
+        }
+    }
+)
+
+/**
+ * @desc function for fetching following details
+ * @route POST /api/users/following
+ * @access private
+ */
+export const getFollowers: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const searchKey = req.query.search;
+        const page = typeof req.query.page === 'string' ? parseInt(req.query.page) : 0;
+        const connection = await Connection.aggregate([
+            {
+                $match: {
+                    following: new ObjectId(req.user?._id)
+                }
+            },
+            {
+                $lookup: {
+                    from: 'userprofiles',
+                    localField: 'user_id',
+                    foreignField: 'user_id',
+                    as: 'userProfile'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user_id',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$user'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$userProfile'
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    user_id: "$userProfile.user_id", username: "$userProfile.username", verified: "$userProfile.verified", profile_img: "$userProfile.profile_img", fullname: "$userProfile.fullname", email: "$user.email"
+                },
+            },
+        ])
+        console.log(connection)
+        if (connection) {
+            let userList = connection?.filter((item) => {
+                return searchKey === ""
+                    ? item
+                    : item.username
+                        .toLowerCase()
+                        .includes(searchKey as string) ||
+                    item.fullname
+                        ?.toLowerCase()
+                        .includes(searchKey as string);
+            })
+            userList = userList.slice(page, page + 10)
+            res.status(200).json({
+                status: 'ok',
+                message: 'followers details fetched',
                 userList
             })
         } else {

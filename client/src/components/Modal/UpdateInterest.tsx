@@ -1,5 +1,5 @@
 import {
-    Alert,
+     Alert,
      Button,
      FileInput,
      Label,
@@ -17,31 +17,36 @@ import {
      useState,
 } from "react";
 import validate from "../../util/formValidate";
-import { newInterest } from "../../services/interestService";
+import { updateInterest } from "../../services/interestService";
 import Loader from "../Loader/Loader";
 import { toast } from "react-toastify";
 import { resetInterest } from "../../features/interest/interestSlice";
 import { IInterest } from "../../types";
 
-export default function NewInterest({
+export default function UpdateInterest({
      showModal,
      setShowModal,
+     interest,
 }: {
      showModal: boolean;
      setShowModal: Dispatch<SetStateAction<boolean>>;
+     interest: IInterest;
 }) {
+
      const dispatch = useAppDispatch();
-     const { isError, isSuccess, isLoading, errorMessage, status } = useAppSelector(
-          (state) => state.interest
-     );
+     const { isError, isSuccess, isLoading, errorMessage, status } =
+          useAppSelector((state) => state.interest);
+
+
      const [formData, setFormData] = useState<IInterest>({
           image: undefined,
-          interest: "",
-          discription: "",
+          interest: interest.interest,
+          discription: interest.discription,
+          _id: interest._id,
      });
+
      const [isSubmit, setIsSubmit] = useState(false);
      const [formError, setFormError] = useState({
-          image: "",
           interest: "",
           discription: "",
      });
@@ -60,21 +65,17 @@ export default function NewInterest({
      function handleSubmit() {
           setFormError({
                ...formData,
-               image: validate("image", formData.image),
                interest: validate("interest", formData.interest),
                discription: validate("discription", formData.discription),
           });
           setIsSubmit(true);
      }
+
+
      useEffect(() => {
           if (isSubmit) {
-               if (
-                    !formError.image &&
-                    !formError.discription &&
-                    !formError.interest
-               ) {
-                    console.log("submited");
-                    dispatch(newInterest(formData));
+               if (!formError.discription && !formError.interest) {
+                    dispatch(updateInterest(formData));
                     setIsSubmit(false);
                }
           }
@@ -82,19 +83,13 @@ export default function NewInterest({
 
      useEffect(() => {
           if (isSuccess) {
-               setFormData({
-                    image: undefined,
-                    interest: "",
-                    discription: "",
-               });
-               dispatch(resetInterest())
+               dispatch(resetInterest());
                setShowModal(false);
           } else if (isError && status !== 409) {
-            console.log(status);
                toast(errorMessage);
-               dispatch(resetInterest())
+               dispatch(resetInterest());
           }
-     }, [isError, setShowModal, dispatch, isSuccess, errorMessage,status]);
+     }, [isError, setShowModal, dispatch, isSuccess, errorMessage, status]);
      return (
           <>
                {isLoading ? (
@@ -138,11 +133,7 @@ export default function NewInterest({
                                                   value="Upload file"
                                              />
                                         </div>
-                                        {formError.image && (
-                                             <span className="text-red-700">
-                                                  {formError.image}
-                                             </span>
-                                        )}
+
                                         <FileInput
                                              id="file-upload"
                                              name="image"

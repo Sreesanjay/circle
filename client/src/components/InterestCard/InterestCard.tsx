@@ -1,13 +1,15 @@
 import "./InterestCard.css";
-import { IInterest } from "../../features/interest/interestSlice";
 import { DeleteBin, Edit } from "../../assets/Icons";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Button, Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { deleteInterest } from "../../services/interestService";
+import UpdateInterest from "../Modal/UpdateInterest";
+import { IInterest } from "../../features/interest/interestSlice";
 export default function InterestCard({ interest }: { interest: IInterest }) {
      const dispatch = useAppDispatch();
+     const [updateInterest, setUpdateInterest] = useState(false)
      const [openModal, setOpenModal] = useState(false);
      const [isSubmit, setIsSubmit] = useState(false);
      const buttonStyle = {
@@ -24,13 +26,13 @@ export default function InterestCard({ interest }: { interest: IInterest }) {
           }
      }, [isSubmit, dispatch, interest]);
      return (
-          <div className="interest-container w-full bg-slate-50 shadow-md rounded-lg p-2 flex flex-col items-center sm:items-start sm:grid sm:grid-cols-12 mt-5">
+          <div className="interest-container w-full bg-white shadow-md rounded-lg p-2 flex flex-col items-center sm:items-start sm:grid sm:grid-cols-12 mt-5">
                <img
                     src={interest?.image}
                     alt=""
                     className="rounded-lg col-span-12 sm:col-span-6 lg:col-span-2"
                />
-               <div className="col-span-12 sm:col-span-6 lg:col-span-3 ms-4">
+               <div className="col-span-12 sm:col-span-6 lg:col-span-3 ms-4 mt-4">
                     <h1 className="text-4xl mb-3">{interest.interest}</h1>
                     <p className="text-sm">{interest.discription}</p>
                </div>
@@ -51,12 +53,13 @@ export default function InterestCard({ interest }: { interest: IInterest }) {
                     </div>
                </div>
                <div className="manage-btn flex absolute right-5">
-                    <div>
+                    <div onClick={()=>setUpdateInterest(true)}>
                          <Edit size={25} />
                     </div>
                     <div onClick={handleDelete}>
                          <DeleteBin size={25} />
                     </div>
+                    <UpdateInterest showModal={updateInterest} setShowModal={setUpdateInterest} interest = { interest }/>
                     <Modal
                          show={openModal}
                          size="md"
@@ -69,7 +72,7 @@ export default function InterestCard({ interest }: { interest: IInterest }) {
                                    <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
                                    <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                                         Are you sure you want to delete this
-                                        product?
+                                        Interest
                                    </h3>
                                    <div className="flex justify-center gap-4">
                                         <Button

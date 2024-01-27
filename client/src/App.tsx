@@ -11,7 +11,7 @@ import PasswordPrivacy from "./pages/PasswordSecurity/PasswordPrivacy";
 import FindFriends from "./pages/FindFriends/FindFriends";
 import AddStory from "./pages/AddStory/AddStory";
 import MyStory from "./pages/MyStory/MyStory";
-import CloseFriends from "./components/CloseFriend/CloseFriends";
+import ManageCloseFriend from "./pages/ManageCloseFriend/ManageCloseFriend";
 const EditProfile = lazy(() => import("./pages/EditProfile/EditProfile"));
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const Dashboard = lazy(() => import("./pages/Admin/Dashboard/Dashboard"));
@@ -25,7 +25,7 @@ const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 
 function App() {
      return (
-          <>
+          <div>
                <Header />
                <Suspense fallback={<Loader />}>
                     <Routes>
@@ -67,7 +67,11 @@ function App() {
                               />
                               <Route
                                    path="/manage-account/close-friends"
-                                   element={<CloseFriends/>}
+                                   element={<ManageCloseFriend />}
+                              />
+                              <Route
+                                   path="/manage-account/close-friends"
+                                   element={<ManageCloseFriend />}
                               />
                          </Route>
                          <Route
@@ -83,7 +87,7 @@ function App() {
                </Suspense>
 
                <ToastContainer />
-          </>
+          </div>
      );
 }
 

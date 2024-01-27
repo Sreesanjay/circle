@@ -3,7 +3,8 @@ import { AxiosError } from "axios";
 import { storage } from "../app/firebase";
 import API from "../api";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { IInterest } from "../components/Modal/NewInterest";
+import { IInterest } from "../types";
+
 
 //upload new interest
 export const newInterest = createAsyncThunk(
@@ -11,9 +12,9 @@ export const newInterest = createAsyncThunk(
     async (data: IInterest, thunkAPI) => {
         try {
             if (data.image !== undefined) {
-                const filename = new Date().getTime() + data.image?.name
+                const filename = new Date().getTime() + (data.image as File).name;
                 const storageRef = ref(storage, 'interest/' + filename);
-                const snapshot = await uploadBytes(storageRef, data.image)
+                const snapshot = await uploadBytes(storageRef, (data.image as File))
                 if (snapshot) {
                     const url = await getDownloadURL(storageRef);
 
@@ -29,6 +30,54 @@ export const newInterest = createAsyncThunk(
                     throw new Error("Internal error")
                 }
             }
+        } catch (error) {
+            const err = error as AxiosError<{
+                message?: string;
+                status?: string;
+            }>
+            const payload = {
+                message: err.response?.data?.message,
+                status: err.response?.status
+            };
+            return thunkAPI.rejectWithValue(payload);
+        }
+
+    })
+
+//upload new interest
+export const updateInterest = createAsyncThunk(
+    "interest/updateInterest",
+    async (data: IInterest, thunkAPI) => {
+        try {
+
+            const body = {
+                image: '',
+                interest: data.interest,
+                discription: data.discription
+            }
+            if (data.image !== undefined) {
+                const filename = new Date().getTime() + (data.image as File)?.name
+                const storageRef = ref(storage, 'interest/' + filename);
+                const snapshot = await uploadBytes(storageRef, (data.image as File))
+                if (snapshot) {
+                    const url = await getDownloadURL(storageRef);
+                    if (url) {
+                        body.image = url;
+                    }
+
+                } else {
+                    throw new Error("Internal error")
+                }
+            }
+            console.log(data)
+            const response = await API.put(`/admin/interest/${data._id}`,
+                body
+                , {
+                    withCredentials: true,
+                });
+
+            return response.data;
+
         } catch (error) {
             const err = error as AxiosError<{
                 message?: string;
@@ -73,7 +122,7 @@ export const getAllInterests = createAsyncThunk(
 
 export const deleteInterest = createAsyncThunk(
     "interest/deleteInterest",
-    async (id : string, thunkAPI) => {
+    async (id: string, thunkAPI) => {
         console.log("request got")
         try {
             const response = await API.delete(`/admin/interest/${id}`, {

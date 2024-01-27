@@ -24,7 +24,7 @@ export default function CloseFriends() {
           })();
      });
      return (
-          <div className="">
+          <div className="flex gap-3">
                {users &&
                     users.map((user: userList, index) => {
                          return (

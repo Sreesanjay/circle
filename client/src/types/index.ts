@@ -1,8 +1,9 @@
 export interface IInterest{
-    _id: string;
+    _id?: string;
     interest: string;
     discription: string;
-    image: string;
+    image: string | File | undefined;
+
 }
 
 export interface IUserList{
@@ -11,6 +12,7 @@ export interface IUserList{
     followers: number;
     following: number;
     profile_img: string;
+    cover_img : string;
     email: string;
     followed:boolean
 }

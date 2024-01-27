@@ -3,10 +3,8 @@ import "./ManageAccSidebar.css";
 import { Sidebar } from "flowbite-react";
 import { BiBuoy } from "react-icons/bi";
 import {
-     HiArrowSmRight,
      HiChartPie,
      HiShoppingBag,
-     HiTable,
      HiUser,
      HiViewBoards,
 } from "react-icons/hi";
@@ -65,10 +63,6 @@ export default function ManageAccSidebar() {
                          <Sidebar.Item icon={HiShoppingBag}>
                               Blocked Users
                          </Sidebar.Item>
-                         <Sidebar.Item icon={HiArrowSmRight}>
-                              Sign In
-                         </Sidebar.Item>
-                         <Sidebar.Item icon={HiTable}>Sign Up</Sidebar.Item>
                     </Sidebar.ItemGroup>
                     <Sidebar.ItemGroup>
                          <Sidebar.Item href="#" icon={BiBuoy}>

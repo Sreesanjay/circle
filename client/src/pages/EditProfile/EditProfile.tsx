@@ -83,7 +83,7 @@ export default function EditProfile() {
                ) : (
                     <section className="manage-account flex flex-col">
                          <ManageAccSidebar />
-                         <div className="edit-profile p-3  sm:ms-64     ">
+                         <div className="edit-profile p-3  sm:ms-64">
                               <h1 className="text-lg font-medium mb-5">
                                    Edit profile
                               </h1>

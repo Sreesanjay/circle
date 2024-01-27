@@ -1,0 +1,19 @@
+.cover-photo {
+     max-height: 300px;
+     min-height: 100px;
+}
+.user-profile .cover-photo img {
+     max-height: 300px;
+     width: 100vw;
+}
+.user-profile .left-area {
+     margin-top: -10%;
+}
+.user-profile .profile-img {
+     width: 15vw;
+     height: 15vw;
+     min-height: 100px;
+     min-width: 100px;
+     background-color: #ff0000;
+     border-radius: 10px;
+}

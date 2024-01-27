@@ -290,12 +290,19 @@ export const getCloseFriends: RequestHandler = asyncHandler(
         const connection = await Connection.findOne({ user_id: req.user?._id }, { _id: 0, user_id: 0, following: 0 });
         const closeFriends = connection?.close_friend
         const userList: IUserList[] = await UserProfile.find({ user_id: { $in: closeFriends } }, { user_id: 1, username: 1, verified: 1, profile_img: 1, fullname: 1 }).populate({ path: 'user_id', select: "email" })
-        console.log(userList)
-        if (userList) {
+        const modifiedUserList = userList.map(({ username, verified, user_id, profile_img, fullname }) => ({
+            username,
+            verified,
+            user_id: user_id._id,
+            email: user_id.email,
+            profile_img,
+            fullname,
+        }));
+        if (modifiedUserList) {
             res.status(200).json({
                 status: "ok",
                 message: "close friends fetched",
-                userList
+                userList :modifiedUserList
             })
         } else {
             next(new Error())
@@ -362,6 +369,26 @@ export const addCloseFriend: RequestHandler = asyncHandler(
             res.status(200).json({
                 status: "ok",
                 message: "Add to close friends"
+            })
+        } else {
+            next(new Error())
+        }
+    }
+)
+/**
+ * @desc function removing close friend
+ * @route DELETE /api/users/close-friend
+ * @access private
+ */
+
+export const removeCloseFriend: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const connection = await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { close_friend: new ObjectId(id) } }, { new: true });
+        if (connection) {
+            res.status(200).json({
+                status: "ok",
+                message: "account removed from close friends"
             })
         } else {
             next(new Error())

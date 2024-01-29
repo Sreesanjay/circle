@@ -6,7 +6,6 @@ import {
      HiShoppingBag,
      HiTable,
      HiUser,
-     HiViewBoards,
 } from "react-icons/hi";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./AdminSidebar.css";
@@ -17,7 +16,7 @@ import { logout } from "../../features/auth/AuthSlice";
 //admin sidebar
 export default function AdminSidebar() {
      const [showSidebar, setShowSidebar] = useState("hidden");
-     const dispatch = useAppDispatch()
+     const dispatch = useAppDispatch();
      const navigate = useNavigate();
      return (
           <div className="md:h-screen md:fixed">
@@ -70,15 +69,17 @@ export default function AdminSidebar() {
                                    className="cursor-pointer"
                                    onClick={() => navigate("/admin/interest")}
                               >
-                                   {/* <Link to='/admin/interest'>Interest</Link>  */}
                                    Interest
                               </Sidebar.Item>
+
                               <Sidebar.Item
+                                   icon={HiUser}
                                    className="cursor-pointer"
-                                   icon={HiViewBoards}
+                                   onClick={() => navigate("/admin/user-management")}
                               >
-                                   Kanban
+                                   User Management
                               </Sidebar.Item>
+
                               <Sidebar.Item
                                    className="cursor-pointer"
                                    icon={HiUser}
@@ -100,7 +101,7 @@ export default function AdminSidebar() {
                               <Sidebar.Item
                                    className="cursor-pointer"
                                    icon={HiTable}
-                                   onClick={()=>dispatch(logout())}
+                                   onClick={() => dispatch(logout())}
                               >
                                    Logout
                               </Sidebar.Item>

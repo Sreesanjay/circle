@@ -1,15 +1,11 @@
 import { Document, ObjectId } from "mongoose";
 
-interface Report {
-     user_id: string;
-     reason: string;
-}
-
 export interface IUser extends Document {
      email: string;
      password: string;
      role: string;
      wallet: number;
+     blocked_users : ObjectId[];
      is_blocked: boolean;
 }
 export interface IUserProfile extends Document {
@@ -19,7 +15,6 @@ export interface IUserProfile extends Document {
      profile_img: string;
      gender: string;
      bio: string;
-     reports: Report[];
      account_type: string;
      cover_img: string;
      wallet: number;
@@ -57,4 +52,11 @@ export interface IStory extends Document{
      content:string;
      story_type:string;
      visibility:string;
+}
+
+export interface IReport extends Document{
+     user_id:ObjectId;
+     reason:string,
+     reported_id:ObjectId;
+     reported_type: string;
 }

@@ -48,6 +48,8 @@ export const updateInterest: RequestHandler = asyncHandler(
                     interest: newInterest
                 })
             }
+        }else{
+            next(new Error())
         }
     }
 )

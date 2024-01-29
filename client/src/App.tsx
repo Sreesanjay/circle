@@ -12,6 +12,8 @@ import FindFriends from "./pages/FindFriends/FindFriends";
 import AddStory from "./pages/AddStory/AddStory";
 import MyStory from "./pages/MyStory/MyStory";
 import ManageCloseFriend from "./pages/ManageCloseFriend/ManageCloseFriend";
+import ProfileView from "./pages/ProfileView/ProfileView";
+import UserManagement from "./pages/Admin/UserManagement/UserManagement";
 const EditProfile = lazy(() => import("./pages/EditProfile/EditProfile"));
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const Dashboard = lazy(() => import("./pages/Admin/Dashboard/Dashboard"));
@@ -26,67 +28,84 @@ const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 function App() {
      return (
           <div>
-               <Header />
-               <Suspense fallback={<Loader />}>
-                    <Routes>
-                         <Route element={<IsAuthenticated />}>
-                              <Route path="/signup" element={<SignupPage />} />
-                              <Route path="/login" element={<SigninPage />} />
-                         </Route>
-                         <Route
-                              element={<ProtectedRoute allowedRole={"USER"} />}
-                         >
-                              <Route path="/" element={<HomePage />} />
+                  <Header />
+                    <Suspense fallback={<Loader />}>
+                         <Routes>
+                              <Route element={<IsAuthenticated />}>
+                                   <Route
+                                        path="/signup"
+                                        element={<SignupPage />}
+                                   />
+                                   <Route
+                                        path="/login"
+                                        element={<SigninPage />}
+                                   />
+                              </Route>
                               <Route
-                                   path="/profile"
-                                   element={<UserProfilePage />}
-                              />
+                                   element={
+                                        <ProtectedRoute allowedRole={"USER"} />
+                                   }
+                              >
+                                   <Route path="/" element={<HomePage />} />
+                                   <Route
+                                        path="/profile"
+                                        element={<UserProfilePage />}
+                                   />
+                                   <Route
+                                        path="/manage-account"
+                                        element={<EditProfile />}
+                                   />
+                                   <Route
+                                        path="/manage-account/preference"
+                                        element={<Preference />}
+                                   />
+                                   <Route
+                                        path="/manage-account/password&security"
+                                        element={<PasswordPrivacy />}
+                                   />
+                                   <Route
+                                        path="/find-friends"
+                                        element={<FindFriends />}
+                                   />
+                                   <Route
+                                        path="/add-story"
+                                        element={<AddStory />}
+                                   />
+                                   <Route
+                                        path="/my-story"
+                                        element={<MyStory />}
+                                   />
+                                   <Route
+                                        path="/manage-account/close-friends"
+                                        element={<ManageCloseFriend />}
+                                   />
+                                   <Route
+                                        path="/view-profile/:id"
+                                        element={<ProfileView />}
+                                   />
+                              </Route>
                               <Route
-                                   path="/manage-account"
-                                   element={<EditProfile />}
-                              />
-                              <Route
-                                   path="/manage-account/preference"
-                                   element={<Preference />}
-                              />
-                              <Route
-                                   path="/manage-account/password&security"
-                                   element={<PasswordPrivacy />}
-                              />
-                              <Route
-                                   path="/find-friends"
-                                   element={<FindFriends />}
-                              />
-                              <Route
-                                   path="/add-story"
-                                   element={<AddStory/>}
-                              />
-                              <Route
-                                   path="/my-story"
-                                   element={<MyStory/>}
-                              />
-                              <Route
-                                   path="/manage-account/close-friends"
-                                   element={<ManageCloseFriend />}
-                              />
-                              <Route
-                                   path="/manage-account/close-friends"
-                                   element={<ManageCloseFriend />}
-                              />
-                         </Route>
-                         <Route
-                              element={<ProtectedRoute allowedRole={"ADMIN"} />}
-                         >
-                              <Route path="/admin" element={<Dashboard />} />
-                              <Route
-                                   path="/admin/interest"
-                                   element={<Interest />}
-                              />
-                         </Route>
-                    </Routes>
-               </Suspense>
+                                   element={
+                                        <ProtectedRoute allowedRole={"ADMIN"} />
+                                   }
+                              >
+                                   <Route
+                                        path="/admin"
+                                        element={<Dashboard />}
+                                   />
+                                   <Route
+                                        path="/admin/interest"
+                                        element={<Interest />}
+                                   />
+                                   <Route
+                                        path="/admin/user-management"
+                                        element={<UserManagement />}
+                                   />
+                              </Route>
+                         </Routes>
+                    </Suspense>
 
-               <ToastContainer />
+                    <ToastContainer />
           </div>
      );
 }

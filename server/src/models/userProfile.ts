@@ -21,16 +21,6 @@ const ProfileSchema: Schema<IUserProfile> = new Schema<IUserProfile>({
     cover_img: {
         type: "string",
     },
-    reports: [
-        {
-            user_id: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User',
-                required: true
-            },
-            reason: "string"
-        }
-    ],
     verified: {
         type: "boolean",
         default: false

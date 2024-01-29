@@ -12,6 +12,7 @@ import { IconButton } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CreateIcon from '@mui/icons-material/Create';
 import { useEffect, useState } from "react";
 const PRIMARY = "#388087";
@@ -108,6 +109,12 @@ export function Edit({size} : {size: number}) {
         <IconButton>
           <CreateIcon sx={{ fontSize: size, color : PRIMARY }}/>
         </IconButton>
+     );
+}
+
+export function ThreeDot({size} : {size: number}) {
+     return (
+          <MoreHorizIcon sx={{ fontSize: size, color : PRIMARY }}/>
      );
 }
 export function ChatIcon({size} : {size: number}) {

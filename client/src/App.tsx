@@ -14,6 +14,7 @@ import MyStory from "./pages/MyStory/MyStory";
 import ManageCloseFriend from "./pages/ManageCloseFriend/ManageCloseFriend";
 import ProfileView from "./pages/ProfileView/ProfileView";
 import UserManagement from "./pages/Admin/UserManagement/UserManagement";
+import BlockedUsers from "./pages/BlockedUsers/BlockedUsers";
 const EditProfile = lazy(() => import("./pages/EditProfile/EditProfile"));
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const Dashboard = lazy(() => import("./pages/Admin/Dashboard/Dashboard"));
@@ -82,6 +83,10 @@ function App() {
                                    <Route
                                         path="/view-profile/:id"
                                         element={<ProfileView />}
+                                   />
+                                   <Route
+                                        path="/manage-account/blocked-users"
+                                        element={<BlockedUsers />}
                                    />
                               </Route>
                               <Route

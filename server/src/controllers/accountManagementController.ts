@@ -2,6 +2,7 @@ import { Request, RequestHandler, Response} from "express";
 import asyncHandler from "express-async-handler";
 import Interest from "../models/interestSchema"
 import UserProfile from "../models/userProfile";
+import User from "../models/userModel";
 
 
 /**
@@ -73,6 +74,36 @@ export const deleteMyInterest: RequestHandler = asyncHandler(
             res.status(200).json({
                 status:'ok',
                 message: "Interest deleted"
+            })
+        }
+    }
+)
+
+/**
+ * @desc function for deleting an interest.
+ * @route POST /api/manage-account//blocked-users
+ * @access private
+ */
+export const getBlockedUsers: RequestHandler = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+       const userList =await User.aggregate([
+        {
+            $match:{_id:req.user?._id}
+        },
+        {
+            $lookup: {
+              from: "userprofiles", // Assuming the collection name is "users"
+              localField: "blocked_users",
+              foreignField: "user_id",
+              as: "blocked_users_details"
+            }
+          },
+       ])
+        if(userList.length > 0){
+            res.status(200).json({
+                status:'ok',
+                message: "Interest deleted",
+                userList : userList[0].blocked_users_details
             })
         }
     }

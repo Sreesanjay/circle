@@ -22,6 +22,7 @@ export const getUserList: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
         const userProfile = await UserProfile.findOne({ user_id: req.user?._id });
+        const user = await User.findOne({ _id: req.user?._id })
         if (!userProfile) {
             return next(Error("Internal error"));
         }
@@ -29,7 +30,7 @@ export const getUserList: RequestHandler = asyncHandler(
             const connection = await Connection.findOne({ user_id: req.user?._id });
             const interests = userProfile.interest;
             const suggestion = await UserProfile.aggregate([
-                { $match: { interest: { $in: interests }, user_id: { $ne: req.user?._id } } },
+                { $match: { interest: { $in: interests }, user_id: { $ne: req.user?._id, $nin: user?.blocked_users } } },
                 {
                     $lookup: {
                         from: "connections",
@@ -40,7 +41,7 @@ export const getUserList: RequestHandler = asyncHandler(
                 },
                 {
                     $match: {
-                        user_id: { $not: { $in: connection && connection?.following } }
+                        user_id: { $nin: connection && connection?.following }
                     }
                 },
                 {
@@ -73,7 +74,7 @@ export const getUserList: RequestHandler = asyncHandler(
                 }
             ])
             const userList = await UserProfile.aggregate([
-                { $match: { user_id: { $ne: req.user?._id } } },
+                { $match: { user_id: { $ne: req.user?._id, $nin: user?.blocked_users } } },
                 {
                     $lookup: {
                         from: "connections",
@@ -416,7 +417,7 @@ export const getProfile: RequestHandler = asyncHandler(
         const following = await Connection.findOne({
             user_id: id
         })
-        if (userProfile && followers!==null && following) {
+        if (userProfile && followers !== null && following) {
             res.status(200).json({
                 status: 'ok',
                 message: 'user profile fetched',
@@ -442,7 +443,7 @@ export const getProfile: RequestHandler = asyncHandler(
 export const blockUser: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
-        await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { following: new ObjectId(id) } });
+        await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { following: new ObjectId(id), close_friend: new ObjectId(id) } });
         const user = await User.findOneAndUpdate({ _id: req.user?._id }, { $push: { blocked_users: new ObjectId(id) } }, { new: true })
         console.log(user)
         if (user) {
@@ -466,7 +467,7 @@ export const blockUser: RequestHandler = asyncHandler(
 export const unblockUser: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
-        const user = await User.findOneAndUpdate({_id: req.user?._id }, { $pull: { blocked_users: new ObjectId(id) } }, { new: true })
+        const user = await User.findOneAndUpdate({ _id: req.user?._id }, { $pull: { blocked_users: new ObjectId(id) } }, { new: true })
         if (user) {
             res.status(200).json({
                 status: 'ok',
@@ -487,11 +488,11 @@ export const unblockUser: RequestHandler = asyncHandler(
 
 export const reportUser: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { id , reason} = req.body;
-        if(!id || !reason) {
+        const { id, reason } = req.body;
+        if (!id || !reason) {
             return next(new Error("Credentials missing"))
         }
-        const report = await Report.findOneAndUpdate({user_id: req.user?._id, reported_id :new ObjectId(id) },{$set:{user_id: req.user?._id, reported_id: new Object(id), reason: reason, reported_type:"account"}},{upsert: true, new:true});
+        const report = await Report.findOneAndUpdate({ user_id: req.user?._id, reported_id: new ObjectId(id) }, { $set: { user_id: req.user?._id, reported_id: new Object(id), reason: reason, reported_type: "account" } }, { upsert: true, new: true });
         if (report) {
             res.status(200).json({
                 status: 'ok',

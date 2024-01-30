@@ -12,7 +12,6 @@ import MyInterest from "../../components/MyInterest/MyInterest";
 import { IInterest } from "../../types";
 import { AddIcon } from "../../assets/Icons";
 import useHandleError from "../../util/usehandleError";
-import { toast } from "react-toastify";
 const AddInterest = lazy(() => import("../../components/Modal/AddInterest"));
 //preference page
 export default function Preference() {
@@ -44,14 +43,12 @@ export default function Preference() {
                          message?: string;
                          status?: string;
                     }>;
-                    if (err.response?.status === 401) {
+                    if (err) {
                          handleError(err);
-                    }else{
-                         toast.error(err.response?.data.message)
                     }
                }
           })();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+          // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [userProfile, openAddInterest]);
 
      return (

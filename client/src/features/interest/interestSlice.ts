@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { deleteInterest, getAllInterests, newInterest } from "../../services/interestService";
+import { deleteInterest, getAllInterests, newInterest, updateInterest } from "../../services/interestService";
 import { toast } from "react-toastify";
 
 export interface IInterest {
@@ -37,7 +37,7 @@ export const interestSlice = createSlice({
             state.isSuccess = false;
             state.isError = false;
             state.status = null,
-            state.errorMessage = ""
+                state.errorMessage = ""
         }
     },
     extraReducers: (builder) => {
@@ -52,6 +52,35 @@ export const interestSlice = createSlice({
                 toast(action.payload.message)
             })
             .addCase(newInterest.rejected, (state, action) => {
+                state.isError = true;
+                state.isLoading = false;
+                const error = action.payload as {
+                    message: string,
+                    status: number
+                };
+                state.errorMessage = error.message;
+                state.status = error.status;
+            })
+            .addCase(updateInterest.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateInterest.fulfilled, (state, action: PayloadAction<{ interest: IInterest; message: string }>) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                const newInterest = state.interest?.map((item) => {
+                    if (item._id === action.payload.interest._id) {
+                        console.log("got id")
+                        item = action.payload.interest;
+                        console.log(item)
+                    }
+                    return item;
+                })
+                if (newInterest) {
+                    state.interest = newInterest;
+                }
+                toast(action.payload.message)
+            })
+            .addCase(updateInterest.rejected, (state, action) => {
                 state.isError = true;
                 state.isLoading = false;
                 const error = action.payload as {

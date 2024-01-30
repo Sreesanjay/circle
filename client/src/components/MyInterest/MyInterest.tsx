@@ -32,7 +32,7 @@ export default function MyInterest({ interest }: { interest: IInterest }) {
      }
      
      return (
-          <div className="card flex shadow-md relative rounded-sm">
+          <div className="card flex shadow-md relative rounded-sm h-min">
                <img src={interest.image} alt="" className="w-32 h-32 object-cover"/>
                <div className="details ms-3 p-3 ">
 

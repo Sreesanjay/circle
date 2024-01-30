@@ -28,6 +28,33 @@ export const newInterest: RequestHandler = asyncHandler(
 )
 
 /**
+ * @desc function for updating interest.
+ * @route PUT /api/admin/interest
+ * @access private
+ */
+export const updateInterest: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+
+        const interest = await Interest.findOne({ _id: req.params.id })
+        if (interest) {
+            interest.interest = req.body.interest;
+            interest.discription = req.body.discription;
+            interest.image = req.body.image !== '' ? req.body.image : interest.image
+            const newInterest = await interest.save();
+            if (newInterest) {
+                res.status(201).json({
+                    status: "created",
+                    message: "New interest created",
+                    interest: newInterest
+                })
+            }
+        }else{
+            next(new Error())
+        }
+    }
+)
+
+/**
  * @desc function for fetching all interests.
  * @route GET /api/admin/interest
  * @access private
@@ -36,28 +63,28 @@ export const getAllInterest: RequestHandler = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
         const interest = await Interest.aggregate([
             {
-              $lookup: {
-                from: 'userprofiles',
-                localField: '_id',
-                foreignField: 'interest',
-                as: 'users',
-              },
+                $lookup: {
+                    from: 'userprofiles',
+                    localField: '_id',
+                    foreignField: 'interest',
+                    as: 'users',
+                },
             },
             {
-                $addFields:{
-                    total_users :{$size : "$users"}
+                $addFields: {
+                    total_users: { $size: "$users" }
                 }
             },
             {
-              $project: {
-                _id: 1,
-                image:1,
-                interest: 1,
-                discription: 1,
-                total_users :1
-              },
+                $project: {
+                    _id: 1,
+                    image: 1,
+                    interest: 1,
+                    discription: 1,
+                    total_users: 1
+                },
             },
-          ]);
+        ]);
         res.status(200).json({
             status: "ok",
             message: "Interest fetched",
@@ -74,13 +101,13 @@ export const getAllInterest: RequestHandler = asyncHandler(
 export const deleteInterest: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const id = req.params.id;
-        if(!id){
+        if (!id) {
             res.status(401)
             return next(Error('Invalid credentials'));
-        } 
+        }
         const deleted = await Interest.findByIdAndDelete(id);
-        await userProfile.updateMany({$pull:{interest:{_id:id}}})
-        if(!deleted) return next(Error())
+        await userProfile.updateMany({ $pull: { interest: { _id: id } } })
+        if (!deleted) return next(Error())
         res.status(200).json({
             status: "ok",
             message: "Interest deleted",

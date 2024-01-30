@@ -15,14 +15,21 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
           enum: ["ADMIN", "USER"],
           default: "USER",
      },
-     is_blocked : {
-          type : Boolean,
+     blocked_users: [
+          {
+               type: Schema.Types.ObjectId,
+               ref: 'User',
+               default: []
+          },
+     ],
+     is_blocked: {
+          type: Boolean,
           default: false,
      }
-    
-},{timestamps : true});
 
-userSchema.pre("save", async function (next){
+}, { timestamps: true });
+
+userSchema.pre("save", async function (next) {
      if (!this.isModified("password")) {
           next();
      }

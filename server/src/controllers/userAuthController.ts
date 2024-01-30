@@ -197,7 +197,7 @@ export const signin = asyncHandler(
                res.status(400);
                return next(Error("Invlalid Credentials"));
           }
-          const user = await User.findOne({ email: email })
+          const user = await User.findOne({ email: email, is_blocked: false })
           if (!user || !user.password) {
                res.status(409);
                return next(Error("Email or password not valid"));

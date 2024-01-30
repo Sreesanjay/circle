@@ -1,8 +1,10 @@
 import { Request, RequestHandler, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
-import UserProfile from "../models/userProfile"
+import UserProfile from "../models/userProfile";
+import User from "../models/userModel";
 import Connection from "../models/connectionSchema";
 import { ObjectId } from 'mongodb'
+import Report from "../models/reportSchema";
 
 interface IUserList {
     user_id: {
@@ -290,11 +292,19 @@ export const getCloseFriends: RequestHandler = asyncHandler(
         const connection = await Connection.findOne({ user_id: req.user?._id }, { _id: 0, user_id: 0, following: 0 });
         const closeFriends = connection?.close_friend
         const userList: IUserList[] = await UserProfile.find({ user_id: { $in: closeFriends } }, { user_id: 1, username: 1, verified: 1, profile_img: 1, fullname: 1 }).populate({ path: 'user_id', select: "email" })
-        if (connection) {
+        const modifiedUserList = userList.map(({ username, verified, user_id, profile_img, fullname }) => ({
+            username,
+            verified,
+            user_id: user_id._id,
+            email: user_id.email,
+            profile_img,
+            fullname,
+        }));
+        if (modifiedUserList) {
             res.status(200).json({
                 status: "ok",
                 message: "close friends fetched",
-                userList
+                userList: modifiedUserList
             })
         } else {
             next(new Error())
@@ -324,7 +334,7 @@ export const getFollowingWithoutCloseFriends: RequestHandler = asyncHandler(
                     },
                 },
             }
-        ]) 
+        ])
         const closeFriends = connection[0]?.followingNotInCloseFriends
         const userList: IUserList[] = await UserProfile.find({ user_id: { $in: closeFriends } }, { user_id: 1, username: 1, verified: 1, profile_img: 1, fullname: 1 }).populate({ path: 'user_id', select: "email" })
         const modifiedUserList = userList.map(({ username, verified, user_id, profile_img, fullname }) => ({
@@ -344,5 +354,152 @@ export const getFollowingWithoutCloseFriends: RequestHandler = asyncHandler(
         } else {
             next(new Error("Server error"))
         }
+    }
+)
+
+/**
+ * @desc function adding new close friend
+ * @route POST /api/users/add-closefriend
+ * @access private
+ */
+
+export const addCloseFriend: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.body;
+        const connection = await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $addToSet: { close_friend: new ObjectId(id) } }, { upsert: true, new: true });
+        if (connection) {
+            res.status(200).json({
+                status: "ok",
+                message: "Add to close friends"
+            })
+        } else {
+            next(new Error())
+        }
+    }
+)
+/**
+ * @desc function removing close friend
+ * @route DELETE /api/users/close-friend
+ * @access private
+ */
+
+export const removeCloseFriend: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const connection = await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { close_friend: new ObjectId(id) } }, { new: true });
+        if (connection) {
+            res.status(200).json({
+                status: "ok",
+                message: "account removed from close friends"
+            })
+        } else {
+            next(new Error())
+        }
+    }
+)
+
+/**
+ * @desc function removing close friend
+ * @route GET /api/users/get-user-profile/:id
+ * @access private
+ */
+
+export const getProfile: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const userProfile = await UserProfile.findOne({ user_id: id });
+        const followers = await Connection.countDocuments({
+            following: new ObjectId(id),
+        })
+        const isFollowing = await Connection.findOne({ user_id: req.user?._id, following: { $in: id } })
+        const isBlocked = await User.findOne({ _id: req.user?._id, blocked_users: { $in: id } })
+        const following = await Connection.findOne({
+            user_id: id
+        })
+        if (userProfile && followers!==null && following) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'user profile fetched',
+                userProfile,
+                following: following.following.length,
+                followers,
+                isFollowing: isFollowing ? true : false,
+                isBlocked: isBlocked ? true : false
+            })
+        } else {
+            next(new Error())
+        }
+    }
+)
+
+
+/**
+ * @desc function for blocking user
+ * @route GET /api/users/block-user/:id
+ * @access private
+ */
+
+export const blockUser: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { following: new ObjectId(id) } });
+        const user = await User.findOneAndUpdate({ _id: req.user?._id }, { $push: { blocked_users: new ObjectId(id) } }, { new: true })
+        console.log(user)
+        if (user) {
+            res.status(200).json({
+                status: 'ok',
+                message: "user blocked"
+            })
+        } else {
+            next(new Error())
+        }
+
+    }
+)
+
+/**
+ * @desc function for unblocking user
+ * @route GET /api/users/unblock-user/:id
+ * @access private
+ */
+
+export const unblockUser: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const user = await User.findOneAndUpdate({_id: req.user?._id }, { $pull: { blocked_users: new ObjectId(id) } }, { new: true })
+        if (user) {
+            res.status(200).json({
+                status: 'ok',
+                message: "user unblocked"
+            })
+        } else {
+            next(new Error())
+        }
+
+    }
+)
+
+/**
+ * @desc function for handling report
+ * @route POST /api/users/report
+ * @access private
+ */
+
+export const reportUser: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id , reason} = req.body;
+        if(!id || !reason) {
+            return next(new Error("Credentials missing"))
+        }
+        const report = await Report.findOneAndUpdate({user_id: req.user?._id, reported_id :new ObjectId(id) },{$set:{user_id: req.user?._id, reported_id: new Object(id), reason: reason, reported_type:"account"}},{upsert: true, new:true});
+        if (report) {
+            res.status(200).json({
+                status: 'ok',
+                message: "report added"
+            })
+        } else {
+            next(new Error())
+        }
+
     }
 )

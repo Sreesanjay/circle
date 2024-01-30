@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import PopupModal from "../../components/Modal/PopupModal";
@@ -21,7 +21,7 @@ import FriendList from "../../components/FriendList/FriendList";
 import CloseFriends from "../../components/CloseFriend/CloseFriends";
 import ProfileSection from "../../components/Profile/ProfileSection";
 import { resetUser } from "../../features/user/userSlice";
-import AddCloseFriends from "../../components/Modal/addCloseFriends";
+const AddCloseFriends = lazy(()=>import("../../components/Modal/AddCloseFriends")) ;
 
 export default function UserProfilePage() {
      const dispatch = useAppDispatch();

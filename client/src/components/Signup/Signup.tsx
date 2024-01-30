@@ -138,7 +138,7 @@ const Signup = () => {
                ) : (
                     <section className="signup w-screen h-screen flex justify-center md:justify-between px-3 ">
                          <div className="left-area  hidden md:flex w-1/2 relative pl-8 md:ps-15">
-                              <div className="rectangle-box absolute"></div>
+                              <div className="rectangle-box absolute bg-primary"></div>
                               <img
                                    src="https://lh3.google.com/u/0/d/1ee8WvmzqA1SFPI8N9VkCZ_hZkENV0bjX"
                                    alt="signup"

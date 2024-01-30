@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { useBottomScrollListener } from "react-bottom-scroll-listener";
 import { userList } from "../../types";
 import SkeletonLoader from "../Loader/Skeleton";
+import { useNavigate } from "react-router-dom";
 export default function ConnectionList({
      openModal,
      setOpenModal,
@@ -24,6 +25,7 @@ export default function ConnectionList({
      title: string;
 }) {
      const [users, setUsers] = useState<userList[]>([]);
+     const navigate = useNavigate()
      const isSearch = useRef(false);
      const [isLoading, setIsLoading] = useState(false);
      const pagination = useRef(0);
@@ -128,10 +130,17 @@ export default function ConnectionList({
                          />
                          <div className="users-list">
                               {users &&
-                                   users.map((user: userList) => {
+                                   users.map((user: userList, index) => {
                                         return (
-                                             <div className="user-card my-4 bg-gray-100 p-2 rounded-md flex items-center gap-3 justify-between">
-                                                  <div className="left flex gap-3">
+                                             <div
+                                                  className="user-card my-4 bg-gray-100 p-2 rounded-md flex items-center gap-3 justify-between"
+                                                  key={index}
+                                             >
+                                                  <div className="left flex gap-3"  onClick={() =>
+                                                       navigate(
+                                                            `/view-profile/${user.user_id}`
+                                                       )
+                                                  }>
                                                        {user.profile_img ? (
                                                             <img
                                                                  src={

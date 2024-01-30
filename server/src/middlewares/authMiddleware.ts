@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel';
 import env from "../util/validateEnv";
-import mongoose,{Document} from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 // import {IUser} from "../Interfaces/index.js"
 // interface UserRequest extends Request {
 //     user: IUser; // Assuming User is your model for users
@@ -11,11 +11,11 @@ import mongoose,{Document} from 'mongoose';
 
 declare module 'express' {
     interface Request {
-      user?: Document; 
+        user?: Document;
     }
-  }
+}
 
-export const protect = asyncHandler(async (req:Request, res: Response, next: NextFunction) => {
+export const protect = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
     if (token) {
         try {
@@ -23,25 +23,30 @@ export const protect = asyncHandler(async (req:Request, res: Response, next: Nex
             const userId = new mongoose.Types.ObjectId(
                 decoded.id
             );
-            const user = await User.findOne({ _id: userId, is_blocked: false })
+            const user = await User.findOne({ _id: userId })
             if (!user || user.role !== 'USER') {
                 res.status(401)
-                throw new Error('Unauthorized user')
-            } else {
+                next(Error('Unauthorized user'))
+            } else if( user.is_blocked){
+                res.status(401)
+                next(Error('Account has been blocked'))
+            }
+            else{
                 req.user = user;
             }
-              next();
+            next();
         } catch (error) {
-              res.status(401);
-              throw new Error('Not authorized, token failed');
+            res.status(401);
+            next(new Error('Not authorized, token failed'));
         }
     } else {
         res.status(401);
-        throw new Error('Not authorized, no token');
+        res.status(401);
+        next(new Error('Not authorized, token failed'));
     }
 });
 
-export const protectAdmin = asyncHandler(async (req:Request, res: Response, next: NextFunction) => {
+export const protectAdmin = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
     if (token) {
         try {
@@ -56,10 +61,10 @@ export const protectAdmin = asyncHandler(async (req:Request, res: Response, next
             } else {
                 req.user = user;
             }
-              next();
+            next();
         } catch (error) {
-              res.status(401);
-              throw new Error('Not authorized, token failed');
+            res.status(401);
+            throw new Error('Not authorized, token failed');
         }
     } else {
         res.status(401);

@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
 import API from "../../api";
-import { userList } from "../../types";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-
+import { userList } from "../../types";
 export default function CloseFriends() {
-     const [closeFriends, setCloseFriends] = useState<userList[]>([]);
+     const [users, setUsers] = useState<userList[]>([]);
      useEffect(() => {
           (async () => {
                try {
-                    const response = await API.get("/users/get-following", {
+                    const response = await API.get("/users/close-friends", {
                          withCredentials: true,
                     });
-                    console.log(response.data);
                     if (response.data) {
-                         setCloseFriends(response.data.userList);
+                         setUsers(response.data.userList);
                     }
                } catch (error) {
                     const err = error as AxiosError<{
@@ -24,17 +22,27 @@ export default function CloseFriends() {
                     toast.error(err.message);
                }
           })();
-     },[]);
-
+     });
      return (
-          <div className="close-friends w-full flex justify-around flex-wrap gap-1 mb-5">
-               {closeFriends.map((user) => {
-                    return (
-                         <div className="friends-container bg-black w-16 h-16 rounded-lg">
-                              <img src={user.profile_img} alt="" />
-                         </div>
-                    );
-               })}
+          <div className="flex gap-3">
+               {users &&
+                    users.map((user: userList, index) => {
+                         return (
+                              <div className="" key={index}>
+                                   {user.profile_img ? (
+                                        <img
+                                             src={user.profile_img}
+                                             alt=""
+                                             className="w-10 rounded-md"
+                                        />
+                                   ) : (
+                                        <h1 className="p-2 px-4 rounded-md bg-gray-400">
+                                             {user.email[0].toUpperCase()}
+                                        </h1>
+                                   )}
+                              </div>
+                         );
+                    })}
           </div>
      );
 }

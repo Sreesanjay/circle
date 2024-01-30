@@ -34,36 +34,41 @@ export default function AddInterest({
      useEffect(() => {
           (async () => {
                try {
-                    const response = await API.get("/manage-account/interest", {
-                         withCredentials: true,
-                    });
-                    if (response.data) {
-                         setInterest(response.data.interest);
-                         setInterest(
-                              response.data.interest.filter(
-                                   (item: IInterest) => {
-                                        const interest = myInterest.find(
-                                             (int) => int._id === item._id
-                                        );
-                                        if (!interest) return item;
-                                   }
-                              )
+                    if (openModal) {
+                         const response = await API.get(
+                              "/manage-account/interest",
+                              {
+                                   withCredentials: true,
+                              }
                          );
+                         if (response.data) {
+                              setInterest(response.data.interest);
+                              setInterest(
+                                   response.data.interest.filter(
+                                        (item: IInterest) => {
+                                             const interest = myInterest.find(
+                                                  (int) => int._id === item._id
+                                             );
+                                             if (!interest) return item;
+                                        }
+                                   )
+                              );
+                         }
                     }
                } catch (error) {
                     const err = error as AxiosError<{
                          message?: string;
                          status?: string;
                     }>;
-                    toast.error(err.message);
+                    toast.error(err.response?.data.message);
                }
           })();
-     }, [myInterest]);
+     }, [myInterest, openModal]);
 
      function handleChange(e: ChangeEvent<HTMLSelectElement>) {
           const item = interest?.find((item) => item._id === e.target.value);
           if (item) {
-               if (!choosedId?.includes(item._id)) {
+               if (!choosedId?.includes(item._id as string)) {
                     setChoosedId((prev) => [...prev, e.target.value]);
                     setChoosedInterest((prev) => [...prev, item]);
                }
@@ -129,7 +134,7 @@ export default function AddInterest({
                                                        <div
                                                             onClick={() =>
                                                                  deleteChoosed(
-                                                                      item._id
+                                                                      item._id as string
                                                                  )
                                                             }
                                                        >

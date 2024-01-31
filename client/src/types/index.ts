@@ -15,7 +15,7 @@ export interface IUserList {
     following: number;
     profile_img: string;
     cover_img: string;
-    is_blocked:boolean;
+    is_blocked: boolean;
     email: string;
     bio: string;
     reports: [];
@@ -45,4 +45,44 @@ export interface userList {
     verified: boolean;
     profile_img: string;
     email: string;
+}
+
+export interface IComment {
+    _id: string;
+    user_id: string;
+    post_id: string;
+    user_details: {
+        user_id: string;
+        username:string;
+        profile_img: string;
+        email:{email:string}
+    }
+    reply:string
+    content: string;
+    createdAt: Date;
+
+}
+
+interface userDetails {
+    username: string;
+    profile_img: string;
+    email: {
+        email: string;
+    }
+}
+
+export interface IPost {
+    _id: string;
+    user_id: string;
+    user_details: userDetails;
+    type: string;
+    content: string;
+    caption: string;
+    tags: string[];
+    visibility: string;
+    impressions: number;
+    profile_visit: number;
+    createdAt: Date;
+    likes: string[];
+    dislikes: number;
 }

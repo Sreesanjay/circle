@@ -4,6 +4,7 @@ import userProfile from "./userProfile";
 import manageAccRoute from "./manageAccRoute";
 import usersRoute from "./usersRoute";
 import storyRoute from "./storyRoute";
+import postsRoute from "./postsRoute";
 const router:Router = Router();
 
 router.post('/signup',signup)
@@ -15,4 +16,5 @@ router.use('/profile', userProfile)
 router.use('/manage-account',manageAccRoute)
 router.use('/users',usersRoute)
 router.use('/story',storyRoute)
+router.use('/posts',postsRoute)
 export default router;  

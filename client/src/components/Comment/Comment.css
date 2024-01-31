@@ -1,0 +1,10 @@
+.comment .header{
+    border: 1px solid rgba(128, 128, 128, 0.114);
+}
+.add-comment-inp{
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.235);
+}
+.add-comment-inp:focus{
+    outline: none;
+}

@@ -15,6 +15,7 @@ import ManageCloseFriend from "./pages/ManageCloseFriend/ManageCloseFriend";
 import ProfileView from "./pages/ProfileView/ProfileView";
 import UserManagement from "./pages/Admin/UserManagement/UserManagement";
 import BlockedUsers from "./pages/BlockedUsers/BlockedUsers";
+import CreatePost from "./pages/CreatePost/CreatePost";
 const EditProfile = lazy(() => import("./pages/EditProfile/EditProfile"));
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const Dashboard = lazy(() => import("./pages/Admin/Dashboard/Dashboard"));
@@ -88,7 +89,14 @@ function App() {
                                         path="/manage-account/blocked-users"
                                         element={<BlockedUsers />}
                                    />
+                                   <Route
+                                        path="/create-post"
+                                        element={<CreatePost />}
+                                   />
                               </Route>
+
+
+
                               <Route
                                    element={
                                         <ProtectedRoute allowedRole={"ADMIN"} />

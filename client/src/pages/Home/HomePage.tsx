@@ -7,6 +7,7 @@ import { AddIcon } from "../../assets/Icons";
 import { useNavigate } from "react-router-dom";
 import { getMyStory } from "../../services/storyService";
 import { resetStory } from "../../features/story/storySlice";
+import Post from "../../components/Post/Post";
 export default function HomePage() {
      const dispatch = useAppDispatch();
      const navigate = useNavigate();
@@ -56,6 +57,9 @@ export default function HomePage() {
                                    </div>
                               )}
                          </div>
+                    </section>
+                    <section className="posts">
+                         <Post/>
                     </section>
                </div>
           </div>

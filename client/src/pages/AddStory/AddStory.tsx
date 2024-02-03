@@ -46,7 +46,7 @@ export default function AddStory() {
                     <div className="story-type bg-slate-300 w-72 flex flex-col items-center justify-center rounded-md cursor-pointer">
                          <div
                               className="bg-slate-50 p-3 rounded-full mb-3"
-                              onClick={() => setOpenTextStory(true)}
+                              onClick={() =>navigate('/add-story/create-text-story')}
                          >
                               <FormatColorTextIcon className=""/>
                          </div>

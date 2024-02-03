@@ -1,7 +1,6 @@
 import { Modal } from "flowbite-react";
 import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import "./TextStory.css";
 import { addStory } from "../../services/storyService";
 import { resetStory } from "../../features/story/storySlice";
 import { toast } from "react-toastify";

@@ -17,6 +17,7 @@ import UserManagement from "./pages/Admin/UserManagement/UserManagement";
 import BlockedUsers from "./pages/BlockedUsers/BlockedUsers";
 import CreatePost from "./pages/CreatePost/CreatePost";
 import PostManagement from "./pages/Admin/PostManagement/PostManagement";
+import CreateTextStory from "./pages/CreateStory/CreateTextStory";
 const EditProfile = lazy(() => import("./pages/EditProfile/EditProfile"));
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const Dashboard = lazy(() => import("./pages/Admin/Dashboard/Dashboard"));
@@ -64,6 +65,7 @@ function App() {
                               />
                               <Route path="/add-story" element={<AddStory />} />
                               <Route path="/my-story" element={<MyStory />} />
+                              <Route path="/add-story/create-text-story" element={<CreateTextStory />} />
                               <Route
                                    path="/manage-account/close-friends"
                                    element={<ManageCloseFriend />}

@@ -56,7 +56,7 @@ export default function Comment({
                     if (response.data) {
                          setNewComment("");
                          setNewReply(false);
-                         setOpenReply(true)
+                         setOpenReply(true);
                          setReplys([...replys, response.data.newComment]);
                     }
                }
@@ -69,8 +69,8 @@ export default function Comment({
           }
      }
      return (
-          <section className="comment mt-5 shadow-sm pb-5">
-               <div className="header flex gap-3 px-5 py-2 shadow-sm">
+          <section className="comment mt-5 pb-5">
+               <div className="header flex gap-3 px-5 py-2 bg-slate-50 rounded-md">
                     <div className="profile-img-icon">
                          {item?.user_details.profile_img ? (
                               <img
@@ -93,8 +93,8 @@ export default function Comment({
                          } - ${date.getFullYear()}`}</small> */}
                     </div>
                </div>
-               <div className="content p-5">
-                    <span>{item.content}</span>
+               <div className="content p-5 bg-slate-50">
+                    <span className="font-light">{item.content}</span>
                </div>
                {newReply && (
                     <div className="add-comment flex items-center h-min my-3 px-2">
@@ -114,7 +114,7 @@ export default function Comment({
                     onClick={() => setOpenReply(!openReply)}
                     className="px-3 text-sm"
                >
-                    View all replys
+                    {openReply ? "hide replies" : "View replies"}
                </button>
                <button
                     className="px-3 text-sm"
@@ -123,12 +123,12 @@ export default function Comment({
                     Reply
                </button>
                {openReply && (
-                    <div className="replys m-5">
+                    <div className="replys m-5 ">
                          {replys &&
                               replys.map((reply) => {
                                    return (
-                                        <div className="reply shadow-sm">
-                                             <div className="header flex gap-3 px-5 py-2 shadow-sm">
+                                        <div className="reply bg-slate-50 rounded-md mb-3">
+                                             <div className="header flex gap-3 px-5 py-2">
                                                   <div className="profile-img-icon">
                                                        {reply?.user_details
                                                             .profile_img ? (
@@ -165,7 +165,7 @@ export default function Comment({
                                                        </h1>
                                                   </div>
                                              </div>
-                                             <div className="content p-5">
+                                             <div className="content p-5 font-light">
                                                   {reply.content}
                                              </div>
                                         </div>

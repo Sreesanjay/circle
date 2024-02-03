@@ -21,10 +21,6 @@ const postSchema: Schema<IPost> = new Schema({
             ref: "User"
         }
     ],
-    comment: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-    },
     visibility: {
         type: String
     },

@@ -83,3 +83,8 @@ export interface IComment extends Document{
      content:string;
      reply: ObjectId;
 }
+
+export interface ISavedPost extends Document{
+     user_id:ObjectId;
+     post_id:ObjectId;
+}

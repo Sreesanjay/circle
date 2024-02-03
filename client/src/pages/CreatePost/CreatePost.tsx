@@ -121,7 +121,7 @@ export default function CreatePost() {
                                         </Breadcrumb.Item>
                                    </Breadcrumb>
                                    <h1 className="text-2xl font-medium mb-5">
-                                        Create new project
+                                        Create new Post
                                    </h1>
                                    <div className="body grid grid-cols-4 ">
                                         <div className="preview-section col-span-4 lg:col-span-2">

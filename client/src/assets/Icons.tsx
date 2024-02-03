@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CreateIcon from "@mui/icons-material/Create";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useEffect, useState } from "react";
 const PRIMARY = "#388087";
 export function Notification() {
@@ -46,6 +47,15 @@ export function LikeIcon({ size }: { size: number }) {
           <>
                <IconButton>
                     <FavoriteBorderIcon sx={{ fontSize: { size }, color: PRIMARY }} />
+               </IconButton>
+          </>
+     );
+}
+export function DislikeIcon({ size }: { size: number }) {
+     return (
+          <>
+               <IconButton>
+                    <FavoriteIcon sx={{ fontSize: { size }, color: PRIMARY }} />
                </IconButton>
           </>
      );

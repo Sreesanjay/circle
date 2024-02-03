@@ -14,7 +14,7 @@ import User from "../models/userModel";
 export const getUserManagement: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const page: number = parseInt(req.query.page as string, 10) || 1;
-        const pageSize = 2;
+        const pageSize = 10;
         let sort = {}
         if (req.query.sort === 'RECENTLTY_JOINED') sort = { createdAt: -1 };
         else if (req.query.sort === 'OLDEST_MEMBERS') sort = { createdAt: 1 };

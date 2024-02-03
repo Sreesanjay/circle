@@ -8,10 +8,12 @@ export default function Report({
      openModal,
      setOpenModal,
      id,
+     reported_type,
 }: {
      openModal: boolean;
      setOpenModal: Dispatch<SetStateAction<boolean>>;
      id: string;
+     reported_type: string;
 }) {
      const [reason, setReason] = useState("");
      const [error, setError] = useState("");
@@ -27,6 +29,7 @@ export default function Report({
                          {
                               id: id,
                               reason: reason,
+                              reported_type
                          },
                          { withCredentials: true }
                     );

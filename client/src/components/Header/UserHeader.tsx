@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAppSelector } from "../../app/hooks";
 import {
      HomeIcon,
      Notification
@@ -11,18 +10,13 @@ import UserHeaderProfile from "./UserHeaderProfile";
 import { Link } from "react-router-dom";
 
 export default function UserHeader() {
-     const { userProfile } = useAppSelector((state) => state.user);
-     // const { user } = useAppSelector((state) => state.auth);
      const [isProfileToggle, setisProfileToggle] = useState(false)
      return (
           <section className="user-header px-6 grid grid-cols-6 items-center sticky shadow-sm">
                <div className="logo col-span-1">
                     <h1 className="text-4xl md:text-5xl">Circle</h1>
                </div>
-               <div className="welcome-note hidden md:flex font-medium  text-lg col-span-1">
-                    <h2 className="ms-3  text-gray-600">Welcome, {userProfile ? userProfile.username : null}</h2>
-               </div>
-               <div className="right-nav flex justify-end gap-5 col-span-5 md:col-span-4 items-center">
+               <div className="right-nav flex justify-end gap-5 col-span-5 md:col-span-5 items-center">
                     <div className="grow hidden sm:flex justify-end">
                         <SearchBox/>
                     </div>

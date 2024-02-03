@@ -103,6 +103,7 @@ export default function UpdateInterest({
                                    image: undefined,
                                    interest: "",
                                    discription: "",
+                                   _id:''
                               });
 
                               setShowModal(false);
@@ -200,6 +201,7 @@ export default function UpdateInterest({
                                                        image: undefined,
                                                        interest: "",
                                                        discription: "",
+                                                       _id:''
                                                   });
                                                   setShowModal(false);
                                              }}

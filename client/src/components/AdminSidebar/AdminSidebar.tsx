@@ -1,9 +1,7 @@
 import { Sidebar } from "flowbite-react";
 import {
-     HiArrowSmRight,
      HiChartPie,
      HiInbox,
-     HiShoppingBag,
      HiTable,
      HiUser,
 } from "react-icons/hi";
@@ -81,23 +79,13 @@ export default function AdminSidebar() {
                               </Sidebar.Item>
 
                               <Sidebar.Item
-                                   className="cursor-pointer"
                                    icon={HiUser}
-                              >
-                                   Users
-                              </Sidebar.Item>
-                              <Sidebar.Item
                                    className="cursor-pointer"
-                                   icon={HiShoppingBag}
+                                   onClick={() => navigate("/admin/post-management")}
                               >
-                                   Products
+                                   Post Management
                               </Sidebar.Item>
-                              <Sidebar.Item
-                                   className="cursor-pointer"
-                                   icon={HiArrowSmRight}
-                              >
-                                   Sign In
-                              </Sidebar.Item>
+                              
                               <Sidebar.Item
                                    className="cursor-pointer"
                                    icon={HiTable}

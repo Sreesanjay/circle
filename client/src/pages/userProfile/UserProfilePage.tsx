@@ -12,7 +12,7 @@ import {
      PostIcon,
      SavedIcon,
      EditPenIcon,
-     AddIcon,
+     // AddIcon,
 } from "../../assets/Icons";
 import CoverImageUpload from "../../components/Modal/CoverUpload";
 import UploadProfileImg from "../../components/Modal/ProfileUpload";
@@ -21,7 +21,15 @@ import FriendList from "../../components/FriendList/FriendList";
 import CloseFriends from "../../components/CloseFriend/CloseFriends";
 import ProfileSection from "../../components/Profile/ProfileSection";
 import { resetUser } from "../../features/user/userSlice";
-const AddCloseFriends = lazy(()=>import("../../components/Modal/AddCloseFriends")) ;
+const PostSection = lazy(
+     () => import("../../components/PostSection/PostSection")
+);
+const SavedSection = lazy(
+     () => import("../../components/SavedSection/SavedSection")
+);
+// const AddCloseFriends = lazy(
+//      () => import("../../components/Modal/AddCloseFriends")
+// );
 
 export default function UserProfilePage() {
      const dispatch = useAppDispatch();
@@ -29,10 +37,11 @@ export default function UserProfilePage() {
           useAppSelector((state) => state.user);
 
      const [showModal, setShowModal] = useState(false);
-     const [addCloseFriends, setAddCloseFriends] = useState(false)
+     // const [addCloseFriends, setAddCloseFriends] = useState(false);
      const [showUploadImage, setshowUploadImage] = useState(false);
      const [showUploadProfile, setshowUploadProfile] = useState(false);
      const [showEditProfImgIcon, setshowEditProfIcon] = useState("hidden");
+     const [content, setContent] = useState("PROFILE");
 
      useEffect(() => {
           if (isError) {
@@ -130,37 +139,55 @@ export default function UserProfilePage() {
                                    </h1>
                               </div>
                               <div className="right-nav grow ps-7 sm:ps-14 flex">
-                                   <div className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9">
+                                   <div
+                                        className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9"
+                                        onClick={() => setContent("PROFILE")}
+                                   >
                                         <Profile size={28} />
                                         <h3 className="">Profile</h3>
                                    </div>
-                                   <div className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9">
+                                   <div
+                                        className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9"
+                                        onClick={() => setContent("POST")}
+                                   >
                                         <PostIcon size={28} />
                                         <h3 className="">Posts</h3>
                                    </div>
-                                   <div className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9">
+                                   <div
+                                        className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9"
+                                        onClick={() => setContent("SAVED")}
+                                   >
                                         <SavedIcon size={28} />
                                         <h3 className="">Saved</h3>
                                    </div>
                               </div>
                          </section>
                          <section className="profile-body h-screen w-full px-3 md:grid md:grid-cols-12 pt-5">
-                              <div className="left-section col-span-3 px-5 ">
+                              <div className="left-section col-span-3 px-5 shadow-md">
                                    <FriendList />
                                    <hr className="my-3" />
                                    <div className="flex items-center mb-3 justify-between">
                                         <h1 className="font-medium text-center">
                                              Close Friends
                                         </h1>
-                                        <div onClick={()=>setAddCloseFriends(true)}>
+                                        {/* <div
+                                             onClick={() =>
+                                                  setAddCloseFriends(true)
+                                             }
+                                        >
                                              <AddIcon size={25} />
                                         </div>
-                                        <AddCloseFriends openModal={addCloseFriends} setOpenModal={setAddCloseFriends}/>
+                                        <AddCloseFriends
+                                             openModal={addCloseFriends}
+                                             setOpenModal={setAddCloseFriends}
+                                        /> */}
                                    </div>
                                    <CloseFriends />
                               </div>
                               <div className="right-section col-span-9">
-                                   <ProfileSection />
+                                   {content === "PROFILE" && <ProfileSection />}
+                                   {content === "POST" && <PostSection />}
+                                   {content === "SAVED" && <SavedSection />}
                               </div>
                          </section>
                     </section>

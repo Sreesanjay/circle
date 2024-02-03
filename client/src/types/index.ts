@@ -1,5 +1,5 @@
 export interface IInterest {
-    _id?: string;
+    _id: string;
     interest: string;
     discription: string;
     image: string | File | undefined;
@@ -53,11 +53,11 @@ export interface IComment {
     post_id: string;
     user_details: {
         user_id: string;
-        username:string;
+        username: string;
         profile_img: string;
-        email:{email:string}
+        email: { email: string }
     }
-    reply:string
+    reply: string
     content: string;
     createdAt: Date;
 
@@ -74,15 +74,18 @@ interface userDetails {
 export interface IPost {
     _id: string;
     user_id: string;
+    is_saved: boolean;
     user_details: userDetails;
     type: string;
     content: string;
     caption: string;
+    is_delete: boolean,
     tags: string[];
     visibility: string;
     impressions: number;
     profile_visit: number;
+    comment:number;
+    reports: [];
     createdAt: Date;
     likes: string[];
-    dislikes: number;
 }

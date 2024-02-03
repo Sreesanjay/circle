@@ -1,40 +1,36 @@
-import { Breadcrumb, Pagination, Table } from "flowbite-react";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import NativeSelect from "@mui/material/NativeSelect";
-import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
-import { CiUser } from "react-icons/ci";
 import { useEffect, useState } from "react";
-import "./UserManagement.css";
-import { IUserList } from "../../../types";
+import { IPost } from "../../../types";
 import API from "../../../api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Loader from "../../../components/Loader/Loader";
-
-export default function UserManagement() {
+import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
+import { Breadcrumb, Pagination, Table } from "flowbite-react";
+import { FormControl, InputLabel, NativeSelect } from "@mui/material";
+export default function PostManagement() {
      const [analytics, setAnalytics] = useState({
-          total_users: 0,
-          todays_users: 0,
-          thismonth_users: 0,
-          this_year_users: 0,
+          total_posts: 0,
+          todays_posts: 0,
+          thismonth_posts: 0,
+          this_year_posts: 0,
      });
-     const [sort, setSort] = useState("RECENTLTY_JOINED");
+     const [sort, setSort] = useState("RECENTLTY_CREATED");
      const [page, setPage] = useState(1);
      const [isLoading, setIsLoading] = useState(false);
-     const [userList, setUserList] = useState<IUserList[]>([]);
+     const [postList, setPostList] = useState<IPost[]>([]);
      useEffect(() => {
           (async () => {
                try {
                     setIsLoading(true);
                     const response = await API.get(
-                         `/admin/user-management/userlist?page=${page}&&sort=${sort}`,
+                         `/admin/post-management/postlist?page=${page}&&sort=${sort}`,
                          {
                               withCredentials: true,
                          }
                     );
                     if (response.data) {
-                         setUserList(response.data.userList);
+                         console.log(response.data);
+                         setPostList(response.data.postList);
                          setIsLoading(false);
                     }
                } catch (error) {
@@ -47,12 +43,15 @@ export default function UserManagement() {
                }
           })();
      }, [page, sort]);
+     useEffect(() => {
+          console.log(postList);
+     }, [postList]);
 
      useEffect(() => {
           (async () => {
                try {
                     const response = await API.get(
-                         "/admin/user-management/analytics",
+                         "/admin/post-management/analytics",
                          {
                               withCredentials: true,
                          }
@@ -70,20 +69,19 @@ export default function UserManagement() {
           })();
      }, []);
 
-     async function blockUser(id: string) {
+     async function deletePost(id: string) {
           try {
-               const response = await API.put(
-                    `/admin/user-management/block/${id}`,
-                    {},
+               const response = await API.delete(
+                    `/admin/post-management/remove/${id}`,
                     {
                          withCredentials: true,
                     }
                );
                if (response.data) {
-                    setUserList((current: IUserList[]) => {
+                    setPostList((current: IPost[]) => {
                          return current.map((item) => {
                               if (item._id === id) {
-                                   item.is_blocked = true;
+                                   item.is_delete = true;
                               }
                               return item;
                          });
@@ -97,20 +95,20 @@ export default function UserManagement() {
                toast.error(err.message);
           }
      }
-     async function unblockUser(id: string) {
+
+     async function undoDelete(id: string) {
           try {
                const response = await API.put(
-                    `/admin/user-management/unblock/${id}`,
-                    {},
+                    `/admin/post-management/undo-remove/${id}`,{},
                     {
                          withCredentials: true,
                     }
                );
                if (response.data) {
-                    setUserList((current: IUserList[]) => {
+                    setPostList((current: IPost[]) => {
                          return current.map((item) => {
                               if (item._id === id) {
-                                   item.is_blocked = false;
+                                   item.is_delete = false;
                               }
                               return item;
                          });
@@ -134,33 +132,33 @@ export default function UserManagement() {
                          <AdminSidebar />
                          <section className="body md:ms-64 py-5">
                               <Breadcrumb aria-label="Default breadcrumb example">
-                                   <Breadcrumb.Item href="#" icon={CiUser}>
-                                        User Management
+                                   <Breadcrumb.Item href="#">
+                                        Post Management
                                    </Breadcrumb.Item>
                               </Breadcrumb>
                               <div className="analytics flex justify-around gap-2 flex-wrap mt-5">
                                    <div className="analytics-card">
-                                        <h1>Total Users</h1>
+                                        <h1>Total Posts</h1>
                                         <h1 className="text-4xl">
-                                             {analytics.total_users}
+                                             {analytics.total_posts}
                                         </h1>
                                    </div>
                                    <div className="analytics-card">
-                                        <h1>New Users(Today)</h1>
+                                        <h1>New Posts(Today)</h1>
                                         <h1 className="text-4xl">
-                                             {analytics.todays_users}
+                                             {analytics.todays_posts}
                                         </h1>
                                    </div>
                                    <div className="analytics-card">
-                                        <h1>New Users(This Month)</h1>
+                                        <h1>New Posts(This Month)</h1>
                                         <h1 className="text-4xl">
-                                             {analytics.thismonth_users}
+                                             {analytics.thismonth_posts}
                                         </h1>
                                    </div>
                                    <div className="analytics-card">
-                                        <h1>New Users (This Year)</h1>
+                                        <h1>New Posts (This Year)</h1>
                                         <h1 className="text-4xl">
-                                             {analytics.this_year_users}
+                                             {analytics.this_year_posts}
                                         </h1>
                                    </div>
                               </div>
@@ -189,27 +187,32 @@ export default function UserManagement() {
                                                   >
                                                        <option
                                                             value={
-                                                                 "RECENTLTY_JOINED"
+                                                                 "RECENTLTY_CREATED"
                                                             }
                                                        >
-                                                            Recently Joined
+                                                            Recently Created
                                                        </option>
                                                        <option
                                                             value={
-                                                                 "OLDEST_MEMBERS"
+                                                                 "OLDEST_POST"
                                                             }
                                                        >
-                                                            Oldest Members
+                                                            Oldest Posts
                                                        </option>
                                                        <option
                                                             value={"REPORTS"}
                                                        >
                                                             Reports
                                                        </option>
+                                                       <option value={"LIKES"}>
+                                                            Likes
+                                                       </option>
                                                        <option
-                                                            value={"USERNAME"}
+                                                            value={
+                                                                 "LOWEST_LIKES"
+                                                            }
                                                        >
-                                                            Username
+                                                            Lowest Likes
                                                        </option>
                                                   </NativeSelect>
                                              </FormControl>
@@ -228,16 +231,16 @@ export default function UserManagement() {
                                                   Si. No
                                              </Table.HeadCell>
                                              <Table.HeadCell>
-                                                  Username
+                                                  content
                                              </Table.HeadCell>
                                              <Table.HeadCell>
-                                                  Email
+                                                  username
+                                             </Table.HeadCell>
+                                             <Table.HeadCell>
+                                                  likes
                                              </Table.HeadCell>
                                              <Table.HeadCell>
                                                   Reports
-                                             </Table.HeadCell>
-                                             <Table.HeadCell>
-                                                  View
                                              </Table.HeadCell>
                                              <Table.HeadCell>
                                                   <span className="sr-only">
@@ -246,8 +249,8 @@ export default function UserManagement() {
                                              </Table.HeadCell>
                                         </Table.Head>
                                         <Table.Body className="divide-y">
-                                             {userList?.map(
-                                                  (user: IUserList, index) => {
+                                             {postList?.map(
+                                                  (post: IPost, index) => {
                                                        return (
                                                             <Table.Row
                                                                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
@@ -257,41 +260,59 @@ export default function UserManagement() {
                                                                       {index}
                                                                  </Table.Cell>
                                                                  <Table.Cell>
+                                                                      <a
+                                                                           href={
+                                                                                post.content
+                                                                           }
+                                                                           target="_blank"
+                                                                      >
+                                                                           {
+                                                                                post.content
+                                                                           }
+                                                                      </a>
+                                                                 </Table.Cell>
+                                                                 <Table.Cell>
                                                                       {
-                                                                           user.username
+                                                                           post
+                                                                                .user_details
+                                                                                .username
                                                                       }
                                                                  </Table.Cell>
                                                                  <Table.Cell>
                                                                       {
-                                                                           user.email
+                                                                           post
+                                                                                .likes
+                                                                                .length
                                                                       }
                                                                  </Table.Cell>
                                                                  <Table.Cell>
                                                                       {
-                                                                           user
+                                                                           post
                                                                                 .reports
                                                                                 .length
                                                                       }
                                                                  </Table.Cell>
                                                                  <Table.Cell>
-                                                                      <button className="text-primary">
-                                                                           View
-                                                                      </button>
-                                                                 </Table.Cell>
-                                                                 <Table.Cell>
-                                                                      {user.is_blocked ? (
-                                                                           <button onClick={()=>unblockUser(user._id)}>
-                                                                                Unblock
+                                                                      {post.is_delete ? (
+                                                                           <button
+                                                                                onClick={() =>
+                                                                                     undoDelete(
+                                                                                          post._id
+                                                                                     )
+                                                                                }
+                                                                           >
+                                                                                Undo
                                                                            </button>
                                                                       ) : (
                                                                            <button
                                                                                 onClick={() =>
-                                                                                     blockUser(
-                                                                                          user._id
+                                                                                     deletePost(
+                                                                                          post._id
                                                                                      )
                                                                                 }
+                                                                                className="text-red-600"
                                                                            >
-                                                                                Block
+                                                                                Delete
                                                                            </button>
                                                                       )}
                                                                  </Table.Cell>
@@ -305,7 +326,7 @@ export default function UserManagement() {
                                         <Pagination
                                              currentPage={page}
                                              totalPages={
-                                                  analytics.total_users / 10
+                                                  analytics.total_posts / 10
                                              }
                                              onPageChange={(newpage: number) =>
                                                   setPage(newpage)

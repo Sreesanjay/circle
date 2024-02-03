@@ -3,6 +3,8 @@ import { ObjectId } from "mongodb";
 import asyncHandler from "express-async-handler";
 import UserProfile from "../models/userProfile"
 import Connection from "../models/connectionSchema";
+import Post from "../models/postSchema";
+import SavedPost from "../models/savedPost";
 // import { IConnections } from "../Interfaces";
 // import User from "../models/userModel";
 // import { IUser } from "../Interfaces";
@@ -142,10 +144,157 @@ export const getConnectionCount: RequestHandler = asyncHandler(
         if (following && followers !== null) {
             res.status(200).json({
                 message: "connection counts fetched",
-                connectionCount: { followers, following: following.following.length}
+                connectionCount: { followers, following: following.following.length }
             })
-        }else{
+        } else {
             next(Error())
+        }
+    }
+)
+
+/**
+ * @desc function for fetching my posts
+ * @route GET /api/profile/posts
+ * @access private
+ */
+export const getMyPosts: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const posts = await Post.aggregate([
+            {
+                $match: {
+                    user_id: new ObjectId(req.user?._id),
+                    is_archive: false,
+                    is_delete: false
+                }
+            },
+            {
+                $lookup: {
+                    from: "savedposts",
+                    localField: '_id',
+                    foreignField: 'post_id',
+                    as: "is_saved",
+                    pipeline: [
+                        {
+                            $match: {
+                                user_id: req.user?._id
+                            }
+                        },
+                        {
+                            $project: {
+                                user_id: 0,
+                                post_id: 0,
+                                createdAt: 0,
+                                updatedAt: 0,
+                                __v: 0
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    user_id: 1,
+                    is_saved: { $cond: { if: { $gt: [{ $size: "$is_saved" }, 0] }, then: true, else: false } },
+                    user_details: 1,
+                    type: 1,
+                    content: 1,
+                    caption: 1,
+                    tags: 1,
+                    visibility: 1,
+                    impressions: 1,
+                    profile_visit: 1,
+                    createdAt: 1,
+                    likes: 1
+                }
+            }
+        ])
+
+        if (posts) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'posts fetched',
+                posts
+            })
+        } else {
+            next(new Error('Internal server error'))
+        }
+    }
+)
+
+
+
+/**
+ * @desc function for fetching saved posts
+ * @route GET /api/profile/saved-posts
+ * @access private
+ */
+export const getSavedPosts: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const saved = await SavedPost.find({ user_id: req.user?._id }, { post_id: 1, _id: 0 });
+        const savedPostIds = saved.map(item => item.post_id);
+        const posts = await Post.aggregate([
+            {
+                $match: {
+                    _id: { $in: savedPostIds },
+                    is_archive: false,
+                    is_delete: false
+                }
+            },
+            {
+                $lookup: {
+                    from: 'userprofiles',
+                    localField: 'user_id',
+                    foreignField: 'user_id',
+                    as: "user_details",
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: 'users',
+                                localField: 'user_id',
+                                foreignField: '_id',
+                                as: "email",
+                                pipeline: [
+                                    {
+                                        $project: {
+                                            _id: 0,
+                                            email: 1
+                                        }
+                                    }
+                                ]
+
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$email"
+                            }
+                        },
+                        {
+                            $project: {
+                                username: 1,
+                                profile_img: 1,
+                                email: 1
+                            }
+                        },
+
+                    ]
+                }
+            }, {
+                $unwind: {
+                    path: "$user_details"
+                }
+            }
+        ])
+
+        if (posts) {
+            console.log(posts)
+            res.status(200).json({
+                status: 'ok',
+                message: 'saved posts fetched',
+                posts
+            })
+        } else {
+            next(new Error('Internal server error'))
         }
     }
 )

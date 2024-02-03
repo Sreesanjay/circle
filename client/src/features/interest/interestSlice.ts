@@ -90,7 +90,7 @@ export const interestSlice = createSlice({
                 state.errorMessage = error.message;
                 state.status = error.status;
             })
-            //get all interests
+            //get all interests -admin
             .addCase(getAllInterests.pending, (state) => {
                 state.isLoading = true;
             })
@@ -133,6 +133,7 @@ export const interestSlice = createSlice({
                 state.errorMessage = error.message;
                 state.status = error.status;
             })
+            
     }
 })
 

@@ -13,7 +13,7 @@ const storySchema: Schema<IStory> = new Schema({
     },
     story_type:{
         type:"string",
-        enum:["TEXT", "IMAGE"]
+        enum:["TEXT", "MEDIA"]
     },
     visibility:{
         type:"string",

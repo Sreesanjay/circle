@@ -1,0 +1,10 @@
+.volume-button{
+    background-color: rgba(255, 255, 255, 0.055);
+}
+.comments::-webkit-scrollbar{
+    display: none;
+}
+
+.post-container::-webkit-scrollbar{
+    display: none;
+}

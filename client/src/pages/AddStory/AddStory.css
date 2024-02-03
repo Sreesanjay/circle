@@ -1,5 +1,7 @@
 .story-type{
     height: 350px;
+    background: linear-gradient(225deg, #35d4c2 0%, #b15ee8 100%)
+
 }
 .add-story{
     height:100%;

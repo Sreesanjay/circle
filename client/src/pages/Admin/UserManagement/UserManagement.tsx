@@ -305,7 +305,7 @@ export default function UserManagement() {
                                         <Pagination
                                              currentPage={page}
                                              totalPages={
-                                                  analytics.total_users / 2
+                                                  analytics.total_users / 10
                                              }
                                              onPageChange={(newpage: number) =>
                                                   setPage(newpage)

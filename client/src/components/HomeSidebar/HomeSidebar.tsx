@@ -55,6 +55,7 @@ export default function HomeSidebar() {
                          <Sidebar.Item
                               icon={IoIosAddCircle}
                               className="text-xl icon"
+                              onClick={()=>navigate('/create-post')}
                          >
                               Create
                          </Sidebar.Item>

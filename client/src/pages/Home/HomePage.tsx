@@ -3,10 +3,11 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getUserProfile } from "../../services/userService";
 import HomeSidebar from "../../components/HomeSidebar/HomeSidebar";
 import "./HomePage.css";
+import Post from "../../components/Post/Post";
+
 import { AddIcon } from "../../assets/Icons";
 import { useNavigate } from "react-router-dom";
-import { getMyStory } from "../../services/storyService";
-import { resetStory } from "../../features/story/storySlice";
+
 export default function HomePage() {
      const dispatch = useAppDispatch();
      const navigate = useNavigate();
@@ -16,19 +17,15 @@ export default function HomePage() {
      useEffect(() => {
           (async () => {
                dispatch(getUserProfile());
-               dispatch(getMyStory());
           })();
      }, [dispatch]);
 
-     useEffect(() => {
-          if (myStory.isSuccess) {
-               dispatch(resetStory());
-          }
-     }, [myStory.isSuccess, dispatch]);
+
      return (
-          <div className="flex">
+          <div className="flex flex-col">
                <HomeSidebar />
-               <div className="section ms-80 w-full pe-5 py-2">
+
+               <div className="section md:ms-80 w-full md:w-auto pe-5">
                     <section className="story-section flex items-center gap-5 bg-slate-50 h-32 rounded-md ps-3 shadow-md">
                          <div className="my-story flex items-center justify-center relative">
                               <div
@@ -56,6 +53,9 @@ export default function HomePage() {
                                    </div>
                               )}
                          </div>
+                    </section>
+                    <section className="posts">
+                         <Post />
                     </section>
                </div>
           </div>

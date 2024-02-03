@@ -123,7 +123,7 @@ export default function ProfileView() {
 
      return (
           <section className="profile-view">
-               <Report openModal={openReport} setOpenModal={setOpenReport} id={id as string}/>
+               <Report openModal={openReport} setOpenModal={setOpenReport} id={id as string} reported_type={'account'}/>
                <section className="cover-photo">
                     {userProfile?.cover_img ? (
                          <img

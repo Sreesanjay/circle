@@ -144,13 +144,21 @@ export default function FindFriends() {
                                                   <h1>{user.username}</h1>
                                                   <div className="connections_details w-full flex justify-between py-3">
                                                        <div className="followers flex flex-col items-center justify-center text-sm">
-                                                            <h1>21k</h1>
+                                                            <h1>
+                                                                 {
+                                                                      user.followers
+                                                                 }
+                                                            </h1>
                                                             <span className="text-sm">
                                                                  followers
                                                             </span>
                                                        </div>
                                                        <div className="following text-sm flex flex-col items-center justify-center">
-                                                            <h1>21k</h1>
+                                                            <h1>
+                                                                 {
+                                                                      user.following
+                                                                 }
+                                                            </h1>
                                                             <span className="text-sm">
                                                                  following
                                                             </span>
@@ -208,13 +216,13 @@ export default function FindFriends() {
                                         <h1>{user.username}</h1>
                                         <div className="connections_details w-full flex justify-between py-3">
                                              <div className="followers flex flex-col items-center justify-center text-sm">
-                                                  <h1>21k</h1>
+                                                  <h1>{user.followers}</h1>
                                                   <span className="text-sm">
                                                        followers
                                                   </span>
                                              </div>
                                              <div className="following text-sm flex flex-col items-center justify-center">
-                                                  <h1>21k</h1>
+                                                  <h1>{user.following}</h1>
                                                   <span className="text-sm">
                                                        following
                                                   </span>

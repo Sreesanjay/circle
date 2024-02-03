@@ -5,7 +5,7 @@ export default function Profile() {
 const {user} = useAppSelector((state) => state.auth);
 const {userProfile} = useAppSelector((state) => state.user)
   return (
-    <div className="md:grid md:grid-cols-6 h-full">
+    <div className="md:grid md:grid-cols-6 h-full p-5">
       <div className="profile-section col-span-4">
           <h1 className="font-medium text-lg mb-5">View Profile</h1>
           <div className="wrapper grid grid-cols-4 mb-4">

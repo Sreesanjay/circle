@@ -3,12 +3,14 @@ import authReducer from "../features/auth/AuthSlice"
 import userReducer from "../features/user/userSlice"
 import interestReducer from "../features/interest/interestSlice"
 import storyReducer from "../features/story/storySlice"
+import postReducer from "../features/post/postSlice"
 export const store = configureStore({
   reducer: {
     auth : authReducer,
     user : userReducer,
     interest : interestReducer,
-    story : storyReducer
+    story : storyReducer,
+    post : postReducer
   },
 })
 

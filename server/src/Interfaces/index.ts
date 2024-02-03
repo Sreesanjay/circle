@@ -60,3 +60,31 @@ export interface IReport extends Document{
      reported_id:ObjectId;
      reported_type: string;
 }
+
+
+export interface IPost extends Document{
+     user_id:ObjectId;
+     content:string;
+     caption: string;
+     visibility:string;
+     tags:ObjectId[];
+     impressions:number;
+     likes:ObjectId[];
+     profile_visit:number;
+     comment:ObjectId;
+     is_delete:boolean;
+     is_archive:boolean;
+     type:string;
+}
+
+export interface IComment extends Document{
+     post_id:ObjectId;
+     user_id:ObjectId;
+     content:string;
+     reply: ObjectId;
+}
+
+export interface ISavedPost extends Document{
+     user_id:ObjectId;
+     post_id:ObjectId;
+}

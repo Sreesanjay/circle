@@ -61,7 +61,9 @@ export default function ManageAccSidebar() {
                          </div>
                          <Sidebar.Item icon={HiUser}>Account</Sidebar.Item>
                          <Sidebar.Item icon={HiShoppingBag}>
-                              Blocked Users
+                         <Link to="/manage-account/blocked-users">
+                                   Blocked Users
+                              </Link>
                          </Sidebar.Item>
                     </Sidebar.ItemGroup>
                     <Sidebar.ItemGroup>

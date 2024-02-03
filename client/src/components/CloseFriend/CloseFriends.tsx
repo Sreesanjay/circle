@@ -22,7 +22,7 @@ export default function CloseFriends() {
                     toast.error(err.message);
                }
           })();
-     });
+     }, []);
      return (
           <div className="flex gap-3">
                {users &&

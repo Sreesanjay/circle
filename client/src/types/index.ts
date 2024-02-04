@@ -26,19 +26,17 @@ export interface IStory {
     user_id: string;
     _id: string;
     content: string;
-    views: string;
-    viewer_type: string;
     story_type: string;
     visibility: string;
-    background : string;
-    color : string;
-    story_viewers: [{
-        _id: string;
-        user_id: string;
-        viewed_on: Date;
-        is_liked: boolean;
-        comment: string
-    }]
+    background: string;
+    color: string;
+    likes:string[];
+    story_viewers: string[];
+}
+
+export interface IStories{
+    stories: IStory[],
+    user_details: userDetails;
 }
 export interface userList {
     username: string;
@@ -67,6 +65,7 @@ export interface IComment {
 
 interface userDetails {
     username: string;
+    fullname: string;
     profile_img: string;
     email: {
         email: string;
@@ -86,7 +85,7 @@ export interface IPost {
     visibility: string;
     impressions: number;
     profile_visit: number;
-    comment:number;
+    comment: number;
     reports: [];
     createdAt: Date;
     likes: string[];

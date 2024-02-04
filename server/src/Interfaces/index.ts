@@ -56,6 +56,7 @@ export interface IStory extends Document {
      visibility: string;
 }
 
+
 export interface IReport extends Document {
      user_id: ObjectId;
      reason: string,

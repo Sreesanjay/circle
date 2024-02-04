@@ -134,7 +134,7 @@ export function ProfileIconWithText({ email, size }: ProfileIconWithTextProps) {
                          : null
                } bg-gray-200 hover:bg-gray-300 px-3 rounded-lg w-min`}
           >
-               {firstLetter.toUpperCase()}
+               {firstLetter?.toUpperCase()}
           </div>
      );
 }

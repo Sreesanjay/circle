@@ -547,36 +547,37 @@ export const searchUser: RequestHandler = asyncHandler(
                 message: "report added",
                 userData: []
             })
-        }
-        const userData = await UserProfile.aggregate([
-            {
-                $match: {
-                    $or: [
-                        { username: { $regex: new RegExp(search, 'i') } },
-                        { fullname: { $regex: new RegExp(search, 'i') } }
-                    ],
-                }
-            },
-            {
-                $project: {
-                    user_id: 1,
-                    username: 1,
-                    fullname: 1,
-                    profile_img: 1
-                }
-            },
-            {
-                $limit: 50
-            }
-        ])
-        if (userData) {
-            res.status(200).json({
-                status: 'ok',
-                message: "report added",
-                userData
-            })
         } else {
-            next(new Error())
+            const userData = await UserProfile.aggregate([
+                {
+                    $match: {
+                        $or: [
+                            { username: { $regex: new RegExp(search, 'i') } },
+                            { fullname: { $regex: new RegExp(search, 'i') } }
+                        ],
+                    }
+                },
+                {
+                    $project: {
+                        user_id: 1,
+                        username: 1,
+                        fullname: 1,
+                        profile_img: 1
+                    }
+                },
+                {
+                    $limit: 50
+                }
+            ])
+            if (userData) {
+                res.status(200).json({
+                    status: 'ok',
+                    message: "report added",
+                    userData
+                })
+            } else {
+                next(new Error())
+            }
         }
 
     }

@@ -51,5 +51,86 @@ export const getMyStory: RequestHandler = asyncHandler(
         } else {
             next(Error("Server Error"))
         }
-    }
-)
+    })
+
+/**
+ * @desc function for fetching my story
+ * @route GET /api/story/all-stories
+ * @access private
+ */
+export const getStories: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const story = await Story.aggregate([
+            {
+                $match: { user_id: { $ne: req.user?._id } }
+            },
+            {
+                $sort:{
+                    createdAt:1
+                }
+            },
+            {
+                $group: {
+                    _id: '$user_id',
+                    stories: {
+                        $push: '$$ROOT'
+                    },
+                }
+            },
+            {
+                $lookup: {
+                    from: 'userprofiles',
+                    localField: '_id',
+                    foreignField: 'user_id',
+                    as: 'user_details',
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: 'users',
+                                localField: 'user_id',
+                                foreignField: '_id',
+                                as: 'email',
+                                pipeline:[
+                                    {
+                                        $project:{
+                                            _id:0,
+                                            email:1
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $unwind:{
+                                path:'$email'
+                            }
+                        },
+                        {
+                            $project: {
+                                username: 1,
+                                fullname: 1,
+                                profile_img: 1,
+                                email:1
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: {
+                    path: '$user_details'
+                }
+            },
+        ])
+        // console.log(story[0]);
+        if (story) {
+            res.status(200).json({
+                status: 'OK',
+                message: "stories fetched",
+                story
+            })
+        } else {
+            next(Error("Server Error"))
+        }
+    })
+

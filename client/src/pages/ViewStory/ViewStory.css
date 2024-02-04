@@ -1,0 +1,86 @@
+/* .all-stories {
+     width: 30vw;
+     overflow: hidden;
+}
+@media only screen and (max-width: 650px) {
+     .all-stories {
+          width: 100vw;
+          overflow: hidden;
+     }
+     .arrow {
+          display: none;
+     }
+}
+
+.stories {
+     height: 82vh;
+}
+.slide {
+     transform: scale(0.2);
+     transition: transform 300ms;
+     opacity: 0.5;
+}
+
+.activeSlide {
+     transform: scale(1.1);
+     opacity: 1;
+}
+
+.arrow {
+     background-color: #fff;
+     position: absolute;
+     cursor: pointer;
+     z-index: 10;
+}
+.slick-initialized {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+}
+.slick-initialized div:nth-child(2) {
+     /* width: 100% !important; */
+     /* width:25vw; */
+     /* background-color: red; */
+/* }
+.slick-active {
+     width: 25% !important;
+} */
+
+/* .story-card div:last-child div:nth-child(2){
+    justify-content: flex-start;
+} */
+
+/* .arrow svg {
+     transition: color 300ms;
+}
+
+.arrow svg:hover {
+     color: #68edff;
+} */ 
+
+/* .next {
+     right: 0%;
+     top: 50%;
+}
+
+.prev {
+     left: 0%;
+     top: 50%;
+} */
+
+/* .story-card{
+    width: 30vh;
+} */
+.all-stories{
+    width: 100vw;
+}
+.story{
+    height: 80vh;
+}
+.prev-story{
+    height: 40vh;
+    width: 15vw;
+}
+.prev-story-card{
+    width: 15vw;
+}

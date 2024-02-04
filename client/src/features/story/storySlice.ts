@@ -1,9 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IStory } from "../../types";
-import { addStory, getMyStory } from "../../services/storyService";
+import { IStories, IStory } from "../../types";
+import { addStory, getMyStory, getStories, likeStory } from "../../services/storyService";
 
 interface Interest {
-    story: IStory | null;
+    story: IStories[] | [];
     myStory: IStory[];
     isLoading: boolean;
     isError: boolean;
@@ -13,7 +13,7 @@ interface Interest {
 }
 
 const initialState: Interest = {
-    story: null,
+    story: [],
     myStory: [],
     isLoading: false,
     isError: false,
@@ -64,6 +64,51 @@ export const storySlice = createSlice({
                 state.myStory = action.payload.story
             })
             .addCase(getMyStory.rejected, (state, action) => {
+                state.isError = true;
+                state.isLoading = false;
+                const error = action.payload as {
+                    message: string,
+                    status: number
+                };
+                state.errorMessage = error.message;
+                state.status = error.status;
+            })
+            
+            //get all stories
+            .addCase(getStories.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(getStories.fulfilled, (state, action: PayloadAction<{ story: IStories[]; message: string }>) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.story =action.payload.story
+            })
+            .addCase(getStories.rejected, (state, action) => {
+                state.isError = true;
+                state.isLoading = false;
+                const error = action.payload as {
+                    message: string,
+                    status: number
+                };
+                state.errorMessage = error.message;
+                state.status = error.status;
+            })
+            //get all stories
+            .addCase(likeStory.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(likeStory.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                // const story = state.story.map((stories)=>{
+                //     stories.stories.map((item)=>{
+                //         if(item._id === action.payload.id){
+                //             item.story_viewers.
+                //         }
+                //     })
+                // })
+            })
+            .addCase(likeStory.rejected, (state, action) => {
                 state.isError = true;
                 state.isLoading = false;
                 const error = action.payload as {

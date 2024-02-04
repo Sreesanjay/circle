@@ -11,6 +11,12 @@ const storySchema: Schema<IStory> = new Schema({
         type:"string",
         required: true
     },
+    background:{
+        type:"string",
+    },
+    color:{
+        type:"string",
+    },
     story_type:{
         type:"string",
         enum:["TEXT", "MEDIA"]

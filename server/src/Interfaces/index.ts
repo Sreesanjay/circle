@@ -5,7 +5,7 @@ export interface IUser extends Document {
      password: string;
      role: string;
      wallet: number;
-     blocked_users : ObjectId[];
+     blocked_users: ObjectId[];
      is_blocked: boolean;
 }
 export interface IUserProfile extends Document {
@@ -40,51 +40,53 @@ export interface IMailOptions {
      text: string;
 }
 
-export interface IConnections extends Document{
-     user_id:ObjectId
-     following:ObjectId[],
-     close_friend:ObjectId[],
+export interface IConnections extends Document {
+     user_id: ObjectId
+     following: ObjectId[],
+     close_friend: ObjectId[],
 }
 
 
-export interface IStory extends Document{
-     user_id:ObjectId;
-     content:string;
-     story_type:string;
-     visibility:string;
+export interface IStory extends Document {
+     user_id: ObjectId;
+     content: string;
+     background: string;
+     color: string;
+     story_type: string;
+     visibility: string;
 }
 
-export interface IReport extends Document{
-     user_id:ObjectId;
-     reason:string,
-     reported_id:ObjectId;
+export interface IReport extends Document {
+     user_id: ObjectId;
+     reason: string,
+     reported_id: ObjectId;
      reported_type: string;
 }
 
 
-export interface IPost extends Document{
-     user_id:ObjectId;
-     content:string;
+export interface IPost extends Document {
+     user_id: ObjectId;
+     content: string;
      caption: string;
-     visibility:string;
-     tags:ObjectId[];
-     impressions:number;
-     likes:ObjectId[];
-     profile_visit:number;
-     comment:ObjectId;
-     is_delete:boolean;
-     is_archive:boolean;
-     type:string;
+     visibility: string;
+     tags: ObjectId[];
+     impressions: number;
+     likes: ObjectId[];
+     profile_visit: number;
+     comment: ObjectId;
+     is_delete: boolean;
+     is_archive: boolean;
+     type: string;
 }
 
-export interface IComment extends Document{
-     post_id:ObjectId;
-     user_id:ObjectId;
-     content:string;
+export interface IComment extends Document {
+     post_id: ObjectId;
+     user_id: ObjectId;
+     content: string;
      reply: ObjectId;
 }
 
-export interface ISavedPost extends Document{
-     user_id:ObjectId;
-     post_id:ObjectId;
+export interface ISavedPost extends Document {
+     user_id: ObjectId;
+     post_id: ObjectId;
 }

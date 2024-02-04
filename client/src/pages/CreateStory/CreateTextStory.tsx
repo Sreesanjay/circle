@@ -1,4 +1,4 @@
-import { Breadcrumb, Tabs } from "flowbite-react";
+import { Breadcrumb } from "flowbite-react";
 import { HiHome } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -23,14 +23,16 @@ export default function CreateTextStory() {
      function handleSubmit() {
           setError("");
           if (story.length === 0) setError("story cannot be empty");
-          else if (story.length > 100)
-               setError("Story should be less than 100 characters");
+          else if (story.length > 50)
+               setError("Story should be less than 50 characters");
           else {
                dispatch(
                     addStory({
                          story_type: "TEXT",
                          content: story,
                          visibility: visibility,
+                         background,
+                         color,
                     })
                );
           }
@@ -40,11 +42,12 @@ export default function CreateTextStory() {
           dispatch(resetStory());
           if (isSuccess) {
                toast("Success");
+               navigate('/')
           }
           if (isError) {
                toast.error(errorMessage);
           }
-     }, [dispatch, errorMessage, isSuccess, isError]);
+     }, [dispatch, errorMessage, isSuccess, isError, navigate]);
 
      return (
           <section className="p-5 create-story">

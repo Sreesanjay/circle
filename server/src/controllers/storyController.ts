@@ -10,23 +10,25 @@ import Story from "../models/storySchema";
 export const addStory: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         console.log(req.body)
-        const { story_type, content, visibility } = req.body;
+        const { story_type, content, visibility, background, color } = req.body;
         if (!story_type || !content || !visibility) {
             res.status(400);
             return next(Error("Invalid credentials"));
         }
         const newStory = new Story({
             story_type, content, visibility,
-            user_id:req.user?._id
+            user_id: req.user?._id,
+            ...(background && { background }),
+            ...(color && { color }),
         });
-        const story =await newStory.save();
-        if(story){
+        const story = await newStory.save();
+        if (story) {
             res.status(201).json({
-                status:'created',
-                message:"New Story uploaded",
+                status: 'created',
+                message: "New Story uploaded",
                 story
             })
-        }else{
+        } else {
             next(Error("Server error"))
         }
     }
@@ -39,14 +41,14 @@ export const addStory: RequestHandler = asyncHandler(
  */
 export const getMyStory: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const story = await Story.find({user_id:req.user?._id});
-        if(story){
+        const story = await Story.find({ user_id: req.user?._id });
+        if (story) {
             res.status(200).json({
                 status: 'OK',
                 message: "my stories fetched",
                 story
             })
-        }else{
+        } else {
             next(Error("Server Error"))
         }
     }

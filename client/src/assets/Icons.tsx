@@ -18,6 +18,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CreateIcon from "@mui/icons-material/Create";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 const PRIMARY = "#388087";
 export function Notification() {
@@ -84,6 +85,13 @@ export function AddIcon({ size }: { size: number }) {
      return (
           <IconButton>
                <AddCircleIcon sx={{ fontSize: size, color: PRIMARY }} />
+          </IconButton>
+     );
+}
+export function CloseXIcon({ size }: { size: number }) {
+     return (
+          <IconButton>
+               <CloseIcon sx={{ fontSize: size, color: PRIMARY }} />
           </IconButton>
      );
 }

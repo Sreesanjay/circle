@@ -30,6 +30,8 @@ export interface IStory {
     viewer_type: string;
     story_type: string;
     visibility: string;
+    background : string;
+    color : string;
     story_viewers: [{
         _id: string;
         user_id: string;

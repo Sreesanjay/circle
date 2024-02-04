@@ -7,6 +7,8 @@ type IAddStory = {
     story_type: string;
     content: string;
     visibility: string;
+    background : string;
+    color : string;
 }
 
 export const addStory = createAsyncThunk(

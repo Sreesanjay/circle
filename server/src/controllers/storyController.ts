@@ -1,6 +1,7 @@
 import { Request, RequestHandler, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import Story from "../models/storySchema";
+import UserProfile from "../models/userProfile";
 
 /**
  * @desc function for adding new story
@@ -65,8 +66,8 @@ export const getStories: RequestHandler = asyncHandler(
                 $match: { user_id: { $ne: req.user?._id } }
             },
             {
-                $sort:{
-                    createdAt:1
+                $sort: {
+                    createdAt: 1
                 }
             },
             {
@@ -90,19 +91,19 @@ export const getStories: RequestHandler = asyncHandler(
                                 localField: 'user_id',
                                 foreignField: '_id',
                                 as: 'email',
-                                pipeline:[
+                                pipeline: [
                                     {
-                                        $project:{
-                                            _id:0,
-                                            email:1
+                                        $project: {
+                                            _id: 0,
+                                            email: 1
                                         }
                                     }
                                 ]
                             }
                         },
                         {
-                            $unwind:{
-                                path:'$email'
+                            $unwind: {
+                                path: '$email'
                             }
                         },
                         {
@@ -110,7 +111,7 @@ export const getStories: RequestHandler = asyncHandler(
                                 username: 1,
                                 fullname: 1,
                                 profile_img: 1,
-                                email:1
+                                email: 1
                             }
                         }
                     ]
@@ -134,3 +135,135 @@ export const getStories: RequestHandler = asyncHandler(
         }
     })
 
+
+
+/**
+ * @desc function for adding view to a story
+ * @route PUT /api/story/view-story
+ * @access private
+ */
+export const viewStory: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const id = req.params.id;
+        const exist = await Story.findById(id);
+        if (!exist) {
+            res.status(400);
+            return next(new Error('Story not found'))
+        }
+        const story = await Story.findOneAndUpdate({ _id: id }, { $addToSet: { story_viewers: req.user?._id } }, { new: true });
+        if (story) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'story viewers updated',
+                story
+            })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    })
+
+
+
+/**
+ * @desc function for adding view to a story
+ * @route PUT /api/story/like-story/:id
+ * @access private
+ */
+export const likeStory: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const id = req.params.id;
+        const exist = await Story.findById(id);
+        if (!exist) {
+            res.status(400);
+            return next(new Error('Story not found'))
+        }
+        const story = await Story.findOneAndUpdate({ _id: id }, { $addToSet: { likes: req.user?._id } }, { new: true });
+        if (story) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'like added',
+                story
+            })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    })
+
+/**
+ * @desc function for adding view to a story
+ * @route PUT /api/story/like-story/:id
+ * @access private
+ */
+export const dislikeStory: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const id = req.params.id;
+        const exist = await Story.findById(id);
+        if (!exist) {
+            res.status(400);
+            return next(new Error('Story not found'))
+        }
+        const story = await Story.findOneAndUpdate({ _id: id }, { $pull: { likes: req.user?._id } }, { new: true });
+        if (story) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'dislike added',
+                story
+            })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    })
+
+
+/**
+ * @desc function for getting story viewers
+ * @route PUT /api/story/get-viewers-list/:id
+ * @access private
+ */
+export const getUserList: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const id = req.params.id;
+        const exist = await Story.findById(id);
+        if (!exist) {
+            res.status(400);
+            return next(new Error('Story not found'))
+        }
+        const userList = await UserProfile.aggregate([
+            {
+                $match: { user_id: { $in: exist.story_viewers } },
+
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user_id',
+                    foreignField: '_id',
+                    as: 'email',
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 0,
+                                email: 1
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: {
+                    path: '$email'
+                }
+            }
+
+        ])
+        console.log(userList)
+        if (userList) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'dislike added',
+                userList
+            })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    })

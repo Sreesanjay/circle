@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IStories, IStory } from "../../types";
-import { addStory, getMyStory, getStories, likeStory } from "../../services/storyService";
+import { addStory, dislikeStory, getMyStory, getStories, likeStory, viewStory } from "../../services/storyService";
 
 interface Interest {
     story: IStories[] | [];
@@ -73,7 +73,7 @@ export const storySlice = createSlice({
                 state.errorMessage = error.message;
                 state.status = error.status;
             })
-            
+
             //get all stories
             .addCase(getStories.pending, (state) => {
                 state.isLoading = true
@@ -81,7 +81,7 @@ export const storySlice = createSlice({
             .addCase(getStories.fulfilled, (state, action: PayloadAction<{ story: IStories[]; message: string }>) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.story =action.payload.story
+                state.story = action.payload.story
             })
             .addCase(getStories.rejected, (state, action) => {
                 state.isError = true;
@@ -93,22 +93,79 @@ export const storySlice = createSlice({
                 state.errorMessage = error.message;
                 state.status = error.status;
             })
-            //get all stories
+
+
+            //like stories
             .addCase(likeStory.pending, (state) => {
                 state.isLoading = true
             })
             .addCase(likeStory.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                // const story = state.story.map((stories)=>{
-                //     stories.stories.map((item)=>{
-                //         if(item._id === action.payload.id){
-                //             item.story_viewers.
-                //         }
-                //     })
-                // })
+                const story = state.story.map((stories) => {
+                    stories.stories = stories.stories.map((item) => {
+                        if (item._id === action.payload.story._id) {
+                            return action.payload.story;
+
+                        } else {
+                            return item;
+                        }
+                    })
+                    return stories;
+                })
+                state.story = story;
             })
             .addCase(likeStory.rejected, (state, action) => {
+                state.isError = true;
+                state.isLoading = false;
+                const error = action.payload as {
+                    message: string,
+                    status: number
+                };
+                state.errorMessage = error.message;
+                state.status = error.status;
+            })
+
+            //view stories
+            .addCase(viewStory.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(viewStory.fulfilled, (state) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+            })
+            .addCase(viewStory.rejected, (state, action) => {
+                state.isError = true;
+                state.isLoading = false;
+                const error = action.payload as {
+                    message: string,
+                    status: number
+                };
+                state.errorMessage = error.message;
+                state.status = error.status;
+            })
+
+            //dislike stories
+            .addCase(dislikeStory.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(dislikeStory.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                const story = state.story.map((stories) => {
+                    stories.stories = stories.stories.map((item) => {
+                        if (item._id === action.payload.story._id) {
+                            return action.payload.story;
+
+                        } else {
+                            return item;
+                        }
+                    })
+                    return stories;
+                })
+                state.story = story;
+            })
+            .addCase(dislikeStory.rejected, (state, action) => {
                 state.isError = true;
                 state.isLoading = false;
                 const error = action.payload as {

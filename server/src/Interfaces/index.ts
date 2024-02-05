@@ -54,6 +54,8 @@ export interface IStory extends Document {
      color: string;
      story_type: string;
      visibility: string;
+     likes: string[];
+     story_viewers: string[];
 }
 
 

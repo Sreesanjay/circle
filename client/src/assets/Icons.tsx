@@ -131,7 +131,7 @@ export function ProfileIconWithText({ email, size }: ProfileIconWithTextProps) {
                          ? "text-4xl py-1"
                          : size === "large"
                          ? "text-9xl px-8"
-                         : null
+                         :null
                } bg-gray-200 hover:bg-gray-300 px-3 rounded-lg w-min`}
           >
                {firstLetter?.toUpperCase()}

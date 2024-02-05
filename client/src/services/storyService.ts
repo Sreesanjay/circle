@@ -78,7 +78,48 @@ export const likeStory = createAsyncThunk(
     "story/likeStory",
     async (id:string, thunkAPI) => {
         try {
-            const response = await API.get(`/story/like-story/${id}`, {
+            const response = await API.put(`/story/like-story/${id}`,{},{
+                withCredentials: true,
+            });
+            return response.data;
+        } catch (error) {
+            const err = error as AxiosError<{
+                message?: string;
+                status?: string;
+            }>
+            const payload = {
+                message: err.response?.data?.message,
+                status: err.response?.status
+            };
+            return thunkAPI.rejectWithValue(payload);
+        }
+    })
+export const dislikeStory = createAsyncThunk(
+    "story/dislikeStory",
+    async (id:string, thunkAPI) => {
+        try {
+            const response = await API.put(`/story/dislike-story/${id}`,{},{
+                withCredentials: true,
+            });
+            return response.data;
+        } catch (error) {
+            const err = error as AxiosError<{
+                message?: string;
+                status?: string;
+            }>
+            const payload = {
+                message: err.response?.data?.message,
+                status: err.response?.status
+            };
+            return thunkAPI.rejectWithValue(payload);
+        }
+    })
+
+export const viewStory = createAsyncThunk(
+    "story/viewStory",
+    async (id:string, thunkAPI) => {
+        try {
+            const response = await API.put(`/story/view-story/${id}`,{}, {
                 withCredentials: true,
             });
             return response.data;

@@ -5,17 +5,17 @@ import { resetStory } from "../../features/story/storySlice";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 
-import { CloseXIcon, LikeIcon, ProfileIconWithText } from "../../assets/Icons";
+import { CloseXIcon, DislikeIcon, LikeIcon, ProfileIconWithText } from "../../assets/Icons";
 import { useNavigate, useParams } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./ViewStory.css";
-import { getStories, likeStory } from "../../services/storyService";
-import { IStory } from "../../types";
+import { dislikeStory, getStories, likeStory, viewStory } from "../../services/storyService";
 
 export default function ViewStory() {
      const navigate = useNavigate();
      const { story, isSuccess } = useAppSelector((state) => state.story);
+     const { user } = useAppSelector((state) => state.auth);
      const dispatch = useAppDispatch();
      const { initialIndex } = useParams();
      const [current, setCurrent] = useState<number>(
@@ -37,7 +37,7 @@ export default function ViewStory() {
      }
 
      useEffect(() => {
-          viewHandle(story[current].stories[0]._id);
+          viewHandle(story[current]?.stories[0]?._id);
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [current]);
 
@@ -53,12 +53,15 @@ export default function ViewStory() {
           }
      }, [isSuccess, dispatch]);
 
-     function LikeStory(story: IStory) {
-          dispatch(likeStory(story._id));
+     function LikeStory(story_id: string) {
+          dispatch(likeStory(story_id));
+     }
+     function DislikeStory(story_id: string) {
+          dispatch(dislikeStory(story_id));
      }
 
      function viewHandle(story_id: string) {
-          console.log(story_id);
+          dispatch(viewStory(story_id));
      }
      return (
           <section className="stories sm:p-5 flex justify-cente">
@@ -176,9 +179,9 @@ export default function ViewStory() {
                                                        showThumbs={false}
                                                        onChange={(index) =>
                                                             viewHandle(
-                                                                 item.stories[
+                                                                 item?.stories[
                                                                       index
-                                                                 ]._id
+                                                                 ]?._id
                                                             )
                                                        }
                                                   >
@@ -193,7 +196,7 @@ export default function ViewStory() {
                                                                                 key={
                                                                                      index
                                                                                 }
-                                                                                className={`story ${item.background} flex items-center justify-center`}
+                                                                                className={`story ${item.background} flex items-center justify-center rounded-md`}
                                                                            >
                                                                                 {item.story_type ===
                                                                                 "TEXT" ? (
@@ -210,21 +213,41 @@ export default function ViewStory() {
                                                                                           alt=""
                                                                                      />
                                                                                 )}
-                                                                                <div className="footer absolute bottom-4">
-                                                                                     <div
-                                                                                          className=""
-                                                                                          onClick={() =>
-                                                                                               LikeStory(
-                                                                                                    item
-                                                                                               )
-                                                                                          }
-                                                                                     >
-                                                                                          <LikeIcon
-                                                                                               size={
-                                                                                                    45
+                                                                                <div className="footer absolute bottom-4 right-3">
+                                                                                     {user &&
+                                                                                     !item.likes.includes(
+                                                                                          user._id
+                                                                                     ) ? (
+                                                                                          <div
+                                                                                               className=""
+                                                                                               onClick={() =>
+                                                                                                    LikeStory(
+                                                                                                         item?._id
+                                                                                                    )
                                                                                                }
-                                                                                          />
-                                                                                     </div>
+                                                                                          >
+                                                                                               <LikeIcon
+                                                                                                    size={
+                                                                                                         45
+                                                                                                    }
+                                                                                               />
+                                                                                          </div>
+                                                                                     ) : (
+                                                                                          <div
+                                                                                               className=""
+                                                                                               onClick={() =>
+                                                                                                    DislikeStory(
+                                                                                                         item?._id
+                                                                                                    )
+                                                                                               }
+                                                                                          >
+                                                                                               <DislikeIcon
+                                                                                                    size={
+                                                                                                         45
+                                                                                                    }
+                                                                                               />
+                                                                                          </div>
+                                                                                     )}
                                                                                 </div>
                                                                            </div>
                                                                       );

@@ -36,7 +36,7 @@ export interface IStory {
 
 export interface IStories{
     stories: IStory[],
-    user_details: userDetails;
+    user_details: IuserDetails;
 }
 export interface userList {
     username: string;
@@ -63,7 +63,8 @@ export interface IComment {
 
 }
 
-interface userDetails {
+export interface IuserDetails {
+    user_id:string,
     username: string;
     fullname: string;
     profile_img: string;
@@ -76,7 +77,7 @@ export interface IPost {
     _id: string;
     user_id: string;
     is_saved: boolean;
-    user_details: userDetails;
+    user_details: IuserDetails;
     type: string;
     content: string;
     caption: string;

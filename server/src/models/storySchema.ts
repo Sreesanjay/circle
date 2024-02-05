@@ -1,30 +1,40 @@
 import mongoose, { Schema } from "mongoose";
-import {IStory } from "../Interfaces";
+import { IStory } from "../Interfaces";
 
 
 const storySchema: Schema<IStory> = new Schema({
-    user_id:{
+    user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    content:{
-        type:"string",
+    content: {
+        type: "string",
         required: true
     },
-    background:{
-        type:"string",
+    background: {
+        type: "string",
     },
-    color:{
-        type:"string",
+    color: {
+        type: "string",
     },
-    story_type:{
-        type:"string",
-        enum:["TEXT", "MEDIA"]
+    story_type: {
+        type: "string",
+        enum: ["TEXT", "MEDIA"]
     },
-    visibility:{
-        type:"string",
-        enum:["PUBLIC", "CLOSE_FRIENDS", "SUBSCRIBER_ONLY"]
-    }
+    visibility: {
+        type: "string",
+        enum: ["PUBLIC", "CLOSE_FRIENDS", "SUBSCRIBER_ONLY"]
+    },
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default:[]
+    }],
+    story_viewers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default:[]
+    }]
 }, { timestamps: true });
 
 export default mongoose.model<IStory>("Story", storySchema);

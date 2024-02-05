@@ -56,6 +56,7 @@ export interface IStory extends Document {
      visibility: string;
      likes: string[];
      story_viewers: string[];
+     is_delete : boolean;
 }
 
 

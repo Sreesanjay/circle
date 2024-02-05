@@ -17,6 +17,10 @@ const storySchema: Schema<IStory> = new Schema({
     color: {
         type: "string",
     },
+    is_delete: {
+        type: "boolean",
+        default: false
+    },
     story_type: {
         type: "string",
         enum: ["TEXT", "MEDIA"]
@@ -28,12 +32,12 @@ const storySchema: Schema<IStory> = new Schema({
     likes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        default:[]
+        default: []
     }],
     story_viewers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        default:[]
+        default: []
     }]
 }, { timestamps: true });
 

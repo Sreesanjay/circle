@@ -47,7 +47,7 @@ export function LikeIcon({ size }: { size: number }) {
      return (
           <>
                <IconButton>
-                    <FavoriteBorderIcon sx={{ fontSize: { size }, color: PRIMARY }} />
+                    <FavoriteBorderIcon sx={{ fontSize: { size }, color: 'red' }} />
                </IconButton>
           </>
      );
@@ -56,7 +56,7 @@ export function DislikeIcon({ size }: { size: number }) {
      return (
           <>
                <IconButton>
-                    <FavoriteIcon sx={{ fontSize: { size }, color: PRIMARY }} />
+                    <FavoriteIcon sx={{ fontSize: { size }, color:'red' }} />
                </IconButton>
           </>
      );

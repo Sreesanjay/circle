@@ -32,7 +32,7 @@ const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 
 function App() {
      return (
-          <div>
+          <div className="bg-slate-800">
                <Header />
                <Suspense fallback={<Loader />}>
                     <Routes>

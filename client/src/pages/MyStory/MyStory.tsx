@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { IoMdArrowDropup } from "react-icons/io";
-import { getMyStory } from "../../services/storyService";
+import { deleteStory, getMyStory } from "../../services/storyService";
 import { IoMdArrowDropdown } from "react-icons/io";
 import API from "../../api";
 import "./MyStory.css";
@@ -11,6 +11,7 @@ import { Carousel } from "flowbite-react";
 import {
      AddIcon,
      CloseXIcon,
+     DeleteBin,
      DislikeIcon,
      ProfileIconWithText,
 } from "../../assets/Icons";
@@ -25,8 +26,9 @@ export default function MyStory() {
      const { userProfile } = useAppSelector((state) => state.user);
      const dispatch = useAppDispatch();
      const [viewers, setViewers] = useState<IuserDetails[] | []>([]);
+     //for setting the view viewers list
      const [openViewers, setOpenViewers] = useState(false);
-     const [current, setCurrent] = useState(0);
+     const [current, setCurrent] = useState(0); //for checkign whether slide changed or not
      useEffect(() => {
           dispatch(getMyStory());
      }, [dispatch]);
@@ -38,6 +40,11 @@ export default function MyStory() {
      useEffect(() => {
           console.log(myStory);
      }, [myStory]);
+
+     function deleteHandle(id: string) {
+          console.log("delete", id);
+          dispatch(deleteStory(id));
+     }
 
      async function getStoryViewers(id: string) {
           console.log("got req");
@@ -59,7 +66,7 @@ export default function MyStory() {
      }
 
      return (
-          <section className="sm:p-5 flex bg-slate-50 justify-center w-screen">
+          <section className="sm:p-5 flex bg-gray-800 justify-center w-screen">
                <div className="story-card rounded-md relative w-screen sm:w-1/4 sm:min-w-96">
                     <div className="header p-3 flex gap-3 absolute z-20">
                          <ProfileIcon size="small" />
@@ -84,51 +91,70 @@ export default function MyStory() {
                          {myStory?.map((item) => {
                               return (
                                    <div
-                                        className={`story ${item.background} h-full flex items-center justify-center rounded-md`}
+                                        className={`story ${item.background} h-full flex items-center justify-center rounded-md flex-wrap ${item.visibility==='CLOSE_FRIENDS'? 'border' :''}`}
                                    >
                                         {item.story_type === "TEXT" ? (
                                              <h1
-                                                  className={`text-${item.color}`}
+                                                  className={`text-${item.color} text-2xl`}
                                              >
                                                   {item.content}
                                              </h1>
                                         ) : (
-                                             <img src="" alt="" />
+                                             <img
+                                                  src={item.content}
+                                                  alt=""
+                                                  className=""
+                                             />
                                         )}
-                                        <div className="footer absolute min-h-10 w-full bottom-0 p-5">
-                                             {openViewers ? (
+                                        <div className="footer absolute min-h-5 w-full bottom-0 px-5 py-1">
+                                             <div className="flex">
+                                                  {openViewers ? (
+                                                       <button
+                                                            className="flex items-center"
+                                                            onClick={() =>
+                                                                 setOpenViewers(
+                                                                      false
+                                                                 )
+                                                            }
+                                                       >
+                                                            {
+                                                                 item
+                                                                      .story_viewers
+                                                                      .length
+                                                            }
+                                                            Views
+                                                            <IoMdArrowDropdown className="text-2xl" />
+                                                       </button>
+                                                  ) : (
+                                                       <button
+                                                            className="flex items-center"
+                                                            onClick={() =>
+                                                                 getStoryViewers(
+                                                                      item._id
+                                                                 )
+                                                            }
+                                                       >
+                                                            {
+                                                                 item
+                                                                      .story_viewers
+                                                                      .length
+                                                            }
+                                                            Views
+                                                            <IoMdArrowDropup className="text-2xl" />
+                                                       </button>
+                                                  )}
                                                   <button
-                                                       className="flex items-center"
+                                                       className="cursor-pointer ms-5"
                                                        onClick={() =>
-                                                            setOpenViewers(
-                                                                 false
-                                                            )
-                                                       }
-                                                  >
-                                                       {
-                                                            item.story_viewers
-                                                                 .length
-                                                       }
-                                                       Views
-                                                       <IoMdArrowDropdown className="text-2xl" />
-                                                  </button>
-                                             ) : (
-                                                  <button
-                                                       className="flex items-center"
-                                                       onClick={() =>
-                                                            getStoryViewers(
+                                                            deleteHandle(
                                                                  item._id
                                                             )
                                                        }
                                                   >
-                                                       {
-                                                            item.story_viewers
-                                                                 .length
-                                                       }
-                                                       Views
-                                                       <IoMdArrowDropup className="text-2xl" />
+                                                       <DeleteBin size={25} />
                                                   </button>
-                                             )}
+                                             </div>
+
                                              {openViewers && (
                                                   <div className="viewers bg-gray-600 py-4 ps-2 shadow-md rounded-md">
                                                        {viewers &&

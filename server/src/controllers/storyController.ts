@@ -2,6 +2,7 @@ import { Request, RequestHandler, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import Story from "../models/storySchema";
 import UserProfile from "../models/userProfile";
+import Connection from "../models/connectionSchema";
 
 /**
  * @desc function for adding new story
@@ -61,9 +62,30 @@ export const getMyStory: RequestHandler = asyncHandler(
  */
 export const getStories: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const connection = await Connection.find({ following: { $in: req.user?._id } }, { _id: 0, user_id: 1 })
+        const close_friend = await Connection.find({ close_friend: { $in: req.user?._id } }, { _id: 0, user_id: 1 })
+        console.log(close_friend)
         const story = await Story.aggregate([
             {
-                $match: { user_id: { $ne: req.user?._id } }
+                $match: {
+
+                    "user_id": {
+                        $in: connection.map(item => item.user_id)
+                    }
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { "visibility": { $ne: "CLOSE_FRIENDS" } },  // Include stories with other visibility types
+                        {
+                            $and: [
+                                { "visibility": "CLOSE_FRIENDS" },
+                                { "user_id": { $in: close_friend.map(item => item.user_id) } }
+                            ]
+                        }
+                    ]
+                }
             },
             {
                 $sort: {
@@ -123,7 +145,7 @@ export const getStories: RequestHandler = asyncHandler(
                 }
             },
         ])
-        // console.log(story[0]);
+        console.log(story[0])
         if (story) {
             res.status(200).json({
                 status: 'OK',
@@ -262,6 +284,27 @@ export const getUserList: RequestHandler = asyncHandler(
                 status: 'ok',
                 message: 'dislike added',
                 userList
+            })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    })
+
+
+/**
+ * @desc function for deleting story
+ * @route DELETE /api/story/:id
+ * @access private
+ */
+export const deleteStory: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const id = req.params.id;
+        const deletedStory = await Story.findOneAndDelete({ _id: id }, { new: true });
+        if (deletedStory) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'story deleted',
+                story_id: id
             })
         } else {
             next(new Error("Internal server error"))

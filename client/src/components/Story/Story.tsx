@@ -29,7 +29,7 @@ export default function Story() {
           console.log(story);
      }, [story]);
      return (
-          <section className="story-section flex items-center gap-5 bg-slate-50 h-32 rounded-md ps-3 shadow-md">
+          <section className="story-section flex items-center gap-5 bg-gray-900 h-32 rounded-md ps-3 shadow-md">
                <div className="my-story flex items-center justify-center relative ">
                     <div
                          className="profile p-1 rounded-full cursor-pointer relative"

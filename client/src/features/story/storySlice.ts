@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IStories, IStory } from "../../types";
-import { addStory, dislikeStory, getMyStory, getStories, likeStory, viewStory } from "../../services/storyService";
+import { addStory, deleteStory, dislikeStory, getMyStory, getStories, likeStory, viewStory } from "../../services/storyService";
 
 interface Interest {
     story: IStories[] | [];
@@ -166,6 +166,28 @@ export const storySlice = createSlice({
                 state.story = story;
             })
             .addCase(dislikeStory.rejected, (state, action) => {
+                state.isError = true;
+                state.isLoading = false;
+                const error = action.payload as {
+                    message: string,
+                    status: number
+                };
+                state.errorMessage = error.message;
+                state.status = error.status;
+            })
+
+
+            //delete stories
+            .addCase(deleteStory.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(deleteStory.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                const myStory = state.myStory.filter((item)=>item._id !== action.payload.story_id)
+                state.myStory = myStory;
+            })
+            .addCase(deleteStory.rejected, (state, action) => {
                 state.isError = true;
                 state.isLoading = false;
                 const error = action.payload as {

@@ -46,12 +46,12 @@ export default function SearchBox() {
                <input
                     type="text"
                     onChange={(e) => setSearch(e.target.value)}
-                    className="search"
+                    className="search text-black"
                     placeholder="Search"
                     value={search}
                />
                {userData.length > 0 && (
-                    <div className="user-list-search absolute mt-2 py-2 bg-white w-72 shadow-md cursor-pointer">
+                    <div className="user-list-search absolute mt-2 py-2 bg-gray-800 w-72 shadow-md cursor-pointer">
                          {userData.map((user) => {
                               return (
                                    <div

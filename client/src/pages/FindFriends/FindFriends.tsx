@@ -121,7 +121,7 @@ export default function FindFriends() {
                               <section className="suggested-for-you flex gap-5 py-5 flex-wrap justify-center sm:justify-start">
                                    {suggestion.map((user) => {
                                         return (
-                                             <div className="friend-card flex flex-col items-center w-56 shadow-md p-3">
+                                             <div className="friend-card bg-gray-900 rounded-md flex flex-col items-center w-56 shadow-md p-3">
                                                   <div className="header w-32 rounded-md mb-3">
                                                        {user.profile_img ? (
                                                             <img
@@ -198,7 +198,7 @@ export default function FindFriends() {
                     <section className="suggested-for-you flex gap-5 py-5 flex-wrap justify-center sm:justify-start">
                          {userList.map((user) => {
                               return (
-                                   <div className="friend-card flex flex-col items-center w-56 shadow-md p-3">
+                                   <div className="friend-card bg-gray-900 rounded-md flex flex-col items-center w-56 shadow-md p-3">
                                         <div className="header w-32 rounded-md mb-3">
                                              {user.profile_img ? (
                                                   <img

@@ -91,7 +91,7 @@ export default function PostCard({ post }: { post: IPost }) {
 
      return (
           <>
-               <section className="post-card md:w-3/6 mb-5 bg-slate-50 rounded-md shadow-md pb-3">
+               <section className="post-card md:w-3/6 mb-5 bg-gray-900 rounded-md shadow-lg pb-3">
                     <div className="header flex gap-3 px-5 py-2 shadow-sm justify-between relative">
                          <div className="flex gap-3">
                               <div className="profile-img-icon">

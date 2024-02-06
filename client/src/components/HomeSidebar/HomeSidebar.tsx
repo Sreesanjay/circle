@@ -13,7 +13,7 @@ export default function HomeSidebar() {
      const navigate = useNavigate()
      return (
           <Sidebar
-               className="home-sidebar sm:fixed w-screen sm:w-min"
+               className="home-sidebar sm:fixed w-screen sm:w-min bg-gray-900 text-white"
                aria-label="Sidebar with content separator example"
           >
                <button
@@ -27,7 +27,7 @@ export default function HomeSidebar() {
                     <MenuIcon />
                </button>
                <Sidebar.Items
-                    className={`sidebar ${showSidebar} md:block pe-24 py-0 sm:py-14`}
+                    className={`sidebar ${showSidebar} md:block pe-24 py-0 sm:py-14 bg-gray-900 rounded-md`}
                >
                     <Sidebar.ItemGroup className="h-3/4 flex flex-col justify-around">
                          <Sidebar.Item icon={MdHome} className="text-xl icon">
@@ -35,7 +35,7 @@ export default function HomeSidebar() {
                          </Sidebar.Item>
                          <Sidebar.Item
                               icon={FaUserFriends}
-                              className="text-xl icon"
+                              className="text-xl icon "
                               onClick={()=>navigate('/find-friends')}
                          >
                               Find Friends

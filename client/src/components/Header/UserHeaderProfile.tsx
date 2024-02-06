@@ -11,8 +11,8 @@ export default function UserHeaderProfile() {
     const {userProfile} = useAppSelector((state)=>state.user)
     const {user} = useAppSelector((state)=>state.auth)
         return (
-          <div className="dropdown p-3 mt-3">
-               <div className="profile-details mb-5 flex">
+          <div className="dropdown bg-gray-700 p-3 mt-3">
+               <div className="profile-details mb-5 flex bg-gray-700">
                     <ProfileIcon size="medium" />
                     <div className="right-area ms-3">
                         <h3>{userProfile?.username}</h3>

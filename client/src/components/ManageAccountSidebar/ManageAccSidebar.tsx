@@ -33,7 +33,7 @@ export default function ManageAccSidebar() {
                          >
                               <MenuIcon />
                          </button>
-               <Sidebar.Items className={`sidebar ${showSidebar} md:block`}>
+               <Sidebar.Items className={`sidebar ${showSidebar} md:block bg-gray-900`}>
                     <Sidebar.ItemGroup>
                          <div className="flex items-center p-3 gap-4">
                               <FaRegUserCircle />
@@ -66,8 +66,8 @@ export default function ManageAccSidebar() {
                               </Link>
                          </Sidebar.Item>
                     </Sidebar.ItemGroup>
-                    <Sidebar.ItemGroup>
-                         <Sidebar.Item href="#" icon={BiBuoy}>
+                    <Sidebar.ItemGroup className="">
+                         <Sidebar.Item href="#" icon={BiBuoy} className="item">
                               Professional Account
                          </Sidebar.Item>
                          <Sidebar.Item href="#" icon={HiChartPie}>

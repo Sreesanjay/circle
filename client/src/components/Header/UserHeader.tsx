@@ -12,9 +12,9 @@ import { Link } from "react-router-dom";
 export default function UserHeader() {
      const [isProfileToggle, setisProfileToggle] = useState(false)
      return (
-          <section className="user-header px-6 grid grid-cols-6 items-center sticky shadow-sm">
+          <section className="user-header px-6 grid grid-cols-6 items-center sticky shadow-sm bg-gray-900">
                <div className="logo col-span-1">
-                    <h1 className="text-4xl md:text-5xl">Circle</h1>
+                    <h1 className="text-4xl md:text-5xl text-primary">Circle</h1>
                </div>
                <div className="right-nav flex justify-end gap-5 col-span-5 md:col-span-5 items-center">
                     <div className="grow hidden sm:flex justify-end">

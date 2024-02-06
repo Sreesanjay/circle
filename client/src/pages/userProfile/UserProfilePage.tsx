@@ -101,7 +101,7 @@ export default function UserProfilePage() {
                                    </div>
                               )}
                          </section>
-                         <section className="header flex flex-col items-center sm:flex-row sm:items-end w-full border-solid border-2 pb-1">
+                         <section className="header bg-gray-900 flex flex-col items-center sm:flex-row sm:items-end w-full pb-1 shadow-2xl">
                               <div className="left-area sm:ms-20 pb-2">
                                    <div
                                         className="profile-img relative"
@@ -140,21 +140,21 @@ export default function UserProfilePage() {
                               </div>
                               <div className="right-nav grow ps-7 sm:ps-14 flex">
                                    <div
-                                        className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9"
+                                        className="flex flex-col items-center hover:bg-gray-700 rounded-md p-2 mt-2 sm:me-9"
                                         onClick={() => setContent("PROFILE")}
                                    >
                                         <Profile size={28} />
                                         <h3 className="">Profile</h3>
                                    </div>
                                    <div
-                                        className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9"
+                                        className="flex flex-col items-center hover:bg-gray-700 rounded-md p-2 mt-2 sm:me-9"
                                         onClick={() => setContent("POST")}
                                    >
                                         <PostIcon size={28} />
                                         <h3 className="">Posts</h3>
                                    </div>
                                    <div
-                                        className="flex flex-col items-center hover:bg-gray-100 rounded-md p-2 mt-2 sm:me-9"
+                                        className="flex flex-col items-center hover:bg-gray-700 rounded-md p-2 mt-2 sm:me-9"
                                         onClick={() => setContent("SAVED")}
                                    >
                                         <SavedIcon size={28} />
@@ -162,8 +162,8 @@ export default function UserProfilePage() {
                                    </div>
                               </div>
                          </section>
-                         <section className="profile-body h-screen w-full px-3 md:grid md:grid-cols-12 pt-5">
-                              <div className="left-section col-span-3 px-5 shadow-md">
+                         <section className="profile-body h-screen w-full md:grid md:grid-cols-12">
+                              <div className="left-section col-span-3 px-5 bg-gray-800 shadow-xl pt-5">
                                    <FriendList />
                                    <hr className="my-3" />
                                    <div className="flex items-center mb-3 justify-between">
@@ -184,7 +184,7 @@ export default function UserProfilePage() {
                                    </div>
                                    <CloseFriends />
                               </div>
-                              <div className="right-section col-span-9">
+                              <div className="right-section col-span-9 pt-5 px-3 ">
                                    {content === "PROFILE" && <ProfileSection />}
                                    {content === "POST" && <PostSection />}
                                    {content === "SAVED" && <SavedSection />}

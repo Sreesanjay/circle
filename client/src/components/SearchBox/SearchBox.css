@@ -8,4 +8,6 @@
     overflow: hidden;
     padding-left: 15px;
   }
-
+.search-box .user-list-search{
+  border: 1px solid rgba(0, 0, 0, 0.338);
+}

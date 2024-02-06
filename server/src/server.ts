@@ -6,5 +6,5 @@ const PORT = env.PORT;
 
 mongoose.connect(env.MONGO_CONNECTION_STRING).then(() => {
      console.log("mongodb connected");
-     app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+    const server = app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 });

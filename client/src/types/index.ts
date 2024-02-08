@@ -108,6 +108,7 @@ export interface IMessage {
     read_by: string[];
     reply_to: string;
     is_delete: boolean;
+    createdAt:Date;
     userDetails: userList
 }
 
@@ -119,6 +120,7 @@ export interface SendMessage {
     read_by: string[];
     reply_to: string;
     is_delete: boolean;
+    createdAt:Date;
     members: string[];
     userDetails: userList
 }

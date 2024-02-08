@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import TimeAgo from "react-timeago";
 import InputEmoji from "react-input-emoji";
 import { IMessage, SendMessage, userList } from "../../types";
 import "./ChatBox.css";
@@ -24,6 +25,17 @@ export default function ChatBox({
      const [newMessage, setNewMessage] = useState("");
      const [messages, setMessages] = useState<IMessage[] | []>([]);
      const imageRef = useRef<HTMLInputElement | null>(null);
+
+     // const messageTime = useRef(null);
+
+     // useEffect(() => {
+     //      const interval = setInterval(() => {
+     //           if (messageTime.current) {
+     //                timeago.render(messageTime.current, "en");
+     //           }
+     //           return () => clearInterval(interval);
+     //      }, 1000);
+     // }, []);
 
      useEffect(() => {
           (async () => {
@@ -54,14 +66,15 @@ export default function ChatBox({
 
      useEffect(() => {
           (async () => {
-               if (messages.length === 0 && currentChat) {
+               if (currentChat) {
+                    console.log("chat=>", currentChat._id);
                     const response = await getMessages(currentChat?._id);
                     if (response.messages) {
                          setMessages(response.messages);
                     }
                }
           })();
-     }, [messages, currentChat]);
+     }, [currentChat]);
 
      async function handleSend() {
           if (user && currentChat?._id) {
@@ -120,7 +133,7 @@ export default function ChatBox({
                                              <div
                                                   key={message._id}
                                                   className={`
-                                                  flex gap-4
+                                                  flex gap-4 mb-3
                                                   ${
                                                        message.sender_id ===
                                                        user?._id
@@ -158,8 +171,47 @@ export default function ChatBox({
                                                        </div>
                                                   )}
                                                   <div className="body flex flex-col gap-2">
-                                                       <div className="user_details">
-                                                            <h1>{message.userDetails.username}</h1>
+                                                       <div className="user_details flex justify-between items-baseline">
+                                                            <h1>
+                                                                 {message.sender_id !==
+                                                                      user?._id &&
+                                                                      message
+                                                                           .userDetails
+                                                                           .username}
+                                                            </h1>
+                                                            {/* ref={messageTime}
+                                                 
+                                                              {timeago.format(
+                                                                message.createdAt
+                                                             )}  */}
+                                                            <div className="text-xs font-light">
+                                                                 <TimeAgo
+                                                                      date={
+                                                                           message.createdAt ||
+                                                                           Date.now()
+                                                                      }
+                                                                      minPeriod={
+                                                                           6
+                                                                      }
+                                                                      formatter={(
+                                                                           value: number,
+                                                                           unit: TimeAgo.Unit,
+                                                                           suffix: TimeAgo.Suffix
+                                                                      ) => {
+                                                                           if (
+                                                                                unit ===
+                                                                                "second"
+                                                                           )
+                                                                                return "just now";
+                                                                           const plural: string =
+                                                                                value !==
+                                                                                1
+                                                                                     ? "s"
+                                                                                     : "";
+                                                                           return `${value} ${unit}${plural} ${suffix}`;
+                                                                      }}
+                                                                 />
+                                                            </div>
                                                        </div>
                                                        <div
                                                             className={`
@@ -168,7 +220,7 @@ export default function ChatBox({
                                                             message.sender_id ===
                                                             user?._id
                                                                  ? "own bg-green-800"
-                                                                 : "others bg-red-500"
+                                                                 : "others bg-gray-500"
                                                        }`}
                                                        >
                                                             <h1>

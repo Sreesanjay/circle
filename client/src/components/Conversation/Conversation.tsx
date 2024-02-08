@@ -36,7 +36,7 @@ export default function Conversation({
 
      return (
           <div
-               className="chat-user-card flex items-center bg-seconday-bg hover:bg-black p-2 rounded-md shadow-lg"
+               className="chat-user-card flex items-center bg-seconday-bg hover:bg-black p-2 rounded-md shadow-lg mb-2"
                onClick={() => {
                     dispatch(setCurrentChat(chat));
                }}

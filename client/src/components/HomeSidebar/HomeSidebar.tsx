@@ -30,7 +30,7 @@ export default function HomeSidebar() {
                     className={`sidebar ${showSidebar} md:block pe-24 py-0 sm:py-14 bg-gray-900 rounded-md`}
                >
                     <Sidebar.ItemGroup className="h-3/4 flex flex-col justify-around">
-                         <Sidebar.Item icon={MdHome} className="text-xl icon">
+                         <Sidebar.Item icon={MdHome} className="text-xl icon ">
                               Home
                          </Sidebar.Item>
                          <Sidebar.Item
@@ -49,6 +49,7 @@ export default function HomeSidebar() {
                          <Sidebar.Item
                               icon={MdOutlineMessage}
                               className="text-xl icon"
+                              onClick={()=>navigate('/messages')}
                          >
                               Message
                          </Sidebar.Item>

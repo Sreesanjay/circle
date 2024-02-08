@@ -35,6 +35,7 @@ export default function AddInterest({
           (async () => {
                try {
                     if (openModal) {
+                         console.log("--------------------req send ------------------")
                          const response = await API.get(
                               "/manage-account/interest",
                               {
@@ -63,7 +64,8 @@ export default function AddInterest({
                     toast.error(err.response?.data.message);
                }
           })();
-     }, [myInterest, openModal]);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [openModal]);
 
      function handleChange(e: ChangeEvent<HTMLSelectElement>) {
           const item = interest?.find((item) => item._id === e.target.value);

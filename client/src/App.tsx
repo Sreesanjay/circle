@@ -1,23 +1,38 @@
 import { Route, Routes } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect, useRef } from "react";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Socket, io } from "socket.io-client";
 
+import "react-toastify/dist/ReactToastify.css";
 import Loader from "./components/Loader/Loader";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import IsAuthenticated from "./components/Route/IsAuthenticated";
 import Header from "./pages/user/Header";
-import PasswordPrivacy from "./pages/PasswordSecurity/PasswordPrivacy";
-import FindFriends from "./pages/FindFriends/FindFriends";
-import AddStory from "./pages/AddStory/AddStory";
-import MyStory from "./pages/MyStory/MyStory";
-import ManageCloseFriend from "./pages/ManageCloseFriend/ManageCloseFriend";
-import ProfileView from "./pages/ProfileView/ProfileView";
-import UserManagement from "./pages/Admin/UserManagement/UserManagement";
-import BlockedUsers from "./pages/BlockedUsers/BlockedUsers";
-import CreatePost from "./pages/CreatePost/CreatePost";
-import PostManagement from "./pages/Admin/PostManagement/PostManagement";
-import CreateTextStory from "./pages/CreateStory/CreateTextStory";
+// const Messages = lazy(() => import("./pages/Messages/Messages"));
+import { useAppDispatch, useAppSelector } from "./app/hooks";
+import Messages from "./pages/Messages/Messages";
+import { setOnlineUsers } from "./features/Socket/SocketSlice";
+const PasswordPrivacy = lazy(
+     () => import("./pages/PasswordSecurity/PasswordPrivacy")
+);
+const FindFriends = lazy(() => import("./pages/FindFriends/FindFriends"));
+const AddStory = lazy(() => import("./pages/AddStory/AddStory"));
+const MyStory = lazy(() => import("./pages/MyStory/MyStory"));
+const ManageCloseFriend = lazy(
+     () => import("./pages/ManageCloseFriend/ManageCloseFriend")
+);
+const ProfileView = lazy(() => import("./pages/ProfileView/ProfileView"));
+const UserManagement = lazy(
+     () => import("./pages/Admin/UserManagement/UserManagement")
+);
+const BlockedUsers = lazy(() => import("./pages/BlockedUsers/BlockedUsers"));
+const CreatePost = lazy(() => import("./pages/CreatePost/CreatePost"));
+const PostManagement = lazy(
+     () => import("./pages/Admin/PostManagement/PostManagement")
+);
+const CreateTextStory = lazy(
+     () => import("./pages/CreateStory/CreateTextStory")
+);
 const ViewStory = lazy(() => import("./pages/ViewStory/ViewStory"));
 const EditProfile = lazy(() => import("./pages/EditProfile/EditProfile"));
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
@@ -31,6 +46,26 @@ const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 
 function App() {
+     const dispatch = useAppDispatch();
+     const { user } = useAppSelector((state) => state.auth);
+     const socket = useRef<Socket | null>(null);
+     useEffect(() => {
+          socket.current = io("http://localhost:5000");
+          socket?.current.emit("new-user-add", user?._id);
+
+          return () => {
+               socket?.current?.disconnect();
+          };
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [user]);
+
+     useEffect(() => {
+          socket?.current?.on("get-users", (users) => {
+               dispatch(setOnlineUsers(users));
+          });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, []);
+
      return (
           <div className="bg-gray-800 app min-h-screen text-white">
                <Header />
@@ -66,8 +101,14 @@ function App() {
                               />
                               <Route path="/add-story" element={<AddStory />} />
                               <Route path="/my-story" element={<MyStory />} />
-                              <Route path="/add-story/create-text-story" element={<CreateTextStory />} />
-                              <Route path="/view-story/:initialIndex" element={<ViewStory />} />
+                              <Route
+                                   path="/add-story/create-text-story"
+                                   element={<CreateTextStory />}
+                              />
+                              <Route
+                                   path="/view-story/:initialIndex"
+                                   element={<ViewStory />}
+                              />
                               <Route
                                    path="/manage-account/close-friends"
                                    element={<ManageCloseFriend />}
@@ -83,6 +124,12 @@ function App() {
                               <Route
                                    path="/create-post"
                                    element={<CreatePost />}
+                              />
+                              <Route
+                                   path="/messages"
+                                   element={
+                                        socket && <Messages socket={socket} />
+                                   }
                               />
                          </Route>
 

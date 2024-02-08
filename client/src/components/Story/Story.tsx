@@ -25,9 +25,7 @@ export default function Story() {
                dispatch(resetStory());
           }
      }, [isSuccess, dispatch]);
-     useEffect(() => {
-          console.log(story);
-     }, [story]);
+
      return (
           <section className="story-section flex items-center gap-5 bg-gray-900 h-32 rounded-md ps-3 shadow-md">
                <div className="my-story flex items-center justify-center relative ">

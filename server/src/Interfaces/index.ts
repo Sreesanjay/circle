@@ -94,3 +94,18 @@ export interface ISavedPost extends Document {
      user_id: ObjectId;
      post_id: ObjectId;
 }
+
+export interface IChat extends Document {
+     chat_name: string;
+     is_groupchat: boolean;
+     members:ObjectId[];
+     is_delete: boolean;
+}
+export interface IMessage extends Document {
+     chat_id: ObjectId;
+     sender_id: ObjectId;
+     content: string;
+     read_by:ObjectId[];
+     reply_to: ObjectId;
+     is_delete: boolean;
+}

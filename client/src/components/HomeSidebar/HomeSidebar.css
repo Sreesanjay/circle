@@ -7,7 +7,12 @@
 }
 
 .home-sidebar .icon{
+    width: 100%;
     color:white;
+}
+.home-sidebar .icon:hover{
+    color:white;
+    background-color: black;
 }
 
 .icon svg{

@@ -30,11 +30,11 @@ export interface IStory {
     visibility: string;
     background: string;
     color: string;
-    likes:string[];
+    likes: string[];
     story_viewers: string[];
 }
 
-export interface IStories{
+export interface IStories {
     stories: IStory[],
     user_details: IuserDetails;
 }
@@ -64,7 +64,7 @@ export interface IComment {
 }
 
 export interface IuserDetails {
-    user_id:string,
+    user_id: string,
     username: string;
     fullname: string;
     profile_img: string;
@@ -90,4 +90,35 @@ export interface IPost {
     reports: [];
     createdAt: Date;
     likes: string[];
+}
+
+export interface IChat {
+    _id: string;
+    chat_name: string;
+    members: string[];
+    is_groupchat: boolean;
+    is_delete: boolean;
+    createdAt: Date;
+}
+export interface IMessage {
+    _id: string;
+    chat_id: string;
+    sender_id: string;
+    content: string;
+    read_by: string[];
+    reply_to: string;
+    is_delete: boolean;
+    userDetails: userList
+}
+
+export interface SendMessage {
+    _id: string;
+    chat_id: string;
+    sender_id: string;
+    content: string;
+    read_by: string[];
+    reply_to: string;
+    is_delete: boolean;
+    members: string[];
+    userDetails: userList
 }

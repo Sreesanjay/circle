@@ -37,17 +37,12 @@ export default function MyStory() {
                dispatch(resetStory());
           }
      }, [isSuccess, dispatch]);
-     useEffect(() => {
-          console.log(myStory);
-     }, [myStory]);
 
      function deleteHandle(id: string) {
-          console.log("delete", id);
           dispatch(deleteStory(id));
      }
 
      async function getStoryViewers(id: string) {
-          console.log("got req");
           try {
                const response = await API.get(`/story/get-viewers-list/${id}`, {
                     withCredentials: true,
@@ -91,7 +86,13 @@ export default function MyStory() {
                          {myStory?.map((item) => {
                               return (
                                    <div
-                                        className={`story ${item.background} h-full flex items-center justify-center rounded-md flex-wrap ${item.visibility==='CLOSE_FRIENDS'? 'border' :''}`}
+                                        className={`story ${
+                                             item.background
+                                        } h-full flex items-center justify-center rounded-md flex-wrap ${
+                                             item.visibility === "CLOSE_FRIENDS"
+                                                  ? "border"
+                                                  : ""
+                                        }`}
                                    >
                                         {item.story_type === "TEXT" ? (
                                              <h1

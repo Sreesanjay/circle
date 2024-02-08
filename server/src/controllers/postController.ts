@@ -38,7 +38,6 @@ export const getPosts: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const page: number = parseInt(req.query.page as string, 10) || 0;
         const pageSize = 3;
-        console.log(page, pageSize)
         const interest = await UserProfile.findOne({ user_id: req.user?._id })
         const connection = await Connection.findOne({ user_id: req.user?._id });
         const following = connection?.following || [];

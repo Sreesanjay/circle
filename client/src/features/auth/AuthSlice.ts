@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signup, googleAuth, signin, passwordReset} from "../../services/authService";
+
+import { signup, googleAuth, signin, passwordReset } from "../../services/authService";
 
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
@@ -10,6 +11,7 @@ export type user = {
      email: string;
      role: string;
 };
+
 interface AuthState {
      user: user | null;
      isLoading: boolean;
@@ -38,7 +40,7 @@ export const authSlice = createSlice({
                state.errorMessage = "";
                state.isSuccess = false;
           },
-          logout : (state) => {
+          logout: (state) => {
                state.user = null;
                localStorage.removeItem('user');
           }

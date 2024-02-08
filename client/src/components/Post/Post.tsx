@@ -14,9 +14,6 @@ export default function Post() {
      const { posts, errorMessage, isLoading, isError, isSuccess } =
           useAppSelector((state) => state.post);
      useEffect(() => {
-          console.log(posts);
-     }, [posts]);
-     useEffect(() => {
           if (posts.length === 0) {
                dispatch(getPosts(pagination.current));
                pagination.current = pagination.current + 1;

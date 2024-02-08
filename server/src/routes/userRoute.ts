@@ -1,20 +1,24 @@
-import {Router} from "express";
-import { signup,googleAuth,signin,verifyMail,verifyOtp} from "../controllers/userAuthController";
+import { Router } from "express";
+import { signup, googleAuth, signin, verifyMail, verifyOtp } from "../controllers/userAuthController";
 import userProfile from "./userProfile";
 import manageAccRoute from "./manageAccRoute";
 import usersRoute from "./usersRoute";
 import storyRoute from "./storyRoute";
 import postsRoute from "./postsRoute";
-const router:Router = Router();
+import chatRoute from "./chatRoute";
+import messageRoute from "./messageRoute";
+const router: Router = Router();
 
-router.post('/signup',signup)
-router.post('/google-auth',googleAuth)
-router.post('/verify-mail',verifyMail)
-router.post('/verify-otp',verifyOtp)
+router.post('/signup', signup)
+router.post('/google-auth', googleAuth)
+router.post('/verify-mail', verifyMail)
+router.post('/verify-otp', verifyOtp)
 router.post('/signin', signin)
 router.use('/profile', userProfile)
-router.use('/manage-account',manageAccRoute)
-router.use('/users',usersRoute)
-router.use('/story',storyRoute)
-router.use('/posts',postsRoute)
+router.use('/manage-account', manageAccRoute)
+router.use('/users', usersRoute)
+router.use('/story', storyRoute)
+router.use('/posts', postsRoute)
+router.use('/chat', chatRoute)
+router.use('/message', messageRoute)
 export default router;  

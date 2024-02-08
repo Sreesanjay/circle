@@ -35,21 +35,26 @@ export default function EditPost({
 
      useEffect(() => {
           (async () => {
-               try {
-                    const response = await API.get("/manage-account/interest", {
-                         withCredentials: true,
-                    });
-                    if (response.data) {
-                         setInterest(response.data.interest);
-                         setInterest(response.data.interest);
-                    }
-               } catch (error) {
-                    const err = error as AxiosError<{
-                         message?: string;
-                         status?: string;
-                    }>;
-                    if (err) {
-                         handleError(err);
+               if (openModal) {
+                    try {
+                         const response = await API.get(
+                              "/manage-account/interest",
+                              {
+                                   withCredentials: true,
+                              }
+                         );
+                         if (response.data) {
+                              setInterest(response.data.interest);
+                              setInterest(response.data.interest);
+                         }
+                    } catch (error) {
+                         const err = error as AxiosError<{
+                              message?: string;
+                              status?: string;
+                         }>;
+                         if (err) {
+                              handleError(err);
+                         }
                     }
                }
           })();

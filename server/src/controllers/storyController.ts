@@ -64,7 +64,6 @@ export const getStories: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const connection = await Connection.find({ following: { $in: req.user?._id } }, { _id: 0, user_id: 1 })
         const close_friend = await Connection.find({ close_friend: { $in: req.user?._id } }, { _id: 0, user_id: 1 })
-        console.log(close_friend)
         const story = await Story.aggregate([
             {
                 $match: {
@@ -145,7 +144,6 @@ export const getStories: RequestHandler = asyncHandler(
                 }
             },
         ])
-        console.log(story[0])
         if (story) {
             res.status(200).json({
                 status: 'OK',

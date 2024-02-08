@@ -63,7 +63,7 @@ export default function PostSection() {
                          gap={1}
                     >
                          {myPosts &&
-                              myPosts.map((post:IPost) => (
+                              myPosts.map((post: IPost) => (
                                    <ImageListItem key={post._id} className="">
                                         <div
                                              className="content p-2 shadow-md"
@@ -105,6 +105,8 @@ export default function PostSection() {
                          post={{
                               ...choosedPost,
                               user_details: {
+                                   fullname: "",
+                                   user_id: "",
                                    username: userProfile.username,
                                    profile_img: userProfile.profile_img,
                                    email: {

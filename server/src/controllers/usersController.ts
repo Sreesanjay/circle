@@ -434,7 +434,34 @@ export const removeCloseFriend: RequestHandler = asyncHandler(
 export const getProfile: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
-        const userProfile = await UserProfile.findOne({ user_id: id });
+        const userProfile = await UserProfile.aggregate([
+            {
+                $match: { user_id: new ObjectId(id) }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user_id',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$user'
+                }
+            },
+            {
+                $project: {
+                    username: 1,
+                    profile_img: 1,
+                    fullname: 1,
+                    user_id: 1,
+                    verified: 1,
+                    email: '$user.email'
+                }
+            }
+        ])
         const followers = await Connection.countDocuments({
             following: new ObjectId(id),
         })
@@ -447,7 +474,7 @@ export const getProfile: RequestHandler = asyncHandler(
             res.status(200).json({
                 status: 'ok',
                 message: 'user profile fetched',
-                userProfile,
+                userProfile: userProfile[0],
                 following: following.following.length,
                 followers,
                 isFollowing: isFollowing ? true : false,

@@ -56,7 +56,7 @@ export interface IStory extends Document {
      visibility: string;
      likes: string[];
      story_viewers: string[];
-     is_delete : boolean;
+     is_delete: boolean;
 }
 
 
@@ -98,14 +98,16 @@ export interface ISavedPost extends Document {
 export interface IChat extends Document {
      chat_name: string;
      is_groupchat: boolean;
-     members:ObjectId[];
+     members: ObjectId[];
      is_delete: boolean;
+     admins: ObjectId[];
+     icon: string
 }
 export interface IMessage extends Document {
      chat_id: ObjectId;
      sender_id: ObjectId;
      content: string;
-     read_by:ObjectId[];
+     read_by: ObjectId[];
      reply_to: ObjectId;
      is_delete: boolean;
 }

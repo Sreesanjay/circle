@@ -96,9 +96,12 @@ export interface IChat {
     _id: string;
     chat_name: string;
     members: string[];
+    admins : string[];
     is_groupchat: boolean;
     is_delete: boolean;
+    latest_message: IMessage;
     createdAt: Date;
+    icon:string;
 }
 export interface IMessage {
     _id: string;
@@ -108,7 +111,7 @@ export interface IMessage {
     read_by: string[];
     reply_to: string;
     is_delete: boolean;
-    createdAt:Date;
+    createdAt: Date;
     userDetails: userList
 }
 
@@ -120,7 +123,7 @@ export interface SendMessage {
     read_by: string[];
     reply_to: string;
     is_delete: boolean;
-    createdAt:Date;
+    createdAt: Date;
     members: string[];
     userDetails: userList
 }

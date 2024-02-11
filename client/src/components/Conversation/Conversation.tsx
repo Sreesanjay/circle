@@ -42,7 +42,20 @@ export default function Conversation({
                }}
           >
                <div className="profile-img relative w-min z-0">
-                    {userDetails?.profile_img ? (
+                    {chat.is_groupchat ? (
+                         chat?.icon ? (
+                              <img
+                                   src={chat?.icon}
+                                   alt="dsfkajfhskadfh"
+                                   className="w-10 h-10"
+                              />
+                         ) : (
+                              <ProfileIconWithText
+                                   size={"medium"}
+                                   email={chat.chat_name || ""}
+                              />
+                         )
+                    ) : userDetails?.profile_img ? (
                          <img
                               src={userDetails.profile_img}
                               alt="dsfkajfhskadfh"
@@ -54,13 +67,24 @@ export default function Conversation({
                               email={userDetails?.email || ""}
                          />
                     )}
-                    {online && (
+                    {!chat.is_groupchat && online && (
                          <div className="active rounded-full w-3 h-3 bg-green-600 absolute bottom-0 right-0"></div>
                     )}
                </div>
                <div className="center-section px-2 flex flex-col justify-center">
-                    <h1 className="text-xl">{userDetails?.username}</h1>
-                    <span className="text-xs">last message</span>
+                    <h1 className="text-xl">
+                         {chat.is_groupchat
+                              ? chat.chat_name
+                              : userDetails?.username} 
+                    </h1>
+                    <span className="text-xs overflow-hidden text-nowrap max-w-48">
+                         {chat?.latest_message?.content ? (
+                              <>
+                                   {chat.latest_message?.userDetails?.username} : 
+                                   {chat.latest_message?.content}{" "}
+                              </>
+                         ) : null}
+                    </span>
                </div>
           </div>
      );

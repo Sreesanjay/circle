@@ -571,7 +571,7 @@ export const searchUser: RequestHandler = asyncHandler(
         if (!pattern.test(search)) {
             res.status(200).json({
                 status: 'ok',
-                message: "report added",
+                message: "user details fetched",
                 userData: []
             })
         } else {
@@ -599,7 +599,7 @@ export const searchUser: RequestHandler = asyncHandler(
             if (userData) {
                 res.status(200).json({
                     status: 'ok',
-                    message: "report added",
+                    message: "user details fetched",
                     userData
                 })
             } else {

@@ -1,6 +1,8 @@
 import { toast } from "react-toastify";
 import API from "../api"
 import { AxiosError } from "axios";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../app/firebase";
 
 export async function createChat(id: string) {
     try {
@@ -15,7 +17,27 @@ export async function createChat(id: string) {
             message?: string;
             status?: string;
         }>;
-        toast.error(err.message)
+        toast.error(err.response?.data.message)
+    }
+}
+type CreateGroup = {
+    chat_name: string;
+    members: string[]
+}
+export async function createGroup(data: CreateGroup) {
+    try {
+        const response = await API.post('/chat/group', data, { withCredentials: true })
+        if (response.data) {
+            return response.data;
+        } else {
+            throw new Error('Internal Error')
+        }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
     }
 }
 
@@ -33,7 +55,7 @@ export async function getAllChats() {
             message?: string;
             status?: string;
         }>;
-        toast.error(err.message)
+        toast.error(err.response?.data.message)
     }
 }
 
@@ -45,7 +67,7 @@ type sendMessage = {
 }
 export async function sendMessage(message: sendMessage) {
     try {
-        const response = await API.post('/message',  message , { withCredentials: true })
+        const response = await API.post('/message', message, { withCredentials: true })
         if (response.data) {
             return response.data;
         } else {
@@ -56,12 +78,12 @@ export async function sendMessage(message: sendMessage) {
             message?: string;
             status?: string;
         }>;
-        toast.error(err.message)
+        toast.error(err.response?.data.message)
     }
 }
-export async function getMessages(chat_id: string) {
+export async function getMessages(chat_id: string, page: Date | null) {
     try {
-        const response = await API.get(`/message/${chat_id}`, { withCredentials: true })
+        const response = await API.get(`/message/${chat_id}?page=${page ? page : ''}`, { withCredentials: true })
         if (response.data) {
             return response.data;
         } else {
@@ -72,6 +94,104 @@ export async function getMessages(chat_id: string) {
             message?: string;
             status?: string;
         }>;
-        toast.error(err.message)
+        toast.error(err.response?.data.message)
+    }
+}
+
+export async function readMessage(message_id: string) {
+    try {
+        const response = await API.put(`/message/read/${message_id}`, {}, { withCredentials: true })
+        if (response.data) {
+            return response.data;
+        } else {
+            throw new Error('Internal Error')
+        }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
+    }
+}
+
+export async function changeChatName({ chat_name, chat_id }: { chat_name: string, chat_id: string }) {
+    try {
+        const response = await API.put(`/chat/chat_name/${chat_id}`, { chat_name }, { withCredentials: true })
+        if (response.data) {
+            return response.data
+        } else {
+            throw new Error('Internal Error')
+        }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
+    }
+}
+
+export async function addMember({ chat_id, user }: { user: string, chat_id: string }) {
+    try {
+        const response = await API.put(`/chat/members/${chat_id}`, { user }, { withCredentials: true })
+        if (response.data) {
+            return response.data
+        } else {
+            throw new Error('Internal Error')
+        }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
+    }
+}
+
+export async function removeMember({ chat_id, user }: { user: string, chat_id: string }) {
+    try {
+        console.log("chat_id",chat_id)
+        const response = await API.put(`/chat/members/remove/${chat_id}`, { user }, { withCredentials: true })
+        if (response.data) {
+            return response.data
+        } else {
+            throw new Error('Internal Error')
+        }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
+    }
+}
+
+export async function changeGroupIcon({ chat_id, icon }: { chat_id: string, icon: Blob }) {
+    try {
+
+        const content = new File([icon], "post", {
+            type: (icon).type,
+        });
+        const filename = new Date().getTime() + (content as File).name;
+        const storageRef = ref(storage, 'posts/' + filename);
+        const snapshot = await uploadBytes(storageRef, (content))
+        if (snapshot) {
+            const url = await getDownloadURL(storageRef);
+            if (url) {
+                const response = await API.put(`/chat/icon/${chat_id}`, { icon: url }, { withCredentials: true })
+                if (response.data) {
+                    return response.data
+                } else {
+                    throw new Error('Internal Error')
+                }
+            }
+        }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
     }
 }

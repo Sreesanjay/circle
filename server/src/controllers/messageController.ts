@@ -60,12 +60,25 @@ export const getMessages: RequestHandler = asyncHandler(
             res.status(400);
             return next(new Error('Chat not found'))
         }
+        const page = (req.query.page && typeof req.query.page === 'string') ? req.query.page : null;
+        const query = page ? {
+            chat_id: new ObjectId(chat_id),
+            createdAt: { $lt: new Date(page) }
+        } : { chat_id: new ObjectId(chat_id) }
         const messages = await Message.aggregate([
             {
-                $match: {
-                    chat_id: new ObjectId(chat_id)
-                }
+                $sort: { createdAt: -1 }
             },
+            {
+                $match: query
+            },
+            {
+                $limit: 10
+            },
+            {
+                $sort: { createdAt: 1 }
+            },
+
             {
                 $lookup: {
                     from: 'userprofiles',
@@ -98,6 +111,7 @@ export const getMessages: RequestHandler = asyncHandler(
                 $unwind: { path: '$userDetails' }
             }
         ])
+
         if (messages) {
             res.status(200).json({
                 status: "ok",
@@ -108,3 +122,32 @@ export const getMessages: RequestHandler = asyncHandler(
             next(new Error("Internal server error"))
         }
     })
+
+
+
+
+/**
+ * @desc request for getting all the messages in a chat
+ * @route PUT /api/message/read/:id
+ * @access private
+ */
+export const readMessage: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const message_id = req.params.id;
+        if (!message_id) {
+            res.status(400);
+            return next(new Error('message_id not found'))
+        }
+        const messages = await Message.findByIdAndUpdate(message_id, { $addToSet: { read_by: req.user?._id } }, { new: true })
+        if (messages) {
+            res.status(200).json({
+                status: "ok",
+                message: 'message read added',
+                messages
+            })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    })
+
+

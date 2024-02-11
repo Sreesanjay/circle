@@ -14,6 +14,13 @@ const chatSchema: Schema<IChat> = new Schema({
         type: Boolean,
         default: false
     },
+    icon: {
+        type :'string',
+    },
+    admins: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'user'
+    }],
     is_delete: {
         type: Boolean,
         default: false

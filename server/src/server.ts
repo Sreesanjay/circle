@@ -24,45 +24,47 @@ mongoose.connect(env.MONGO_CONNECTION_STRING).then(() => {
      let activeUsers: User[] = [];
 
      io.on('connection', (socket) => {
-          socket.on("new-user-add", (newUserId) => {
-               socket.join(newUserId);
-               if (!activeUsers.some((user) => user.userId === newUserId)) {
-                    activeUsers.push({ userId: newUserId, socketId: socket.id });
+
+          socket.on("setup", (newUserId) => {
+               const user = activeUsers.find((item) => item.userId === newUserId);
+               if (!user || user.socketId !== socket.id) {
+                    const newUser = { userId: newUserId, socketId: socket.id };
+                    activeUsers.push(newUser);
                }
-               io.emit("get-users", activeUsers);
+               io.emit("connected", activeUsers);
           });
 
-          socket.on('getActiveUsers', () => {
-               io.emit("get-users", activeUsers);
-          })
-
           socket.on('join-room', (room) => {
+               console.log("joined room=>", room)
                socket.join(room);
           });
 
           socket.on('typing', (details) => {
-               console.log(details, "typing-------")
-               socket.in(details.room).emit('start-typing', details)
+               socket.to(details.room).emit('start-typing', details)
+          })
+          socket.on('typed', (details) => {
+               socket.to(details.room).emit('stop-typing', details)
+          })
+          socket.on('read-message', (message) => {
+               socket.to(message.chat_id).emit('read', message)
           })
           // socket.on('stop typing', (room) => socket.in(room).emit('stop typing'));
 
           socket.on('send-message', (newMessage) => {
                newMessage?.members.forEach((user: string) => {
                     const reciever = activeUsers.find((item) => item.userId === user);
-                    if (!reciever && reciever === newMessage.sender_id) return;
-
-                    delete newMessage.members
-                    if (reciever) {
+                    if (reciever && reciever.userId !== newMessage.sender_id) {
                          socket.to(reciever.socketId).emit('recieve-message', newMessage)
                     }
                });
+
+               // socket.to(newMessage?.members).emit('recieve-message', newMessage)
           })
 
 
           socket.on('disconnect', () => {
                activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
-
-               io.emit("get-users", activeUsers);
+               io.emit("connected", activeUsers);
           });
      });
 })

@@ -7,7 +7,6 @@ export default function GoogleAuth() {
      const dispatch = useAppDispatch();
 
      const responseGoogle = async (response: CredentialResponse) => {
-          console.log(response)
           if (response.credential) {
                dispatch(googleAuth(response.credential));
           }

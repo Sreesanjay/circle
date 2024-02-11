@@ -12,13 +12,15 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import GridViewIcon from "@mui/icons-material/GridView";
 import { IconButton } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CreateIcon from "@mui/icons-material/Create";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import CloseIcon from '@mui/icons-material/Close';
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import CloseIcon from "@mui/icons-material/Close";
+import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 import { useEffect, useState } from "react";
 const PRIMARY = "#388087";
 export function Notification() {
@@ -47,7 +49,9 @@ export function LikeIcon({ size }: { size: number }) {
      return (
           <>
                <IconButton>
-                    <FavoriteBorderIcon sx={{ fontSize: { size }, color: 'red' }} />
+                    <FavoriteBorderIcon
+                         sx={{ fontSize: { size }, color: "red" }}
+                    />
                </IconButton>
           </>
      );
@@ -56,7 +60,7 @@ export function DislikeIcon({ size }: { size: number }) {
      return (
           <>
                <IconButton>
-                    <FavoriteIcon sx={{ fontSize: { size }, color:'red' }} />
+                    <FavoriteIcon sx={{ fontSize: { size }, color: "red" }} />
                </IconButton>
           </>
      );
@@ -95,6 +99,14 @@ export function CloseXIcon({ size }: { size: number }) {
           </IconButton>
      );
 }
+export function CloseCircleIcon({ size }: { size: number }) {
+     return (
+          <IconButton>
+               <HighlightOffIcon sx={{ fontSize: size, color: PRIMARY }} />
+          </IconButton>
+     );
+}
+
 export function EventIcon() {
      return (
           <IconButton>
@@ -131,7 +143,7 @@ export function ProfileIconWithText({ email, size }: ProfileIconWithTextProps) {
                          ? "text-4xl py-1"
                          : size === "large"
                          ? "text-9xl px-8"
-                         :null
+                         : null
                } bg-gray-200 hover:bg-gray-300 px-3 rounded-lg w-min`}
           >
                {firstLetter?.toUpperCase()}
@@ -145,6 +157,14 @@ export function UserIcon({ size }: { size: number }) {
                <AccountCircleOutlinedIcon
                     sx={{ fontSize: size, color: PRIMARY }}
                />
+          </IconButton>
+     );
+}
+
+export function RemoveIcon({ size }: { size: number }) {
+     return (
+          <IconButton>
+               <DoDisturbOnIcon sx={{ fontSize: size, color: PRIMARY }} />
           </IconButton>
      );
 }

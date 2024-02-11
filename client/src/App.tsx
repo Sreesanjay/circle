@@ -48,23 +48,22 @@ const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 function App() {
      const dispatch = useAppDispatch();
      const { user } = useAppSelector((state) => state.auth);
+     const { currentChat } = useAppSelector((state) => state.socket);
      const socket = useRef<Socket | null>(null);
      useEffect(() => {
           socket.current = io("http://localhost:5000");
-          socket?.current.emit("new-user-add", user?._id);
-
+          socket?.current?.emit("setup", user?._id);
+          socket?.current?.on("connected", (users) => {
+               dispatch(setOnlineUsers(users));
+          });
+          if (currentChat) {
+               socket?.current?.emit("join-room", currentChat?._id);
+          }
           return () => {
                socket?.current?.disconnect();
           };
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [user]);
-
-     useEffect(() => {
-          socket?.current?.on("get-users", (users) => {
-               dispatch(setOnlineUsers(users));
-          });
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, []);
 
      return (
           <div className="bg-gray-800 app min-h-screen text-white">

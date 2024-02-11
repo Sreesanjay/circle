@@ -151,7 +151,7 @@ export async function addMember({ chat_id, user }: { user: string, chat_id: stri
 
 export async function removeMember({ chat_id, user }: { user: string, chat_id: string }) {
     try {
-        console.log("chat_id",chat_id)
+        console.log("remove member", chat_id)
         const response = await API.put(`/chat/members/remove/${chat_id}`, { user }, { withCredentials: true })
         if (response.data) {
             return response.data
@@ -166,6 +166,7 @@ export async function removeMember({ chat_id, user }: { user: string, chat_id: s
         toast.error(err.response?.data.message)
     }
 }
+
 
 export async function changeGroupIcon({ chat_id, icon }: { chat_id: string, icon: Blob }) {
     try {

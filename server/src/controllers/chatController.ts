@@ -84,11 +84,22 @@ export const userChats: RequestHandler = asyncHandler(
 
             {
                 $match: {
-                    members: {
-                        $elemMatch: {
-                            $eq: new ObjectId(req.user?._id)
+                    $or: [
+                        {
+                            members: {
+                                $elemMatch: {
+                                    $eq: new ObjectId(req.user?._id)
+                                }
+                            }
+                        },
+                        {
+                            removed_members: {
+                                $elemMatch: {
+                                    $eq: new ObjectId(req.user?._id)
+                                }
+                            }
                         }
-                    }
+                    ]
                 }
             },
             {
@@ -257,7 +268,7 @@ export const addMember: RequestHandler = asyncHandler(
             res.status(400);
             return next(new Error('Internal error'));
         }
-        const chat = await Chat.findByIdAndUpdate(chat_id, { $addToSet: { members: user } }, { new: true });
+        const chat = await Chat.findByIdAndUpdate(chat_id, { $addToSet: { members: user }, $pull: { removed_members: user } }, { new: true });
         if (chat) {
             res.status(200).json({
                 status: 'ok',
@@ -276,14 +287,14 @@ export const addMember: RequestHandler = asyncHandler(
  */
 export const removeMember: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        console.log("remove reached----------------------------------")
         const chat_id = req.params.id;
+        console.log("remove member", chat_id)
         const { user } = req.body;
         if (!chat_id || !user) {
             res.status(400);
             return next(new Error('Internal error'));
         }
-        const chat = await Chat.findByIdAndUpdate(chat_id, { $pull: { members: user } }, { new: true });
+        const chat = await Chat.findByIdAndUpdate(chat_id, { $addToSet: { removed_members: user }, $pull: { members: user } }, { new: true });
         if (chat) {
             res.status(200).json({
                 status: 'ok',
@@ -294,3 +305,4 @@ export const removeMember: RequestHandler = asyncHandler(
             next(new Error('Internal Error'))
         }
     })
+

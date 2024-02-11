@@ -101,7 +101,8 @@ export interface IChat extends Document {
      members: ObjectId[];
      is_delete: boolean;
      admins: ObjectId[];
-     icon: string
+     icon: string;
+     removed_members:ObjectId[];
 }
 export interface IMessage extends Document {
      chat_id: ObjectId;

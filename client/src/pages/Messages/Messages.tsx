@@ -15,6 +15,7 @@ import {
      resetCurrentChat,
      setChats,
      setCurrentChat,
+     updateRemovedMembers,
      // setOnlineUsers,
 } from "../../features/Socket/SocketSlice";
 import { useLocation } from "react-router-dom";
@@ -34,7 +35,6 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
      const [receivedMessage, setReceivedMessage] = useState<IMessage | null>(
           null
      );
-
      const [userData, setUserData] = useState<
           | {
                  user_id: string;
@@ -60,7 +60,28 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
           socket?.current?.on("recieve-message", (data) => {
                setReceivedMessage(data);
           });
-     });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [socket?.current]);
+
+     //add new chat
+     useEffect(() => {
+          socket?.current?.on("join-newchat", (newChat) => {
+               const exists = chats.find((item) => item._id === newChat._id);
+               if (!exists) {
+                    dispatch(addChat(newChat));
+               }
+          });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [socket?.current]);
+     useEffect(() => {
+          socket?.current?.on("remove-chat", (chat) => {
+               const exists = chats.find((item) => item._id === chat._id);
+               if (!exists) {
+                    dispatch(updateRemovedMembers(chat));
+               }
+          });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [socket?.current]);
 
      useEffect(() => {
           dispatch(addLatestMessage(receivedMessage));
@@ -105,6 +126,7 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
 
      async function handleAddChat(id: string) {
           const newChat = await createChat(id);
+          socket?.current?.emit("new-chat", newChat);
           const exists = chats.find((item) => item._id === newChat._id);
           if (!exists) {
                dispatch(addChat(newChat));
@@ -127,7 +149,7 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
                <CreateGroup
                     openModal={createGroup}
                     setOpenModal={setCreateGroup}
-                    setChats={setChats}
+                    socket={socket}
                />
                <section className="chat flex bg-red-400">
                     <div className="chat-list md:w-96  bg-primary-bg p-3">
@@ -214,13 +236,21 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
                          </header>
                          {chats &&
                               chats.map((chat, index) => {
-                                   return (
-                                        <Conversation
-                                             chat={chat}
-                                             online={checkOnlineStatus(chat)}
-                                             key={index}
-                                        />
-                                   );
+                                   console.log("rerenders chat")
+                                   if (
+                                        chat.latest_message?.content ||
+                                        chat.is_groupchat
+                                   ) {
+                                        return (
+                                             <Conversation
+                                                  chat={chat}
+                                                  online={checkOnlineStatus(
+                                                       chat
+                                                  )}
+                                                  key={index}
+                                             />
+                                        );
+                                   }
                               })}
                     </div>
                     <div className="message-section  bg-seconday-bg w-full">

@@ -38,7 +38,13 @@ export const socketSlice = createSlice({
             state.chats = action.payload
         },
         addChat: (state, action) => {
-            state.chats = [action.payload, ...state.chats]
+            const exist = state.chats.find((item) => item._id === action.payload._id)
+            if (!exist) {
+                state.chats = [action.payload, ...state.chats]
+            } else if (state.currentChat?._id === action.payload._id) {
+                state.currentChat = action.payload
+            }
+
         },
         addLatestMessage: (state, action) => {
             state.chats = state.chats.map((item) => {
@@ -87,18 +93,42 @@ export const socketSlice = createSlice({
                 );
             }
         },
+        //updating members field
         updateMembers: (state, action) => {
             state.chats = state.chats.map((item) => {
                 if (item._id === action.payload?._id) {
                     item = {
                         ...item,
                         members: action.payload.members,
+                        removed_members: action.payload.removed_members
                     };
                 }
                 return item;
             });
             if (state.currentChat) {
                 state.currentChat.members = action.payload.members;
+                state.currentChat.removed_members = action.payload.removed_members;
+                localStorage.setItem(
+                    "currentChat",
+                    JSON.stringify(state.currentChat)
+                );
+            }
+        },
+        //updating removed_members
+        updateRemovedMembers: (state, action) => {
+            state.chats = state.chats.map((item) => {
+                if (item._id === action.payload?._id) {
+                    item = {
+                        ...item,
+                        members: action.payload.members,
+                        removed_members: action.payload.removed_members
+                    };
+                }
+                return item;
+            });
+            if (state.currentChat) {
+                state.currentChat.members = action.payload.members;
+                state.currentChat.removed_members = action.payload.removed_members;
                 localStorage.setItem(
                     "currentChat",
                     JSON.stringify(state.currentChat)
@@ -108,6 +138,6 @@ export const socketSlice = createSlice({
     }
 })
 
-export const { setOnlineUsers, setCurrentChat, resetCurrentChat, setChats, addChat, addLatestMessage, updateChatName, updateGroupIcon, updateMembers } = socketSlice.actions;
+export const { setOnlineUsers, setCurrentChat, resetCurrentChat, setChats, addChat, addLatestMessage, updateChatName, updateGroupIcon, updateMembers, updateRemovedMembers } = socketSlice.actions;
 
 export default socketSlice.reducer;

@@ -20,13 +20,17 @@ export default function Conversation({
      useEffect(() => {
           (async () => {
                try {
-                    const user_id = chat.members.find((id) => id !== user?._id);
-                    const response = await API.get(
-                         `/users/get-user-profile/${user_id}`,
-                         { withCredentials: true }
-                    );
-                    if (response.data) {
-                         setUserDetails(response.data.userProfile);
+                    if (!chat.is_groupchat) {
+                         const user_id = chat.members.find(
+                              (id) => id !== user?._id
+                         );
+                         const response = await API.get(
+                              `/users/get-user-profile/${user_id}`,
+                              { withCredentials: true }
+                         );
+                         if (response.data) {
+                              setUserDetails(response.data.userProfile);
+                         }
                     }
                } catch (error) {
                     toast.error("Internal error");
@@ -75,13 +79,13 @@ export default function Conversation({
                     <h1 className="text-xl">
                          {chat.is_groupchat
                               ? chat.chat_name
-                              : userDetails?.username} 
+                              : userDetails?.username}
                     </h1>
                     <span className="text-xs overflow-hidden text-nowrap max-w-48">
                          {chat?.latest_message?.content ? (
                               <>
-                                   {chat.latest_message?.userDetails?.username} : 
-                                   {chat.latest_message?.content}{" "}
+                                   {chat.latest_message?.userDetails?.username}{" "}
+                                   :{chat.latest_message?.content}{" "}
                               </>
                          ) : null}
                     </span>

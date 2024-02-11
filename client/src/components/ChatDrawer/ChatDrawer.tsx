@@ -9,6 +9,7 @@ import {
 import {
      ChangeEvent,
      Dispatch,
+     RefObject,
      SetStateAction,
      useEffect,
      useRef,
@@ -30,19 +31,23 @@ import {
      updateChatName,
      updateGroupIcon,
      updateMembers,
+     updateRemovedMembers,
 } from "../../features/Socket/SocketSlice";
 import "./ChatDrawer.css";
 import ImageCrop from "../ImageCrop/ImageCrop";
 import { AxiosError } from "axios";
+import { Socket } from "socket.io-client";
 
 export default function ChatDrawer({
      userDetails,
      setOpenDrawer,
      openDrawer,
+     socket,
 }: {
      userDetails: userList[] | null;
      openDrawer: boolean;
      setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+     socket: RefObject<Socket>;
 }) {
      const dispatch = useAppDispatch();
      const [isEditGroupName, setIsEditGroupName] = useState(false);
@@ -94,6 +99,7 @@ export default function ChatDrawer({
                });
                if (response.chat) {
                     dispatch(updateMembers(response.chat));
+                    socket?.current?.emit("new-chat", response.chat);
                }
           }
      }
@@ -104,7 +110,8 @@ export default function ChatDrawer({
                     user: user_id,
                });
                if (response.chat) {
-                    dispatch(updateMembers(response.chat));
+                    dispatch(updateRemovedMembers(response.chat));
+                    socket?.current?.emit("exit-chat", response.chat);
                }
           }
      }
@@ -161,6 +168,18 @@ export default function ChatDrawer({
           })();
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [search]);
+
+     async function handleExitChat() {
+          if (user?._id && currentChat) {
+               const response = await removeMember({
+                    chat_id: currentChat?._id,
+                    user: user?._id,
+               });
+               if (response.chat) {
+                    dispatch(updateRemovedMembers(response.chat));
+               }
+          }
+     }
      return (
           <>
                <ImageCrop
@@ -276,7 +295,7 @@ export default function ChatDrawer({
                                                        </button>
                                                   </>
                                              ) : (
-                                                  currentChat.admins.includes(
+                                                  currentChat.admins?.includes(
                                                        user?._id as string
                                                   ) && (
                                                        <div
@@ -315,9 +334,18 @@ export default function ChatDrawer({
                               </div>
                          </section>
                          <section className="flex gap-5 pt-10">
-                              <button className="exit-group px-4 py-1 rounded-md text-secondary bg-primary hover:bg-primary-hover">
-                                   Exit
-                              </button>
+                              {currentChat?.is_groupchat ? (
+                                   <button
+                                        className="exit-group px-4 py-1 rounded-md text-secondary bg-primary hover:bg-primary-hover"
+                                        onClick={handleExitChat}
+                                   >
+                                        Exit
+                                   </button>
+                              ) : (
+                                   <button className="exit-group px-4 py-1 rounded-md text-secondary bg-primary hover:bg-primary-hover">
+                                        Block
+                                   </button>
+                              )}
                               <button className="report px-4 py-1 rounded-md text-secondary bg-red-700">
                                    Report
                               </button>
@@ -328,7 +356,7 @@ export default function ChatDrawer({
                               </h1>
                               <div className="members-container">
                                    {currentChat &&
-                                        currentChat.admins.includes(
+                                        currentChat.admins?.includes(
                                              user?._id as string
                                         ) && (
                                              <button
@@ -448,7 +476,7 @@ export default function ChatDrawer({
                                                                       </small>
                                                                  </div>
                                                                  {(currentChat &&
-                                                                      !currentChat.admins.includes(
+                                                                      !currentChat.admins?.includes(
                                                                            user?._id as string
                                                                       )) ||
                                                                       (userProfile.user_id !==

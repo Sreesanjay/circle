@@ -58,13 +58,7 @@ export default function ChatBox({
                               { withCredentials: true }
                          );
                          if (response.data) {
-                              setUserDetails(
-                                   //      response.data.members.filter(
-                                   //           (item: userList) =>
-                                   //                item.user_id !== user?._id
-                                   //      )
-                                   response.data.members
-                              );
+                              setUserDetails(response.data.members);
                          }
                     }
                } catch (error) {
@@ -201,14 +195,16 @@ export default function ChatBox({
                     setIsTyping(true);
                }
           });
-     });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [socket?.current]);
      useEffect(() => {
           socket?.current?.on("stop-typing", (details) => {
                if (details.room === currentChat?._id) {
                     setIsTyping(false);
                }
           });
-     });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [socket?.current]);
 
      //catching read-message
      useEffect(() => {
@@ -225,7 +221,8 @@ export default function ChatBox({
                     });
                });
           });
-     });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [socket?.current]);
      return (
           <>
                {currentChat ? (
@@ -284,10 +281,14 @@ export default function ChatBox({
                                         <span className="text-xs">Typing</span>
                                    ) : (
                                         currentChat.is_groupchat && (
-                                             <div className="user-list flex gap-3 flex-nowrap">
-                                                  <h1 className="text-xs text-gray-400">
-                                                       you and
-                                                  </h1>
+                                             <div className="user-list flex gap-2 flex-nowrap">
+                                                  {currentChat.members.includes(
+                                                       user?._id as string
+                                                  ) && (
+                                                       <h1 className="text-xs text-gray-400">
+                                                            you,
+                                                       </h1>
+                                                  )}
                                                   {userDetails?.map(
                                                        (item, index) => {
                                                             if (
@@ -343,35 +344,47 @@ export default function ChatBox({
                                         );
                                    })}
                          </section>
-                         <section className="chat-sender flex items-center px-5 bg-gray-900 py-2">
-                              <div onClick={() => imageRef.current?.click()}>
-                                   +
-                              </div>
-                              <InputEmoji
-                                   value={newMessage}
-                                   onChange={(e) => {
-                                        handleChange(e);
-                                        setStartTyping(true);
+                         {!currentChat.removed_members?.includes(
+                              user?._id as string
+                         ) ? (
+                              <section className="chat-sender flex items-center px-5 bg-gray-900 py-2">
+                                   <div
+                                        onClick={() =>
+                                             imageRef.current?.click()
+                                        }
+                                   >
+                                        +
+                                   </div>
+                                   <InputEmoji
+                                        value={newMessage}
+                                        onChange={(e) => {
+                                             handleChange(e);
+                                             setStartTyping(true);
 
-                                        setTimeout(() => {
-                                             setStartTyping(false);
-                                        }, 3000);
-                                   }}
-                              />
-                              <div
-                                   className="send-button button"
-                                   onClick={handleSend}
-                              >
-                                   Send
+                                             setTimeout(() => {
+                                                  setStartTyping(false);
+                                             }, 3000);
+                                        }}
+                                   />
+                                   <div
+                                        className="send-button button"
+                                        onClick={handleSend}
+                                   >
+                                        Send
+                                   </div>
+                                   <input
+                                        type="file"
+                                        name=""
+                                        id=""
+                                        style={{ display: "none" }}
+                                        ref={imageRef}
+                                   />
+                              </section>
+                         ) : (
+                              <div className="py-3 w-full bg-slate-400">
+                                   <h1 className="text-center text-black">You are no longer a member</h1>
                               </div>
-                              <input
-                                   type="file"
-                                   name=""
-                                   id=""
-                                   style={{ display: "none" }}
-                                   ref={imageRef}
-                              />
-                         </section>
+                         )}
                     </section>
                ) : (
                     <h1>No chats</h1>
@@ -382,6 +395,7 @@ export default function ChatBox({
                          userDetails={userDetails}
                          setOpenDrawer={setOpenDrawer}
                          openDrawer={openDrawer}
+                         socket={socket}
                     />
                </div>
           </>

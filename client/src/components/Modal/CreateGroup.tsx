@@ -1,22 +1,24 @@
 import { Modal } from "flowbite-react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, RefObject, SetStateAction, useEffect, useState } from "react";
 import API from "../../api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { createGroup } from "../../services/chatService";
-import { IChat } from "../../types";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { addChat, setCurrentChat } from "../../features/Socket/SocketSlice";
+import { Socket } from "socket.io-client";
 
 export default function CreateGroup({
      openModal,
      setOpenModal,
-     setChats,
+     socket
 }: {
      openModal: boolean;
      setOpenModal: Dispatch<SetStateAction<boolean>>;
-     setChats: Dispatch<SetStateAction<IChat[]>>;
+     socket: RefObject<Socket> 
 }) {
+     const dispatch = useAppDispatch();
      const [search, setSearch] = useState("");
      const { user } = useAppSelector((state) => state.auth);
      const [chat_name, setChatName] = useState("");
@@ -68,7 +70,9 @@ export default function CreateGroup({
                };
                const response = await createGroup(data);
                if (response.chat) {
-                    setChats((current) => [response.chat, ...current]);
+                    dispatch(addChat(response.chat));
+                    dispatch(setCurrentChat(response.chat));
+                    socket?.current?.emit("new-chat", response.chat);
                     setOpenModal(false);
                }
           }
@@ -154,7 +158,7 @@ export default function CreateGroup({
                                                                            {
                                                                                 user_id: userProfile.user_id,
                                                                                 username:
-                                                                                userProfile.username,
+                                                                                     userProfile.username,
                                                                            },
                                                                       ];
                                                             }
@@ -162,14 +166,22 @@ export default function CreateGroup({
                                                   }}
                                              >
                                                   <img
-                                                       src={userProfile.profile_img}
+                                                       src={
+                                                            userProfile.profile_img
+                                                       }
                                                        alt=""
                                                        className="w-11 shadow rounded-md"
                                                   />
                                                   <div className="name leading-none">
-                                                       <h1>{userProfile.username}</h1>
+                                                       <h1>
+                                                            {
+                                                                 userProfile.username
+                                                            }
+                                                       </h1>
                                                        <small>
-                                                            {userProfile.fullname}
+                                                            {
+                                                                 userProfile.fullname
+                                                            }
                                                        </small>
                                                   </div>
                                              </div>

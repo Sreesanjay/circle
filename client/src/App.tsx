@@ -65,6 +65,8 @@ function App() {
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [user]);
 
+
+
      return (
           <div className="bg-gray-800 app min-h-screen text-white">
                <Header />

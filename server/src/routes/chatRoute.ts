@@ -11,6 +11,7 @@ router.put('/chat_name/:id', protect, updateChatName);
 router.put('/icon/:id', protect, updateGroupIcon);
 router.put('/members/:id', protect, addMember);
 router.put('/members/remove/:id', protect, removeMember)
+// router.put('/exit/:id', protect, exitChat)
 
 
 

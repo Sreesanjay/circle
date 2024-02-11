@@ -21,6 +21,12 @@ const chatSchema: Schema<IChat> = new Schema({
         type: mongoose.Types.ObjectId,
         ref: 'user'
     }],
+    
+    removed_members: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'user'
+    }],
+
     is_delete: {
         type: Boolean,
         default: false

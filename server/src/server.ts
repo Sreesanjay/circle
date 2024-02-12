@@ -43,13 +43,22 @@ mongoose.connect(env.MONGO_CONNECTION_STRING).then(() => {
                })
           });
           socket.on('exit-chat', (chat) => {
-               chat.removed_members.forEach((member: string) => {
-                    const reciever = activeUsers.find((item) => item.userId === member);
-                    if (reciever) {
-                         console.log(reciever)
-                         socket.to(reciever.socketId).emit('remove-chat', chat)
-                    }
-               })
+               socket.to(chat._id).emit('remove-chat', chat)
+          });
+
+          //block user
+          socket.on('block-user', (user) => {
+               const reciever = activeUsers.find(item => item.userId === user)
+               if (reciever) {
+                    socket.to(reciever.socketId).emit('block-chat', user)
+               }
+          });
+          //unblock user
+          socket.on('unblock-user', (user) => {
+               const reciever = activeUsers.find(item => item.userId === user)
+               if (reciever) {
+                    socket.to(reciever.socketId).emit('unblock-chat', user)
+               }
           });
           socket.on('join-room', (room) => {
                socket.join(room);

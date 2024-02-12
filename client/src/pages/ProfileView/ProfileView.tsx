@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { RefObject, useEffect, useState } from "react";
 import API from "../../api";
 import { toast } from "react-toastify";
 import { IUserList } from "../../types";
@@ -8,8 +8,9 @@ import { AxiosError } from "axios";
 import { ThreeDot } from "../../assets/Icons";
 import { ListGroup } from "flowbite-react";
 import Report from "../../components/Modal/Report";
+import { Socket } from "socket.io-client";
 
-export default function ProfileView() {
+export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
      const [userProfile, setUserProfile] = useState<IUserList>();
      const [showList, setShowList] = useState(false);
      const [following, setFollowing] = useState(0);
@@ -89,6 +90,7 @@ export default function ProfileView() {
                     withCredentials: true,
                });
                if (response.data) {
+                    socket?.current?.emit("block-user", id);
                     setIsFollowing(false);
                     if (isFollowing) {
                          setFollowers((current) => current - 1);
@@ -111,6 +113,7 @@ export default function ProfileView() {
                });
                if (response.data) {
                     setIsBlocked(false);
+                    socket?.current?.emit("unblock-user", id);
                }
           } catch (error) {
                const err = error as AxiosError<{
@@ -123,7 +126,12 @@ export default function ProfileView() {
 
      return (
           <section className="profile-view">
-               <Report openModal={openReport} setOpenModal={setOpenReport} id={id as string} reported_type={'account'}/>
+               <Report
+                    openModal={openReport}
+                    setOpenModal={setOpenReport}
+                    id={id as string}
+                    reported_type={"account"}
+               />
                <section className="cover-photo">
                     {userProfile?.cover_img ? (
                          <img
@@ -230,7 +238,11 @@ export default function ProfileView() {
                                                        Block
                                                   </ListGroup.Item>
                                              )}
-                                             <ListGroup.Item onClick={()=>setOpenReport(true)}>
+                                             <ListGroup.Item
+                                                  onClick={() =>
+                                                       setOpenReport(true)
+                                                  }
+                                             >
                                                   Report
                                              </ListGroup.Item>
                                              <ListGroup.Item>

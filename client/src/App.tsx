@@ -116,7 +116,7 @@ function App() {
                               />
                               <Route
                                    path="/view-profile/:id"
-                                   element={<ProfileView />}
+                                   element={socket && <ProfileView socket={socket}  />}
                               />
                               <Route
                                    path="/manage-account/blocked-users"

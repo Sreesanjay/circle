@@ -46,7 +46,7 @@ export default function SearchBox() {
                <input
                     type="text"
                     onChange={(e) => setSearch(e.target.value)}
-                    className="search text-black"
+                    className="search text-white bg-gray-800"
                     placeholder="Search"
                     value={search}
                />

@@ -1,4 +1,5 @@
 import Chat from "../models/chatSchema";
+import User from "../models/userModel";
 import { ObjectId } from "mongodb";
 import UserProfile from "../models/userProfile";
 import { Request, RequestHandler, Response, NextFunction } from "express";
@@ -99,7 +100,8 @@ export const userChats: RequestHandler = asyncHandler(
                                 }
                             }
                         }
-                    ]
+                    ],
+                    is_delete : false
                 }
             },
             {
@@ -109,6 +111,15 @@ export const userChats: RequestHandler = asyncHandler(
                     foreignField: 'chat_id',
                     as: 'latest_message',
                     pipeline: [
+                        {
+                            $match: {
+                                delivered_to: {
+                                    $elemMatch: {
+                                        $eq: new ObjectId(req.user?._id)
+                                    }
+                                }
+                            }
+                        },
                         {
                             $sort: { createdAt: -1 }
                         },
@@ -288,13 +299,16 @@ export const addMember: RequestHandler = asyncHandler(
 export const removeMember: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const chat_id = req.params.id;
-        console.log("remove member", chat_id)
         const { user } = req.body;
         if (!chat_id || !user) {
             res.status(400);
             return next(new Error('Internal error'));
         }
-        const chat = await Chat.findByIdAndUpdate(chat_id, { $addToSet: { removed_members: user }, $pull: { members: user } }, { new: true });
+        const existChat = await Chat.findById(chat_id);
+        if (existChat && existChat.admins.includes(user) && existChat.admins.length === 1 && existChat.members.length > 1) {
+            await Chat.findByIdAndUpdate(chat_id, { $push: { admins: existChat.members[1] } })
+        }
+        const chat = await Chat.findByIdAndUpdate(chat_id, { $addToSet: { removed_members: user }, $pull: { members: user, admins: user } }, { new: true });
         if (chat) {
             res.status(200).json({
                 status: 'ok',
@@ -304,5 +318,40 @@ export const removeMember: RequestHandler = asyncHandler(
         } else {
             next(new Error('Internal Error'))
         }
+    })
+
+/**
+ * @desc request for checking whether the user is blocked or not
+ * @route GET /api/chat/members/is-blocked/:id
+ * @access private
+ */
+export const isBlocked: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const user = req.params.id;
+        if (!user) {
+            res.status(400);
+            return next(new Error('Invalid user'));
+        }
+        const youBlocked = await User.findOne({ _id: req.user?._id, blocked_users: { $elemMatch: { $eq: user } } })
+        const theyBlocked = await User.findOne({ _id: user, blocked_users: { $elemMatch: { $eq: req.user?._id } } })
+        if (youBlocked) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'is Blocked fetched',
+                blocked: 'You blocked this user'
+            })
+        } else if (theyBlocked) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'is Blocked fetched',
+                blocked: 'You were blocked by this user'
+            })
+        } else {
+            res.status(200).json({
+                status: 'ok',
+                message: 'is Blocked fetched'
+            })
+        }
+
     })
 

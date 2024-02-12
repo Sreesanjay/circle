@@ -498,7 +498,6 @@ export const blockUser: RequestHandler = asyncHandler(
         const { id } = req.params;
         await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { following: new ObjectId(id), close_friend: new ObjectId(id) } });
         const user = await User.findOneAndUpdate({ _id: req.user?._id }, { $push: { blocked_users: new ObjectId(id) } }, { new: true })
-        console.log(user)
         if (user) {
             res.status(200).json({
                 status: 'ok',

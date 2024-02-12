@@ -43,7 +43,9 @@ export const addStory: RequestHandler = asyncHandler(
  */
 export const getMyStory: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const story = await Story.find({ user_id: req.user?._id });
+        const twentyFourHoursAgo = new Date();
+        twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+        const story = await Story.find({ user_id: req.user?._id, "createdAt": { $gte: twentyFourHoursAgo } });
         if (story) {
             res.status(200).json({
                 status: 'OK',
@@ -64,13 +66,15 @@ export const getStories: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const connection = await Connection.find({ following: { $in: req.user?._id } }, { _id: 0, user_id: 1 })
         const close_friend = await Connection.find({ close_friend: { $in: req.user?._id } }, { _id: 0, user_id: 1 })
+        const twentyFourHoursAgo = new Date();
+        twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
         const story = await Story.aggregate([
             {
                 $match: {
-
-                    "user_id": {
+                    user_id: {
                         $in: connection.map(item => item.user_id)
-                    }
+                    },
+                    createdAt: { $gte: twentyFourHoursAgo }
                 }
             },
             {

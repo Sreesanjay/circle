@@ -15,11 +15,26 @@ const messageSchema: Schema<IMessage> = new Schema({
         type: String,
         required: true
     },
+    content_type: {
+        type: 'string',
+        enum: ['TEXT', 'MEDIA', 'LOCATION'],
+        default: 'TEXT'
+    },
+    file_type: {
+        type: 'string',
+    },
+    delivered_to: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'user',
+            default: []
+        }
+    ],
     read_by: [
         {
             type: mongoose.Types.ObjectId,
             ref: 'user',
-            default:[]
+            default: []
         }
     ],
     reply_to: {

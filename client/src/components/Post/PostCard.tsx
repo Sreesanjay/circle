@@ -134,7 +134,7 @@ export default function PostCard({ post }: { post: IPost }) {
                                         sx={{
                                              width: "100%",
                                              maxWidth: 360,
-                                             bgcolor: "background.paper",
+                                             backgroundColor: "#121d33"
                                         }}
                                         className="rounded-md shadow-md "
                                         aria-label="contacts"
@@ -145,7 +145,7 @@ export default function PostCard({ post }: { post: IPost }) {
                                                   disablePadding
                                                   onClick={() => handleUnsave()}
                                              >
-                                                  <ListItemButton>
+                                                  <ListItemButton >
                                                        <ListItemText
                                                             primary="Unsave"
                                                             className="px-5"

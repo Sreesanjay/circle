@@ -19,7 +19,7 @@ export const addMessage: RequestHandler = asyncHandler(
             return next(new Error('Chat not found'))
         }
         if (!req.body.sender_id) req.body.sender_id = req.user?._id
-        const message = new Message({ ...req.body });
+        const message = new Message({ ...req.body, delivered_to: chat.members });
         const newMessage = await message.save();
         const userProfile = await UserProfile.findOne({ user_id: req.user?._id })
         if (newMessage && userProfile) {
@@ -37,6 +37,8 @@ export const addMessage: RequestHandler = asyncHandler(
                     chat_id: newMessage.chat_id,
                     sender_id: newMessage.sender_id,
                     content: newMessage.content,
+                    content_type: newMessage.content_type,
+                    file_type: newMessage.file_type,
                     read_by: newMessage.read_by,
                     reply_to: newMessage.reply_to,
                     is_delete: newMessage.is_delete
@@ -60,11 +62,25 @@ export const getMessages: RequestHandler = asyncHandler(
             res.status(400);
             return next(new Error('Chat not found'))
         }
+        console.log(req.query.page)
         const page = (req.query.page && typeof req.query.page === 'string') ? req.query.page : null;
         const query = page ? {
             chat_id: new ObjectId(chat_id),
-            createdAt: { $lt: new Date(page) }
-        } : { chat_id: new ObjectId(chat_id) }
+            createdAt: { $lt: new Date(page) },
+            delivered_to: {
+                $elemMatch: {
+                    $eq: new ObjectId(req.user?._id)
+                }
+            }
+        } : {
+            chat_id: new ObjectId(chat_id),
+            delivered_to: {
+                $elemMatch: {
+                    $eq: new ObjectId(req.user?._id)
+                }
+            }
+        }
+
         const messages = await Message.aggregate([
             {
                 $sort: { createdAt: -1 }
@@ -111,7 +127,6 @@ export const getMessages: RequestHandler = asyncHandler(
                 $unwind: { path: '$userDetails' }
             }
         ])
-
         if (messages) {
             res.status(200).json({
                 status: "ok",

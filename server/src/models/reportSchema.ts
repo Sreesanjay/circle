@@ -7,16 +7,16 @@ const reportSchema: Schema<IReport> = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    reported_id:{
+    reported_id: {
         type: mongoose.Schema.Types.ObjectId
     },
-    reported_type:{
-        type:String,
-        enum:['account', 'post']
+    reported_type: {
+        type: String,
+        enum: ['account', 'post', 'group']
     },
-    reason:{
-        type:String
+    reason: {
+        type: String
     }
-},{timestamps :true});
+}, { timestamps: true });
 
 export default mongoose.model<IReport>("Report", reportSchema);

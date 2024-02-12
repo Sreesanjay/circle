@@ -9,14 +9,14 @@ import { IChat, IMessage, SendMessage } from "../../types";
 import Conversation from "../../components/Conversation/Conversation";
 import ChatBox from "../../components/ChatBox/ChatBox";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
      addChat,
      addLatestMessage,
      resetCurrentChat,
      setChats,
      setCurrentChat,
-     updateRemovedMembers,
-     // setOnlineUsers,
+     updateMembers,
 } from "../../features/Socket/SocketSlice";
 import { useLocation } from "react-router-dom";
 import { ThreeDot } from "../../assets/Icons";
@@ -67,18 +67,17 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
      useEffect(() => {
           socket?.current?.on("join-newchat", (newChat) => {
                const exists = chats.find((item) => item._id === newChat._id);
-               if (!exists) {
+               if (exists !== undefined) {
                     dispatch(addChat(newChat));
+               } else {
+                    dispatch(updateMembers(newChat));
                }
           });
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [socket?.current]);
      useEffect(() => {
           socket?.current?.on("remove-chat", (chat) => {
-               const exists = chats.find((item) => item._id === chat._id);
-               if (!exists) {
-                    dispatch(updateRemovedMembers(chat));
-               }
+               dispatch(updateMembers(chat));
           });
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [socket?.current]);
@@ -151,8 +150,12 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
                     setOpenModal={setCreateGroup}
                     socket={socket}
                />
-               <section className="chat flex bg-red-400">
-                    <div className="chat-list md:w-96  bg-primary-bg p-3">
+               <section className="chat bg-red-400 grid grid-cols-12">
+                    <div
+                         className={`chat-list ${
+                              currentChat ? "hidden" : "block"
+                         } md:block bg-primary-bg p-3 col-span-12 sm:col-span-5 md:col-span-3`}
+                    >
                          <header className="chat-header my-4 mb-7">
                               <div className="flex items-center justify-between relative">
                                    <h1 className="chat-title my-5 mb-7 text-2xl">
@@ -236,7 +239,6 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
                          </header>
                          {chats &&
                               chats.map((chat, index) => {
-                                   console.log("rerenders chat")
                                    if (
                                         chat.latest_message?.content ||
                                         chat.is_groupchat
@@ -253,12 +255,21 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
                                    }
                               })}
                     </div>
-                    <div className="message-section  bg-seconday-bg w-full">
+                    <div
+                         className={`message-section ${
+                              currentChat ? "block" : "hidden"
+                         }  md:block bg-seconday-bg w-full col-span-12 sm:col-span-7 md:col-span-9 `}
+                    >
+                         <div
+                              className="back-arrow p-2 absolute md:hidden"
+                              onClick={() => dispatch(resetCurrentChat())}
+                         >
+                              <ArrowBackIcon />
+                         </div>
                          <ChatBox
                               online={checkOnlineStatus(currentChat!)}
                               setSendMessage={setSendMessage}
                               receivedMessage={receivedMessage}
-                              // setStartTyping={setStartTyping}
                               socket={socket}
                          />
                     </div>

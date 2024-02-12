@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import API from "../api"
 import { AxiosError } from "axios";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../app/firebase";
 
 export async function createChat(id: string) {
@@ -63,6 +63,8 @@ export async function getAllChats() {
 type sendMessage = {
     sender_id: string;
     content: string;
+    content_type: string;
+    file_type?: string;
     chat_id: string;
 }
 export async function sendMessage(message: sendMessage) {
@@ -167,6 +169,23 @@ export async function removeMember({ chat_id, user }: { user: string, chat_id: s
     }
 }
 
+export async function isBlocked(user: string) {
+    try {
+        const response = await API.get(`/chat/members/is-blocked/${user}`, { withCredentials: true })
+        if (response.data) {
+            return response.data
+        } else {
+            throw new Error('Internal Error')
+        }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
+    }
+}
+
 
 export async function changeGroupIcon({ chat_id, icon }: { chat_id: string, icon: Blob }) {
     try {
@@ -188,6 +207,41 @@ export async function changeGroupIcon({ chat_id, icon }: { chat_id: string, icon
                 }
             }
         }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
+    }
+}
+
+export async function sendFileMessage(file: File) {
+    try {
+        const filename = new Date().getTime() + file.name;
+        const storageRef = ref(storage, 'message/' + filename);
+        const snapshot = await uploadBytes(storageRef, file)
+        if (snapshot) {
+            const url = await getDownloadURL(storageRef);
+            if (url) {
+                return url;
+            } else {
+                throw new Error("can't upload the file")
+            }
+        }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
+    }
+}
+
+export async function deleteFile(url: string) {
+    try {
+        const storageRef = ref(storage, url);
+         deleteObject(storageRef);
     } catch (error) {
         const err = error as AxiosError<{
             message?: string;

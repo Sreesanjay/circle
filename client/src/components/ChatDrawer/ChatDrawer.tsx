@@ -21,6 +21,7 @@ import { userList } from "../../types";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
+import Report from "../../components/Modal/Report";
 import {
      addMember,
      changeChatName,
@@ -31,7 +32,6 @@ import {
      updateChatName,
      updateGroupIcon,
      updateMembers,
-     updateRemovedMembers,
 } from "../../features/Socket/SocketSlice";
 import "./ChatDrawer.css";
 import ImageCrop from "../ImageCrop/ImageCrop";
@@ -55,7 +55,7 @@ export default function ChatDrawer({
      const { user } = useAppSelector((state) => state.auth);
      const [chat_name, setChat_name] = useState(currentChat?.chat_name || "");
      const iconInput = useRef<HTMLInputElement>(null);
-
+     const [reportId, setReportId] = useState<string | null>(null);
      const [inputImg, setInputImg] = useState<string>("");
      const [isCrop, setisCrop] = useState(false);
      const [groupIcon, setGroupIcon] = useState<Blob | undefined>();
@@ -70,6 +70,20 @@ export default function ChatDrawer({
             }[]
           | []
      >([]);
+
+     useEffect(() => {
+          if (currentChat?.is_groupchat) {
+               setReportId(currentChat._id);
+          } else {
+               const id = currentChat?.members.find(
+                    (item) => item !== user?._id
+               );
+               setReportId(id as string);
+          }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [userDetails]);
+
+     const [openReport, setOpenReport] = useState(false);
 
      async function handleChangeChatName() {
           if (chat_name === currentChat?.chat_name) return;
@@ -110,7 +124,7 @@ export default function ChatDrawer({
                     user: user_id,
                });
                if (response.chat) {
-                    dispatch(updateRemovedMembers(response.chat));
+                    dispatch(updateMembers(response.chat));
                     socket?.current?.emit("exit-chat", response.chat);
                }
           }
@@ -176,12 +190,19 @@ export default function ChatDrawer({
                     user: user?._id,
                });
                if (response.chat) {
-                    dispatch(updateRemovedMembers(response.chat));
+                    dispatch(updateMembers(response.chat));
+                    socket?.current?.emit("exit-chat", response.chat);
                }
           }
      }
      return (
           <>
+               <Report
+                    openModal={openReport}
+                    setOpenModal={setOpenReport}
+                    id={reportId as string}
+                    reported_type={"group"}
+               />
                <ImageCrop
                     src={inputImg}
                     aspect={1 / 1}
@@ -335,18 +356,25 @@ export default function ChatDrawer({
                          </section>
                          <section className="flex gap-5 pt-10">
                               {currentChat?.is_groupchat ? (
-                                   <button
-                                        className="exit-group px-4 py-1 rounded-md text-secondary bg-primary hover:bg-primary-hover"
-                                        onClick={handleExitChat}
-                                   >
-                                        Exit
-                                   </button>
+                                   currentChat.members.includes(
+                                        user?._id as string
+                                   ) && (
+                                        <button
+                                             className="exit-group px-4 py-1 rounded-md text-secondary bg-primary hover:bg-primary-hover"
+                                             onClick={handleExitChat}
+                                        >
+                                             Exit
+                                        </button>
+                                   )
                               ) : (
                                    <button className="exit-group px-4 py-1 rounded-md text-secondary bg-primary hover:bg-primary-hover">
                                         Block
                                    </button>
                               )}
-                              <button className="report px-4 py-1 rounded-md text-secondary bg-red-700">
+                              <button
+                                   className="report px-4 py-1 rounded-md text-secondary bg-red-700"
+                                   onClick={() => setOpenReport(true)}
+                              >
                                    Report
                               </button>
                          </section>
@@ -480,7 +508,7 @@ export default function ChatDrawer({
                                                                            user?._id as string
                                                                       )) ||
                                                                       (userProfile.user_id !==
-                                                                      user?._id ? (
+                                                                           user?._id && (
                                                                            <div
                                                                                 className="remove-icon"
                                                                                 onClick={() =>
@@ -495,11 +523,14 @@ export default function ChatDrawer({
                                                                                      }
                                                                                 />
                                                                            </div>
-                                                                      ) : (
-                                                                           <span className="text-xs">
-                                                                                Admin
-                                                                           </span>
                                                                       ))}
+                                                                 {currentChat?.admins.includes(
+                                                                      userProfile.user_id
+                                                                 ) && (
+                                                                      <span className="text-xs">
+                                                                           Admin
+                                                                      </span>
+                                                                 )}
                                                             </div>
                                                        );
                                                   }

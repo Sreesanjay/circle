@@ -85,7 +85,11 @@ export default function Conversation({
                          {chat?.latest_message?.content ? (
                               <>
                                    {chat.latest_message?.userDetails?.username}{" "}
-                                   :{chat.latest_message?.content}{" "}
+                                   :
+                                   {chat.latest_message?.content_type ===
+                                   "MEDIA"
+                                        ? "file"
+                                        : chat.latest_message?.content}{" "}
                               </>
                          ) : null}
                     </span>

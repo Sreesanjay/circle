@@ -74,7 +74,7 @@ export default function CreateTextStory() {
                               </span>
                          )}
                          <textarea
-                              className="w-full rounded-md h-32"
+                              className="w-full rounded-md h-32 bg-gray-800"
                               onChange={(e) => setStory(e.target.value)}
                          />
                          <div className="flex flex-col my-3">
@@ -82,7 +82,7 @@ export default function CreateTextStory() {
                               <select
                                    name=""
                                    id=""
-                                   className="rounded-md"
+                                   className="rounded-md bg-gray-800"
                                    onChange={(e) =>
                                         setVisibility(e.target.value)
                                    }
@@ -184,7 +184,7 @@ export default function CreateTextStory() {
                     </section>
                     <section className="preview col-span-12 md:col-span-8 flex justify-center">
                          <div
-                              className={`preview-story flex items-center justify-center w-1/2 h-full border rounded-md shadow-md ${background}`}
+                              className={`preview-story flex items-center justify-center w-2/5 h-full border rounded-md shadow-md ${background}`}
                          >
                               <h1 className={`text-2xl text-${color}`}>
                                    {story}

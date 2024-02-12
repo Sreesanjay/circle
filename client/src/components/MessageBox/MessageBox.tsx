@@ -62,14 +62,22 @@ export default function MessageBox({ message }: { message: IMessage }) {
                    : "others bg-gray-500"
          }`}
                     >
-                         <p
-                              className="max-w-96 pe-2"
-                              style={{
-                                   overflowWrap: "break-word",
-                              }}
-                         >
-                              {message.content}
-                         </p>
+                         {message && message.content_type === "MEDIA" ? (
+                              <img
+                                   src={message.content}
+                                   alt=""
+                                   className="w-96"
+                              />
+                         ) : (
+                              <p
+                                   className="max-w-96 pe-2"
+                                   style={{
+                                        overflowWrap: "break-word",
+                                   }}
+                              >
+                                   {message.content}
+                              </p>
+                         )}
                          <div className="seen absolute right-1 bottom-0">
                               {message.sender_id === user?._id ? (
                                    message.read_by.length > 0 ? (

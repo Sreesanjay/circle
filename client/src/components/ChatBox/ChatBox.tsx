@@ -1,4 +1,5 @@
 import {
+     ChangeEvent,
      Dispatch,
      RefObject,
      SetStateAction,
@@ -6,7 +7,7 @@ import {
      useRef,
      useState,
 } from "react";
-
+import AttachmentIcon from "@mui/icons-material/Attachment";
 import InputEmoji from "react-input-emoji";
 import { IMessage, SendMessage, userList } from "../../types";
 import "./ChatBox.css";
@@ -15,14 +16,18 @@ import API from "../../api";
 import { toast } from "react-toastify";
 import { ProfileIconWithText } from "../../assets/Icons";
 import {
+     deleteFile,
      getMessages,
+     isBlocked,
      readMessage,
+     sendFileMessage,
      sendMessage,
 } from "../../services/chatService";
 import { Spinner } from "flowbite-react";
 import { Socket } from "socket.io-client";
 import MessageBox from "../MessageBox/MessageBox";
 import ChatDrawer from "../ChatDrawer/ChatDrawer";
+import { useNavigate } from "react-router-dom";
 
 export default function ChatBox({
      online,
@@ -35,6 +40,7 @@ export default function ChatBox({
      receivedMessage: IMessage | null;
      socket: RefObject<Socket>;
 }) {
+     const navigate = useNavigate();
      const { user } = useAppSelector((state) => state.auth);
      const { currentChat } = useAppSelector((state) => state.socket);
      const [userDetails, setUserDetails] = useState<userList[] | null>(null);
@@ -47,6 +53,11 @@ export default function ChatBox({
      const [isTyping, setIsTyping] = useState(false);
      const [startTyping, setStartTyping] = useState(false);
      const [openDrawer, setOpenDrawer] = useState(false);
+     const [blocked, setBlocked] = useState<string | null>(null);
+     const [fileInput, setFileInput] = useState<{
+          content: string;
+          file_type: string;
+     } | null>(null);
 
      useEffect(() => {
           (async () => {
@@ -58,7 +69,16 @@ export default function ChatBox({
                               { withCredentials: true }
                          );
                          if (response.data) {
-                              setUserDetails(response.data.members);
+                              if (currentChat.is_groupchat) {
+                                   setUserDetails(response.data.members);
+                              } else {
+                                   setUserDetails(
+                                        response.data.members.filter(
+                                             (member: userList) =>
+                                                  member.user_id !== user?._id
+                                        )
+                                   );
+                              }
                          }
                     }
                } catch (error) {
@@ -66,6 +86,45 @@ export default function ChatBox({
                }
           })();
      }, [currentChat, user]);
+
+     useEffect(() => {
+          (async () => {
+               if (currentChat && !currentChat?.is_groupchat) {
+                    const userId = currentChat?.members.find(
+                         (item) => item !== user?._id
+                    );
+                    const response = await isBlocked(userId as string);
+                    if (response.blocked) {
+                         setBlocked(response.blocked);
+                    }
+               }
+          })();
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [currentChat]);
+
+     useEffect(() => {
+          socket?.current?.on("block-chat", (userId) => {
+               const user_id = currentChat?.members.find(
+                    (item) => item === user?._id
+               );
+               if (userId === user_id) {
+                    setBlocked("you were blocked by this user");
+               }
+          });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [socket?.current]);
+
+     useEffect(() => {
+          socket?.current?.on("unblock-chat", (userId) => {
+               const user_id = currentChat?.members.find(
+                    (item) => item === user?._id
+               );
+               if (userId === user_id) {
+                    setBlocked(null);
+               }
+          });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [socket?.current]);
 
      useEffect(() => {
           if (receivedMessage) {
@@ -84,19 +143,18 @@ export default function ChatBox({
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [receivedMessage]);
 
+     // eslint-disable-next-line react-hooks/exhaustive-deps
      const getMessage = async () => {
           if (currentChat) {
                setIsLoading(true);
+               console.log(pagination.current);
                const response = await getMessages(
                     currentChat?._id,
                     pagination.current
                );
                setIsLoading(false);
                if (response.messages.length > 0) {
-                    setMessages((current) => [
-                         ...response.messages,
-                         ...current,
-                    ]);
+                    setMessages(() => [...response.messages, ...messages]);
                     response.messages.map((message: IMessage) => {
                          if (
                               !message.read_by.includes(user?._id as string) ||
@@ -109,13 +167,26 @@ export default function ChatBox({
           }
      };
      useEffect(() => {
+          pagination.current = null;
           setMessages([]);
-          getMessage();
+          setFileInput(null);
+          console.log("pagination", pagination.current);
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [currentChat]);
 
      useEffect(() => {
-          console.log(currentChat);
+          if (
+               currentChat &&
+               messages.length === 0 &&
+               pagination.current === null
+          ) {
+               console.log("called");
+               getMessage();
+          }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [messages]);
+
+     useEffect(() => {
           if (currentChat && socket.current?.connected) {
                socket?.current?.emit("join-room", currentChat?._id);
           }
@@ -128,28 +199,62 @@ export default function ChatBox({
           }
      }, [messages]);
 
-     async function handleSend() {
-          if (user && currentChat?._id) {
-               const message = {
-                    sender_id: user?._id,
-                    content: newMessage,
-                    chat_id: currentChat?._id,
-               };
-               const response = await sendMessage(message);
-               if (response.newMessage) {
-                    setNewMessage("");
-                    setSendMessage({
-                         ...response.newMessage,
-                         members: currentChat.members,
+     async function handleSendFile(e: ChangeEvent<HTMLInputElement>) {
+          if (e.target.files) {
+               const response = await sendFileMessage(e.target.files[0]);
+               if (response) {
+                    setFileInput({
+                         content: response,
+                         file_type: e.target.files[0].type,
                     });
+               }
+          }
+     }
 
-                    setMessages((current) => [...current, response.newMessage]);
+     async function handleSend(type: string) {
+          if (user && currentChat?._id) {
+               let message;
+               if (type === "file") {
+                    message = {
+                         sender_id: user?._id,
+                         content: fileInput?.content as string,
+                         content_type: "MEDIA",
+                         file_type: fileInput?.file_type,
+                         chat_id: currentChat?._id,
+                    };
+                    setFileInput(null);
+               } else if (type === "text") {
+                    message = {
+                         sender_id: user?._id,
+                         content: newMessage as string,
+                         content_type: "TEXT",
+                         chat_id: currentChat?._id,
+                    };
+               }
+               if (message) {
+                    const response = await sendMessage(message);
+                    if (response.newMessage) {
+                         setNewMessage("");
+                         setSendMessage({
+                              ...response.newMessage,
+                              members: currentChat.members,
+                         });
+
+                         setMessages((current) => [
+                              ...current,
+                              response.newMessage,
+                         ]);
+                    }
                }
           }
      }
      function handleScroll(e: React.UIEvent<HTMLElement>) {
           const element = e.target as HTMLElement;
-          if (messages.length > 1 && element.scrollTop === 0) {
+          if (
+               messages.length > 1 &&
+               element.scrollTop === 0 &&
+               messages[0].chat_id === currentChat?._id
+          ) {
                pagination.current = messages[0].createdAt;
                getMessage();
           }
@@ -229,7 +334,16 @@ export default function ChatBox({
                     <section className="chatbox-container flex flex-col justify-between">
                          <section
                               className="header p-2 px-5 bg-gray-800 shadow-xl w-full flex"
-                              onClick={() => setOpenDrawer(!openDrawer)}
+                              onClick={() => {
+                                   if (currentChat.is_groupchat) {
+                                        setOpenDrawer(!openDrawer);
+                                   } else {
+                                        const userId = currentChat.members.find(
+                                             (item) => item !== user?._id
+                                        );
+                                        navigate(`/view-profile/${userId}`);
+                                   }
+                              }}
                          >
                               <div className="profile-img relative w-fit">
                                    {currentChat.is_groupchat ? (
@@ -297,7 +411,12 @@ export default function ChatBox({
                                                                       user?._id
                                                             ) {
                                                                  return (
-                                                                      <h1 className="text-xs text-gray-400">
+                                                                      <h1
+                                                                           className="text-xs text-gray-400"
+                                                                           key={
+                                                                                index
+                                                                           }
+                                                                      >
                                                                            {
                                                                                 item.username
                                                                            }
@@ -344,50 +463,89 @@ export default function ChatBox({
                                         );
                                    })}
                          </section>
-                         {!currentChat.removed_members?.includes(
-                              user?._id as string
-                         ) ? (
-                              <section className="chat-sender flex items-center px-5 bg-gray-900 py-2">
-                                   <div
-                                        onClick={() =>
-                                             imageRef.current?.click()
-                                        }
-                                   >
-                                        +
+                         {fileInput ? (
+                              <div className="file-box w-96 h-96 p-2 bg-gray-700 shadow-lg rounded-md">
+                                   {fileInput.file_type.includes("image") ? (
+                                        <img src={fileInput.content} alt="" />
+                                   ) : null}
+                                   <div className="footer py-3">
+                                        <button
+                                             className="discard px-3 py-1 rounded-md bg-red-600"
+                                             onClick={() => {
+                                                  deleteFile(fileInput.content);
+                                                  setFileInput(null);
+                                             }}
+                                        >
+                                             Discard
+                                        </button>
+                                        <button
+                                             className="send px-3 py-1 rounded-md bg-primary ms-3"
+                                             onClick={() => handleSend("file")}
+                                        >
+                                             Send
+                                        </button>
                                    </div>
-                                   <InputEmoji
-                                        value={newMessage}
-                                        onChange={(e) => {
-                                             handleChange(e);
-                                             setStartTyping(true);
+                              </div>
+                         ) : !currentChat.removed_members?.includes(
+                                user?._id as string
+                           ) ? (
+                              blocked ? (
+                                   <div className="py-3 w-full bg-slate-400">
+                                        <h1 className="text-center text-black">
+                                             {blocked}
+                                        </h1>
+                                   </div>
+                              ) : (
+                                   <section className="chat-sender flex items-center px-5 bg-gray-900 py-2">
+                                        <div
+                                             onClick={() =>
+                                                  imageRef.current?.click()
+                                             }
+                                             className="cursor-pointer"
+                                        >
+                                             <AttachmentIcon />
+                                        </div>
+                                        <InputEmoji
+                                             value={newMessage}
+                                             onChange={(e) => {
+                                                  handleChange(e);
+                                                  setStartTyping(true);
 
-                                             setTimeout(() => {
-                                                  setStartTyping(false);
-                                             }, 3000);
-                                        }}
-                                   />
-                                   <div
-                                        className="send-button button"
-                                        onClick={handleSend}
-                                   >
-                                        Send
-                                   </div>
-                                   <input
-                                        type="file"
-                                        name=""
-                                        id=""
-                                        style={{ display: "none" }}
-                                        ref={imageRef}
-                                   />
-                              </section>
+                                                  setTimeout(() => {
+                                                       setStartTyping(false);
+                                                  }, 3000);
+                                             }}
+                                        />
+                                        <div
+                                             className="send-button button"
+                                             onClick={() => handleSend("text")}
+                                        >
+                                             Send
+                                        </div>
+                                        <input
+                                             type="file"
+                                             name=""
+                                             id=""
+                                             ref={imageRef}
+                                             style={{ display: "none" }}
+                                             onChange={handleSendFile}
+                                        />
+                                   </section>
+                              )
                          ) : (
                               <div className="py-3 w-full bg-slate-400">
-                                   <h1 className="text-center text-black">You are no longer a member</h1>
+                                   <h1 className="text-center text-black">
+                                        You are no longer a member
+                                   </h1>
                               </div>
                          )}
                     </section>
                ) : (
-                    <h1>No chats</h1>
+                    <img
+                         src="https://studio.uxpincdn.com/studio/wp-content/uploads/2023/04/Chat-User-Interface-Design.png.webp"
+                         alt=""
+                         className="h-full opacity-70"
+                    />
                )}
 
                <div>

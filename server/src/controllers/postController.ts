@@ -1,5 +1,6 @@
 import { Request, RequestHandler, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
+import Notification from "../models/notificationSchema";
 import Post from "../models/postSchema";
 import Connection from "../models/connectionSchema";
 import UserProfile from "../models/userProfile";
@@ -259,6 +260,14 @@ export const postComment: RequestHandler = asyncHandler(
 
         ])
         if (newComment) {
+            const commentedUser = await UserProfile.findOne({ usre_id: req.user?._id });
+            const newMessage = new Notification({
+                user_id: post.user_id,
+                sender_id: req.user?._id,
+                message: `${commentedUser?.username} commented on your post`
+            })
+            newMessage.save()
+
             res.status(201).json({
                 status: 'created',
                 message: 'Comment added',
@@ -444,7 +453,15 @@ export const addLike: RequestHandler = asyncHandler(
             return next(new Error('post not not found'))
         }
         const post = await Post.findOneAndUpdate({ _id: id }, { $push: { likes: req.user?._id } }, { new: true });
+
         if (post) {
+            const user = await UserProfile.findOne({ user_id: req.user?._id });
+            const newMessage = new Notification({
+                user_id: post.user_id,
+                sender_id: req.user?._id,
+                message: `${user?.username} liked your post`
+            })
+            newMessage.save()
             res.status(200).json({
                 status: 'ok',
                 message: 'replys fetched',

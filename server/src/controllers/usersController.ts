@@ -2,6 +2,7 @@ import { Request, RequestHandler, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import UserProfile from "../models/userProfile";
 import User from "../models/userModel";
+import Notification from "../models/notificationSchema";
 import Connection from "../models/connectionSchema";
 import { ObjectId } from 'mongodb'
 import Report from "../models/reportSchema";
@@ -164,7 +165,15 @@ export const addFriend: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.body;
         const connection = await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $addToSet: { following: new ObjectId(id) } }, { upsert: true, new: true });
+
         if (connection) {
+            const followedUser = await UserProfile.findOne({ user_id: req.user?._id });
+            const newMessage = new Notification({
+                user_id: id,
+                sender_id: req.user?._id,
+                message: `${followedUser?.username} started following you`
+            })
+            newMessage.save()
             res.status(200).json({
                 status: "ok",
                 message: "follow request added"

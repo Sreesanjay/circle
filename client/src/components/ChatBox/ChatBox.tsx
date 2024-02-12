@@ -138,6 +138,10 @@ export default function ChatBox({
                     ) {
                          handleReadMessage(receivedMessage._id);
                     }
+               } else {
+                    toast.success(
+                         `You have a new message from ${receivedMessage.userDetails.username}`
+                    );
                }
           }
           // eslint-disable-next-line react-hooks/exhaustive-deps

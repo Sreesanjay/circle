@@ -37,3 +37,27 @@
 .value:focus {
      background-color: rgba(128, 128, 128, 0.171);
 }
+
+/* notification drawer */
+.notification-drawer {
+     width: 30vw;
+}
+.notification-drawer::-webkit-scrollbar {
+     display: none;
+}
+.notification-drawer .close-icon{
+     display: none;
+}
+@media only screen and (max-width: 900px) {
+     .notification-drawer {
+          width: 50vw;
+     }
+}
+@media only screen and (max-width: 600px) {
+     .notification-drawer {
+          width: 100vw;      
+     }
+     .notification-drawer .close-icon{
+          display: block;
+     }
+}

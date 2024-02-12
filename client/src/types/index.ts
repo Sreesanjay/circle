@@ -132,3 +132,12 @@ export interface SendMessage {
     members: string[];
     userDetails: userList
 }
+
+export interface INotification{
+    _id: string;
+    user_id: string;
+    message: string;
+    createdAt: Date;
+    is_read: boolean;
+    userProfile : userList
+}

@@ -116,6 +116,9 @@ export interface IMessage extends Document {
      is_delete: boolean;
 }
 
-interface INotification extends Document{
-     
+export interface INotification extends Document{
+     user_id:ObjectId,
+     message:string,
+     sender_id:ObjectId,
+     is_read:boolean
 }

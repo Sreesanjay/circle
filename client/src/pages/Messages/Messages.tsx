@@ -154,7 +154,7 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
                     <div
                          className={`chat-list ${
                               currentChat ? "hidden" : "block"
-                         } md:block bg-primary-bg p-3 col-span-12 sm:col-span-5 md:col-span-3`}
+                         } sm:block bg-primary-bg p-3 col-span-12 sm:col-span-5 md:col-span-3`}
                     >
                          <header className="chat-header my-4 mb-7">
                               <div className="flex items-center justify-between relative">
@@ -258,7 +258,7 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
                     <div
                          className={`message-section ${
                               currentChat ? "block" : "hidden"
-                         }  md:block bg-seconday-bg w-full col-span-12 sm:col-span-7 md:col-span-9 `}
+                         }  sm:block bg-seconday-bg w-full col-span-12 sm:col-span-7 md:col-span-9 `}
                     >
                          <div
                               className="back-arrow p-2 absolute md:hidden"

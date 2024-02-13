@@ -1,4 +1,6 @@
 .story-card{
-    width:500px;
-    height: 80vh;
+    height: 83vh;
+}
+.story-card .border{
+    border: 3px solid rgb(0, 128, 0);
 }

@@ -22,7 +22,7 @@
     right: 10px;
     top : 80px;
     border-radius: 10px;
-    background-color: rgba(128, 128, 128, 0.292);
+    background-color: rgba(199, 199, 199, 0.553);
 }
 .add-cover-btn:hover{
     background-color: rgba(128, 128, 128, 0.432);
@@ -30,5 +30,5 @@
 
 /*edit profile img button*/
 .edit-profileImg{
-    background-color: rgba(202, 199, 199, 0.427);
+    background-color: rgba(0, 0, 0, 0.877);
 }  

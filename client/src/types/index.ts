@@ -1,5 +1,5 @@
 export interface IInterest {
-    _id: string;
+    _id?: string;
     interest: string;
     discription: string;
     image: string | File | undefined;
@@ -26,17 +26,17 @@ export interface IStory {
     user_id: string;
     _id: string;
     content: string;
-    views: string;
-    viewer_type: string;
     story_type: string;
     visibility: string;
-    story_viewers: [{
-        _id: string;
-        user_id: string;
-        viewed_on: Date;
-        is_liked: boolean;
-        comment: string
-    }]
+    background: string;
+    color: string;
+    likes: string[];
+    story_viewers: string[];
+}
+
+export interface IStories {
+    stories: IStory[],
+    user_details: IuserDetails;
 }
 export interface userList {
     username: string;
@@ -63,8 +63,10 @@ export interface IComment {
 
 }
 
-interface userDetails {
+export interface IuserDetails {
+    user_id: string,
     username: string;
+    fullname: string;
     profile_img: string;
     email: {
         email: string;
@@ -75,7 +77,7 @@ export interface IPost {
     _id: string;
     user_id: string;
     is_saved: boolean;
-    user_details: userDetails;
+    user_details: IuserDetails;
     type: string;
     content: string;
     caption: string;
@@ -84,8 +86,58 @@ export interface IPost {
     visibility: string;
     impressions: number;
     profile_visit: number;
-    comment:number;
+    comment: number;
     reports: [];
     createdAt: Date;
     likes: string[];
+}
+
+export interface IChat {
+    _id: string;
+    chat_name: string;
+    members: string[];
+    admins: string[];
+    is_groupchat: boolean;
+    is_delete: boolean;
+    latest_message: IMessage;
+    createdAt: Date;
+    icon: string;
+    removed_members: string[];
+}
+export interface IMessage {
+    _id: string;
+    chat_id: string;
+    sender_id: string;
+    content: string;
+    read_by: string[];
+    reply_to: string;
+    is_delete: boolean;
+    createdAt: Date;
+    userDetails: userList;
+    content_type: string;
+    file_type?: string;
+}
+
+export interface SendMessage {
+    _id: string;
+    chat_id: string;
+    sender_id: string;
+    content: string;
+    read_by: string[];
+    reply_to: string;
+    content_type: string;
+    file_type?: string;
+    is_delete: boolean;
+    createdAt: Date;
+    members: string[];
+    userDetails: userList
+}
+
+export interface INotification{
+    _id: string;
+    user_id: string;
+    message: string;
+    createdAt: Date;
+    is_read: boolean;
+    userProfile : userList
 }

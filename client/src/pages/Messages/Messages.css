@@ -1,0 +1,9 @@
+.chat{
+    height: calc(100vh - 70px);
+}
+.chat-list {
+     height: calc(100vh - 70px);
+}
+.chat-list .user-list-search{
+    border: .5px solid black;
+}

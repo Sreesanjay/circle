@@ -1,0 +1,17 @@
+.chat-drawer::-webkit-scrollbar {
+     display: none;
+}
+.edit-icon {
+     display: none;
+}
+.chat-drawer .profile-img:hover .edit-icon {
+     display: flex;
+}
+.icon-input {
+     height: 0px;
+     width: 0px;
+}
+
+.members .add-member {
+     background-color: rgba(33, 33, 33, 0.142);
+}

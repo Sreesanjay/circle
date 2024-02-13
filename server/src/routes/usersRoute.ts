@@ -18,4 +18,5 @@ router.get('/block-user/:id', protect, blockUser)
 router.get('/unblock-user/:id', protect, unblockUser)
 router.post('/report', protect, addReport)
 router.get('/user-search', protect, searchUser)
+
 export default router

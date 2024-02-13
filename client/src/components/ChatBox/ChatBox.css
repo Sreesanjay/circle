@@ -1,0 +1,47 @@
+.chatbox-container .header {
+     border-bottom: 0.5px solid rgba(0, 0, 0, 0.758);
+}
+
+.chatbox-container {
+     height: calc(100vh - 70px);
+}
+
+.chat-body::-webkit-scrollbar {
+     display: none;
+}
+
+.chat-body {
+     display: flex;
+     flex-direction: column;
+     gap: 0.5rem;
+     padding: 1.5rem;
+     overflow: scroll;
+     scroll-behavior: smooth;
+}
+.chatbox-container .message {
+     display: flex;
+}
+.chatbox-container .own {
+     align-self: flex-end;
+}
+.seen {
+     font-size: 10px;
+}
+
+.chat-drawer {
+     width: 400px;
+     height: 100vh;
+     background-color: black;
+}
+
+.chat-drawer .name{
+     width: 350px;
+}
+@media only screen and (max-width: 600px){
+     .chat-drawer {
+          width: 100vw;
+     }
+     .chat-drawer .name{
+          width: 90vw;
+     }
+}

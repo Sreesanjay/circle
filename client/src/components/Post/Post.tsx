@@ -13,14 +13,12 @@ export default function Post() {
      const postContainerRef = useRef<HTMLDivElement | null>(null);
      const { posts, errorMessage, isLoading, isError, isSuccess } =
           useAppSelector((state) => state.post);
-
      useEffect(() => {
-          console.log("isLoading", isLoading);
-     }, [isLoading]);
-     useEffect(() => {
-          dispatch(getPosts(pagination.current));
-          pagination.current = pagination.current + 1;
-     }, [dispatch]);
+          if (posts.length === 0) {
+               dispatch(getPosts(pagination.current));
+               pagination.current = pagination.current + 1;
+          }
+     }, [dispatch, posts]);
 
      useEffect(() => {
           if (isError) {
@@ -31,10 +29,10 @@ export default function Post() {
 
      useEffect(() => {
           const handleScroll = () => {
-               const bodyHeight = document.body.clientHeight; // Visible height
-               const scrollHeight = window.scrollY; // Total scrollable height
-               const scrollTop = window.scrollY;
-               const isAtBottom = scrollTop + scrollHeight > bodyHeight;
+               const bodyHeight = document.body.clientHeight;
+               const scrollHeight = window.scrollY;
+               const innerHeight = window.innerHeight;
+               const isAtBottom = bodyHeight - (scrollHeight + innerHeight) < 5;
                if (isAtBottom) {
                     dispatch(getPosts(pagination.current));
                     pagination.current = pagination.current + 1;
@@ -57,15 +55,18 @@ export default function Post() {
                     })}
                {isLoading && (
                     <>
-                         <Skeleton variant="rectangular" sx={{maxWidth:'50%'}} />
+                         <Skeleton
+                              variant="rectangular"
+                              sx={{ maxWidth: "50%" }}
+                         />
 
                          {/* For other variants, adjust the size with `width` and `height` */}
                          <Skeleton variant="circular" width={60} height={60} />
                          <Skeleton
                               variant="rectangular"
-                              sx={{maxWidth:'50%'}}
+                              sx={{ maxWidth: "50%" }}
                          />
-                         <Skeleton variant="rounded" sx={{maxWidth:'50%'}}/>
+                         <Skeleton variant="rounded" sx={{ maxWidth: "50%" }} />
                     </>
                )}
           </div>

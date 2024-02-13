@@ -1,12 +1,9 @@
 .user-header {
-     /* box-shadow: 0px 3px 6px 5px rgba(0, 0, 0, 0.09); */
      height: 70px;
      z-index: 10;
-     background-color:rgb(255, 255, 255);
      top: 0;
 }
 .logo h1 {
-     color: #bd80f9;
      font-family: "Joti One", serif;
      font-style: normal;
      font-weight: 400;
@@ -18,7 +15,6 @@
      display: flex;
      flex-direction: column;
      width: 300px;
-     background-color: #ffffff;
      box-shadow: 0px 3px 6px 5px rgba(0, 0, 0, 0.09);
      justify-content: center;
      border-radius: 5px;
@@ -28,7 +24,7 @@
 .profile-dropdown .value {
      background-color: transparent;
      border: none;
-     color: rgb(2, 2, 2);
+     color: rgb(255, 255, 255);
      display: flex;
      align-items: center;
      position: relative;
@@ -40,4 +36,28 @@
 .profile-dropdown .value:not(:active):hover,
 .value:focus {
      background-color: rgba(128, 128, 128, 0.171);
+}
+
+/* notification drawer */
+.notification-drawer {
+     width: 30vw;
+}
+.notification-drawer::-webkit-scrollbar {
+     display: none;
+}
+.notification-drawer .close-icon{
+     display: none;
+}
+@media only screen and (max-width: 900px) {
+     .notification-drawer {
+          width: 50vw;
+     }
+}
+@media only screen and (max-width: 600px) {
+     .notification-drawer {
+          width: 100vw;      
+     }
+     .notification-drawer .close-icon{
+          display: block;
+     }
 }

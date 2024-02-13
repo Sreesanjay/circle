@@ -11,3 +11,11 @@
     max-width: 500px;
     
 }
+.edit-profile label{
+    color:white;
+}
+
+.edit-profile input{
+    background-color:#1f2937;
+    color: white;
+}

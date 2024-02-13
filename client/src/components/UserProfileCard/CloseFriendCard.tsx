@@ -10,7 +10,7 @@ export default function CloseFriendCard({
      removeCloseFriend: (id:string) => void;
 }) {
      return (
-          <div className="card shadow-md" style={{width:'230px'}}>
+          <div className="user-profile-card shadow-md" style={{width:'230px'}}>
                <button className="mail">
                     <ChatIcon size={25} />
                </button>

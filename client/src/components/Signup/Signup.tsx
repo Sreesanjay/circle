@@ -165,7 +165,7 @@ const Signup = () => {
                                                   </Alert>
                                              </Stack>
                                         ) : null}
-                                        <div className="mt-5">
+                                        <div className="mt-5 text-black">
                                              <label className="font-semibold text-sm text-gray-600 pb-1 block">
                                                   E-mail
                                              </label>

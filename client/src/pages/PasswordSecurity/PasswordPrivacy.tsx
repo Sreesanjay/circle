@@ -70,7 +70,7 @@ export default function PasswordPrivacy() {
                {isLoading ? (
                     <Loader />
                ) : (
-                    <section className="password-privacy flex flex-col">
+                    <section className="password-security flex flex-col">
                          <ManageAccSidebar />
                          <div className="preference p-5 m-0 sm:ms-64 pt-5">
                               <Breadcrumb aria-label="Default breadcrumb example">
@@ -105,6 +105,7 @@ export default function PasswordPrivacy() {
                                              <input
                                                   type="password"
                                                   name="old_password"
+                                                  autoComplete="off"
                                                   onChange={(e) =>
                                                        setOldPassword(
                                                             e.target.value

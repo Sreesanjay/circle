@@ -11,10 +11,10 @@ export default function UploadCoverImage({
      showUploadImage: boolean;
      setshowUploadImage: Dispatch<SetStateAction<boolean>>;
 }) {
-     const [isCrop, setisCrop] = useState(false);
      const dispatch = useAppDispatch()
-     const [inputImg, setInputImg] = useState<string>("");
      const { userProfile } = useAppSelector((state) => state.user);
+     const [isCrop, setisCrop] = useState(false);
+     const [inputImg, setInputImg] = useState<string>("");
      const [coverImgae, setcoverImgae] = useState<Blob | undefined>();
 
 

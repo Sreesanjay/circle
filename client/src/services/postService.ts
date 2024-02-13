@@ -14,7 +14,7 @@ type ICreatePost = {
 
 //upload new post
 export const getPosts = createAsyncThunk(
-    "post/uploadPost",
+    "post/getPosts",
     async (page:number, thunkAPI) => {
         try {
             const response = await API.get(`/posts?page=${page}`, {
@@ -37,7 +37,7 @@ export const getPosts = createAsyncThunk(
 
 //upload new post
 export const uploadPost = createAsyncThunk(
-    "post/getPosts",
+    "post/uploadPost",
     async (data: ICreatePost, thunkAPI) => {
         try {
             if (data.content !== undefined) {

@@ -91,7 +91,7 @@ export default function PostCard({ post }: { post: IPost }) {
 
      return (
           <>
-               <section className="post-card md:w-3/6 mb-5 bg-slate-50 rounded-md shadow-md pb-3">
+               <section className="post-card lg:w-3/6 mb-5 bg-gray-900 rounded-md shadow-lg pb-3">
                     <div className="header flex gap-3 px-5 py-2 shadow-sm justify-between relative">
                          <div className="flex gap-3">
                               <div className="profile-img-icon">
@@ -134,7 +134,7 @@ export default function PostCard({ post }: { post: IPost }) {
                                         sx={{
                                              width: "100%",
                                              maxWidth: 360,
-                                             bgcolor: "background.paper",
+                                             backgroundColor: "#121d33"
                                         }}
                                         className="rounded-md shadow-md "
                                         aria-label="contacts"
@@ -145,7 +145,7 @@ export default function PostCard({ post }: { post: IPost }) {
                                                   disablePadding
                                                   onClick={() => handleUnsave()}
                                              >
-                                                  <ListItemButton>
+                                                  <ListItemButton >
                                                        <ListItemText
                                                             primary="Unsave"
                                                             className="px-5"
@@ -165,17 +165,19 @@ export default function PostCard({ post }: { post: IPost }) {
                                                   </ListItemButton>
                                              </ListItem>
                                         )}
-                                        <ListItem
-                                             disablePadding
-                                             onClick={() => handleReport()}
-                                        >
-                                             <ListItemButton>
-                                                  <ListItemText
-                                                       primary="Report"
-                                                       className="px-5"
-                                                  />
-                                             </ListItemButton>
-                                        </ListItem>
+                                        {user?._id !== post.user_id && (
+                                             <ListItem
+                                                  disablePadding
+                                                  onClick={() => handleReport()}
+                                             >
+                                                  <ListItemButton>
+                                                       <ListItemText
+                                                            primary="Report"
+                                                            className="px-5"
+                                                       />
+                                                  </ListItemButton>
+                                             </ListItem>
+                                        )}
                                    </List>
                               </div>
                          )}
@@ -239,9 +241,7 @@ export default function PostCard({ post }: { post: IPost }) {
                          )}
                     </div>
                     <footer className="flex px-3 gap-3 items-center">
-                         <div
-                              className="likes flex items-center"
-                         >
+                         <div className="likes flex items-center">
                               {user && post.likes.includes(user?._id) ? (
                                    <div
                                         className="like"
@@ -254,7 +254,10 @@ export default function PostCard({ post }: { post: IPost }) {
                                         <LikeIcon size={25} />
                                    </div>
                               )}
-                              <span className="text-xs"  onClick={() => setOpenLike(true)}>
+                              <span
+                                   className="text-xs"
+                                   onClick={() => setOpenLike(true)}
+                              >
                                    {post.likes.length} Likes
                               </span>
                          </div>

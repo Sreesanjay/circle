@@ -4,10 +4,6 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/userModel';
 import env from "../util/validateEnv";
 import mongoose, { Document } from 'mongoose';
-// import {IUser} from "../Interfaces/index.js"
-// interface UserRequest extends Request {
-//     user: IUser; // Assuming User is your model for users
-// }
 
 declare module 'express' {
     interface Request {

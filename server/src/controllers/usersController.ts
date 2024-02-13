@@ -2,6 +2,7 @@ import { Request, RequestHandler, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import UserProfile from "../models/userProfile";
 import User from "../models/userModel";
+import Notification from "../models/notificationSchema";
 import Connection from "../models/connectionSchema";
 import { ObjectId } from 'mongodb'
 import Report from "../models/reportSchema";
@@ -164,7 +165,15 @@ export const addFriend: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.body;
         const connection = await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $addToSet: { following: new ObjectId(id) } }, { upsert: true, new: true });
+
         if (connection) {
+            const followedUser = await UserProfile.findOne({ user_id: req.user?._id });
+            const newMessage = new Notification({
+                user_id: id,
+                sender_id: req.user?._id,
+                message: `${followedUser?.username} started following you`
+            })
+            newMessage.save()
             res.status(200).json({
                 status: "ok",
                 message: "follow request added"
@@ -182,7 +191,8 @@ export const addFriend: RequestHandler = asyncHandler(
 export const unFollow: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.body;
-        const connection = await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { following: new ObjectId(id) } }, { new: true });
+        const connection = await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { following: new ObjectId(id), close_friend: new ObjectId(id) } }, { new: true });
+
         if (connection) {
             res.status(200).json({
                 status: "ok",
@@ -434,7 +444,34 @@ export const removeCloseFriend: RequestHandler = asyncHandler(
 export const getProfile: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
-        const userProfile = await UserProfile.findOne({ user_id: id });
+        const userProfile = await UserProfile.aggregate([
+            {
+                $match: { user_id: new ObjectId(id) }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user_id',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$user'
+                }
+            },
+            {
+                $project: {
+                    username: 1,
+                    profile_img: 1,
+                    fullname: 1,
+                    user_id: 1,
+                    verified: 1,
+                    email: '$user.email'
+                }
+            }
+        ])
         const followers = await Connection.countDocuments({
             following: new ObjectId(id),
         })
@@ -447,7 +484,7 @@ export const getProfile: RequestHandler = asyncHandler(
             res.status(200).json({
                 status: 'ok',
                 message: 'user profile fetched',
-                userProfile,
+                userProfile: userProfile[0],
                 following: following.following.length,
                 followers,
                 isFollowing: isFollowing ? true : false,
@@ -471,7 +508,6 @@ export const blockUser: RequestHandler = asyncHandler(
         const { id } = req.params;
         await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { following: new ObjectId(id), close_friend: new ObjectId(id) } });
         const user = await User.findOneAndUpdate({ _id: req.user?._id }, { $push: { blocked_users: new ObjectId(id) } }, { new: true })
-        console.log(user)
         if (user) {
             res.status(200).json({
                 status: 'ok',
@@ -544,39 +580,40 @@ export const searchUser: RequestHandler = asyncHandler(
         if (!pattern.test(search)) {
             res.status(200).json({
                 status: 'ok',
-                message: "report added",
+                message: "user details fetched",
                 userData: []
             })
-        }
-        const userData = await UserProfile.aggregate([
-            {
-                $match: {
-                    $or: [
-                        { username: { $regex: new RegExp(search, 'i') } },
-                        { fullname: { $regex: new RegExp(search, 'i') } }
-                    ],
-                }
-            },
-            {
-                $project: {
-                    user_id: 1,
-                    username: 1,
-                    fullname: 1,
-                    profile_img: 1
-                }
-            },
-            {
-                $limit: 50
-            }
-        ])
-        if (userData) {
-            res.status(200).json({
-                status: 'ok',
-                message: "report added",
-                userData
-            })
         } else {
-            next(new Error())
+            const userData = await UserProfile.aggregate([
+                {
+                    $match: {
+                        $or: [
+                            { username: { $regex: new RegExp(search, 'i') } },
+                            { fullname: { $regex: new RegExp(search, 'i') } }
+                        ],
+                    }
+                },
+                {
+                    $project: {
+                        user_id: 1,
+                        username: 1,
+                        fullname: 1,
+                        profile_img: 1
+                    }
+                },
+                {
+                    $limit: 50
+                }
+            ])
+            if (userData) {
+                res.status(200).json({
+                    status: 'ok',
+                    message: "user details fetched",
+                    userData
+                })
+            } else {
+                next(new Error())
+            }
         }
 
     }

@@ -191,7 +191,8 @@ export const addFriend: RequestHandler = asyncHandler(
 export const unFollow: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.body;
-        const connection = await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { following: new ObjectId(id) } }, { new: true });
+        const connection = await Connection.findOneAndUpdate({ user_id: req.user?._id }, { $pull: { following: new ObjectId(id), close_friend: new ObjectId(id) } }, { new: true });
+
         if (connection) {
             res.status(200).json({
                 status: "ok",

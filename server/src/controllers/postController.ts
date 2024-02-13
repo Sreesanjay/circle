@@ -260,7 +260,7 @@ export const postComment: RequestHandler = asyncHandler(
 
         ])
         if (newComment) {
-            const commentedUser = await UserProfile.findOne({ usre_id: req.user?._id });
+            const commentedUser = await UserProfile.findOne({ user_id: req.user?._id });
             const newMessage = new Notification({
                 user_id: post.user_id,
                 sender_id: req.user?._id,

@@ -16,7 +16,6 @@ import {
 } from "../../assets/Icons";
 import CoverImageUpload from "../../components/Modal/CoverUpload";
 import UploadProfileImg from "../../components/Modal/ProfileUpload";
-// import { reset } from "../../features/auth/AuthSlice";
 import FriendList from "../../components/FriendList/FriendList";
 import CloseFriends from "../../components/CloseFriend/CloseFriends";
 import ProfileSection from "../../components/Profile/ProfileSection";
@@ -37,7 +36,6 @@ export default function UserProfilePage() {
           useAppSelector((state) => state.user);
 
      const [showModal, setShowModal] = useState(false);
-     // const [addCloseFriends, setAddCloseFriends] = useState(false);
      const [showUploadImage, setshowUploadImage] = useState(false);
      const [showUploadProfile, setshowUploadProfile] = useState(false);
      const [showEditProfImgIcon, setshowEditProfIcon] = useState("hidden");

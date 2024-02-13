@@ -6,6 +6,7 @@ import API from "../../api";
 import { AxiosError } from "axios";
 import { useAppDispatch } from "../../app/hooks";
 import { getUserProfile } from "../../services/userService";
+// import "./MyInterest.css"
 
 export default function MyInterest({ interest }: { interest: IInterest }) {
      const dispatch = useAppDispatch();

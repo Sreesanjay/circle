@@ -69,8 +69,8 @@ export default function Comment({
           }
      }
      return (
-          <section className="comment mt-5 pb-5">
-               <div className="header flex gap-3 px-5 py-2 bg-slate-50 rounded-md">
+          <section className="comment mt-5 pb-5 bg-gray-800">
+               <div className="header flex gap-3 px-5 py-2  rounded-md">
                     <div className="profile-img-icon">
                          {item?.user_details.profile_img ? (
                               <img
@@ -93,14 +93,14 @@ export default function Comment({
                          } - ${date.getFullYear()}`}</small> */}
                     </div>
                </div>
-               <div className="content p-5 bg-slate-50">
+               <div className="content p-5 bg-gray-800">
                     <span className="font-light">{item.content}</span>
                </div>
                {newReply && (
                     <div className="add-comment flex items-center h-min my-3 px-2">
                          <input
                               type="text"
-                              className="rounded-md add-comment-inp mr-2"
+                              className="rounded-md add-comment-inp mr-2 bg-gray-800"
                               name="comment"
                               placeholder="Add your comment"
                               onChange={(e) => setNewComment(e.target.value)}
@@ -127,7 +127,7 @@ export default function Comment({
                          {replys &&
                               replys.map((reply) => {
                                    return (
-                                        <div className="reply bg-slate-50 rounded-md mb-3">
+                                        <div className="reply bg-gray-900 rounded-md mb-3">
                                              <div className="header flex gap-3 px-5 py-2">
                                                   <div className="profile-img-icon">
                                                        {reply?.user_details

@@ -131,7 +131,9 @@ export default function EditProfile() {
                                                        className="w-20 lg:w-full shadow-lg rounded-md"
                                                   />
                                              )}
-                                             <h1 className="text-center mt-3 font-medium">Profile Image</h1>
+                                             <h1 className="text-center mt-3 font-medium">
+                                                  Profile Image
+                                             </h1>
                                         </div>
                                    </div>
                                    <form className="profile-form col-span-4 p-5">
@@ -143,7 +145,7 @@ export default function EditProfile() {
                                                   <span className="font-medium">
                                                        Alert!
                                                   </span>{" "}
-                                                 {errorMessage}
+                                                  {errorMessage}
                                              </Alert>
                                         ) : null}
                                         <div className="relative">
@@ -158,10 +160,9 @@ export default function EditProfile() {
                                                   name="fullname"
                                                   type="text"
                                                   onChange={handleChange}
-                                                  value={userProfile?.fullname}
+                                                  value={formData.fullname}
                                                   placeholder="Enter your full name"
-                                                  required
-                                                  className="text-field"
+                                                  className="text-field "
                                              />
                                         </div>
                                         <div className="mt-5 w-full">
@@ -267,9 +268,10 @@ export default function EditProfile() {
                                                   style={{ maxWidth: "500px" }}
                                                   placeholder="Add your bio"
                                                   name="bio"
+                                                  className="bg-gray-800 text-white"
                                                   required
                                                   onChange={handleChange}
-                                                  value={formData?.bio}
+                                                  value={formData.bio}
                                                   rows={4}
                                              />
                                         </div>

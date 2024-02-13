@@ -19,7 +19,7 @@ export default function HomePage() {
           <div className="flex flex-col">
                <HomeSidebar />
 
-               <div className="section md:ms-80 w-full md:w-auto p-5 ">
+               <div className="section md:ms-80 w-full md:w-auto md:p-5">
                     <Story/>
                     <section className="posts">
                          <Post />

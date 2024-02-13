@@ -1,5 +1,12 @@
 import { Route, Routes } from "react-router-dom";
-import { Suspense, lazy, useEffect, useRef } from "react";
+import {
+     Suspense,
+     lazy,
+     useEffect,
+     useRef,
+     createContext,
+     RefObject,
+} from "react";
 import { ToastContainer } from "react-toastify";
 import { Socket, io } from "socket.io-client";
 
@@ -45,6 +52,8 @@ const UserProfilePage = lazy(
 const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 
+export const SocketContext = createContext<RefObject<Socket> | null>(null);
+
 function App() {
      const dispatch = useAppDispatch();
      const { user } = useAppSelector((state) => state.auth);
@@ -65,11 +74,11 @@ function App() {
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [user]);
 
-
-
      return (
           <div className="bg-gray-800 app min-h-screen text-white">
-               <Header />
+               <SocketContext.Provider value={socket}>
+                    <Header />
+               </SocketContext.Provider>
                <Suspense fallback={<Loader />}>
                     <Routes>
                          <Route element={<IsAuthenticated />}>
@@ -116,7 +125,11 @@ function App() {
                               />
                               <Route
                                    path="/view-profile/:id"
-                                   element={socket && <ProfileView socket={socket}  />}
+                                   element={
+                                        socket && (
+                                             <ProfileView socket={socket} />
+                                        )
+                                   }
                               />
                               <Route
                                    path="/manage-account/blocked-users"

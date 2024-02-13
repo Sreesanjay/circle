@@ -32,7 +32,7 @@ export default function Post() {
                const bodyHeight = document.body.clientHeight;
                const scrollHeight = window.scrollY;
                const innerHeight = window.innerHeight;
-               const isAtBottom = scrollHeight + innerHeight > bodyHeight;
+               const isAtBottom = bodyHeight - (scrollHeight + innerHeight) < 5;
                if (isAtBottom) {
                     dispatch(getPosts(pagination.current));
                     pagination.current = pagination.current + 1;

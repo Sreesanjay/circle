@@ -1,4 +1,4 @@
-.card {
+.user-profile-card {
     width: 230px;
     height: 250px;
     background: rgb(252, 252, 252);
@@ -9,7 +9,7 @@
     transition: all 0.5s ease-in-out;
   }
   
-  .card .mail {
+  .user-profile-card .mail {
     position: absolute;
     right: 2rem;
     top: .5rem;
@@ -17,7 +17,7 @@
   
 
   
-  .card .profile-pic {
+  .user-profile-card .profile-pic {
     position: absolute;
     width: calc(100% - 6px);
     height: calc(100% - 6px);
@@ -29,7 +29,7 @@
     transition: all 0.5s ease-in-out 0.2s, z-index 0.5s ease-in-out 0.2s;
   }
   
-  .card .profile-pic img {
+  .user-profile-card .profile-pic img {
     -o-object-fit: cover;
     object-fit: cover;
     width: 100%;
@@ -39,7 +39,7 @@
     transition: all 0.5s ease-in-out 0s;
   }
   
-  .card .bottom {
+  .user-profile-card .bottom {
     position: absolute;
     bottom: 3px;
     left: 3px;
@@ -52,7 +52,7 @@
     transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
   }
   
-  .card .bottom .content {
+  .user-profile-card .bottom .content {
     position: absolute;
     bottom: 0;
     left: 1.5rem;
@@ -62,21 +62,21 @@
   }
 
   
-  .card .bottom .content .name {
+  .user-profile-card .bottom .content .name {
     display: block;
     font-size: 1.2rem;
     color: white;
     font-weight: bold;
   }
   
-  .card .bottom .content .about-me {
+  .user-profile-card .bottom .content .about-me {
     display: block;
     font-size: 0.9rem;
     color: white;
     margin-top: 1rem;
   }
   
-  .card .bottom .bottom-bottom {
+  .user-profile-card .bottom .bottom-bottom {
     position: absolute;
     bottom: .5rem;
     left: 1.5rem;
@@ -86,26 +86,26 @@
     justify-content: space-between;
   }
   
-  .card .bottom .bottom-bottom .username {
+  .user-profile-card .bottom .bottom-bottom .username {
     display: flex;
     gap: 1rem;
   }
   
-  .card:hover {
+  .user-profile-card:hover {
     border-top-left-radius: 55px;
   }
-  .card:hover .content{
+  .user-profile-card:hover .content{
     display: block;
   }
   
-  .card:hover .bottom {
+  .user-profile-card:hover .bottom {
     top: 20%;
     border-radius: 80px 29px 29px 29px;
     transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
   }
   
   
-  .card:hover .profile-pic {
+  .user-profile-card:hover .profile-pic {
     width: 100px;
     height: 100px;
     aspect-ratio: 1;
@@ -119,15 +119,15 @@
   }
   
   
-  .card:hover .profile-pic:hover {
+  .user-profile-card:hover .profile-pic:hover {
     transform: scale(1.3);
     border-radius: 0px;
   }
   
-  .card:hover .profile-pic img {
+  .user-profile-card:hover .profile-pic img {
     transition: all 0.5s ease-in-out 0.5s;
   }
 
-  .card:hover .bottom-bottom{
+  .user-profile-card:hover .bottom-bottom{
     display: none;
   }

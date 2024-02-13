@@ -137,8 +137,8 @@ export default function PostModal({
                     onClose={() => setOpenModal(false)}
                     size={"5xl"}
                >
-                    <Modal.Body className="flex flex-col sm:flex-row">
-                         <div className="content p-2 sm:w-1/2">
+                    <Modal.Body className="view-post-modal flex flex-col sm:flex-row bg-gray-900 shadow-xl">
+                         <div className="content p-2 sm:w-1/2 flex flex-col items-start justify-between">
                               {post.type.includes("image") ? (
                                    <img
                                         src={post?.content}
@@ -171,6 +171,7 @@ export default function PostModal({
                                         </div>
                                    </div>
                               )}
+                              {type === "PROFILE" && <button className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white">Boost this post</button>}
                          </div>
                          <div className="flex flex-col sm:w-1/2">
                               <div className="header flex items-center gap-3 shadow-md w-full h-min py-2 px-3">
@@ -196,7 +197,7 @@ export default function PostModal({
                                         )}
                                    </div>
                                    <div className="name w-full">
-                                        <h1 className="">
+                                        <h1 className="text-white">
                                              {post.user_details.username}
                                         </h1>
                                         <small className="text-xs text-slate-500">{`${date.getDay()} - ${
@@ -229,7 +230,7 @@ export default function PostModal({
                               <div className="add-comment flex items-center h-min my-3 pe-2">
                                    <input
                                         type="text"
-                                        className="rounded-md add-comment-inp mr-2"
+                                        className="rounded-md bg-gray-800 text-white add-comment-inp mr-2"
                                         value={newComment}
                                         name="comment"
                                         placeholder="Add your comment"
@@ -242,7 +243,7 @@ export default function PostModal({
                                              handleSubmit();
                                              setNewComment("");
                                         }}
-                                        className="cursor-pointer"
+                                        className="cursor-pointer text-white"
                                    >
                                         <IoSend />
                                    </div>

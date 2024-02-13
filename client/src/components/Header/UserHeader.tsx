@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
      CloseCircleIcon,
      CloseXIcon,
@@ -18,15 +18,25 @@ import { INotification } from "../../types";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import API from "../../api";
+import { SocketContext } from "../../App";
 
 export default function UserHeader() {
      const dispatch = useAppDispatch();
+     const socket = useContext(SocketContext);
      const location = useLocation();
      const [openDrawer, setOpenDrawer] = useState(false);
      const [notifications, setNotifications] = useState<INotification[] | []>(
           []
      );
      const [isProfileToggle, setisProfileToggle] = useState(false);
+
+     useEffect(() => {
+          socket?.current?.on("recieve-notification", (doc) => {
+               setNotifications((current) => [doc, ...current]);
+          });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [socket?.current]);
+
      //for handling currentChat persist between reloads
      useEffect(() => {
           if (location.pathname !== "/messages") {
@@ -92,7 +102,15 @@ export default function UserHeader() {
                     <Link to="/">
                          <HomeIcon />
                     </Link>
-                    <button onClick={() => setOpenDrawer(!openDrawer)}>
+                    <button
+                         onClick={() => setOpenDrawer(!openDrawer)}
+                         className="relative"
+                    >
+                         {notifications.length > 0 && (
+                              <div className="notification-counter absolute right-0 bg-primary rounded-full px-2">
+                                   {notifications.length}
+                              </div>
+                         )}
                          <Notification />
                     </button>
                     <div
@@ -121,7 +139,10 @@ export default function UserHeader() {
                               <h1 className="text-white text-xl">
                                    Notifications
                               </h1>
-                              <div className="close-icon" onClick={()=>setOpenDrawer(false)}>
+                              <div
+                                   className="close-icon"
+                                   onClick={() => setOpenDrawer(false)}
+                              >
                                    <CloseXIcon size={25} />
                               </div>
                          </div>
@@ -129,7 +150,10 @@ export default function UserHeader() {
                               {notifications &&
                                    notifications.map((notification, index) => {
                                         return (
-                                             <div className="notification-card rounded-md flex justify-between items-center p-1 bg-gray-900 gap-2" key={index}>
+                                             <div
+                                                  className="notification-card rounded-md flex justify-between items-center p-1 bg-gray-900 gap-2 mb-3"
+                                                  key={index}
+                                             >
                                                   <div className="profile-img rounded-md overflow-hidden">
                                                        {notification.userProfile
                                                             .profile_img ? (

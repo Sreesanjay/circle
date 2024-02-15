@@ -1,2 +1,3 @@
 # circle
-social media
+Modern social media platform
+ 

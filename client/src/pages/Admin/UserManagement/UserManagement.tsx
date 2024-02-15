@@ -164,7 +164,7 @@ export default function UserManagement() {
                                         </h1>
                                    </div>
                               </div>
-                              <div className="user-list pe-5">
+                              <div className="user-list pe-5 text-white">
                                    <h1 className="my-10">User Management</h1>
                                    <section className="filter flex justify-between my-5">
                                         <div className="sort">
@@ -172,6 +172,7 @@ export default function UserManagement() {
                                                   <InputLabel
                                                        variant="standard"
                                                        htmlFor="uncontrolled-native"
+                                                       
                                                   >
                                                        Sort
                                                   </InputLabel>
@@ -218,7 +219,7 @@ export default function UserManagement() {
                                              <input
                                                   type="text"
                                                   placeholder="Search account"
-                                                  className="rounded-md"
+                                                  className="rounded-md text-black"
                                              />
                                         </div>
                                    </section>

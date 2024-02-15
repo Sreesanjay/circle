@@ -26,7 +26,7 @@ export default function InterestCard({ interest }: { interest: IInterest }) {
           }
      }, [isSubmit, dispatch, interest]);
      return (
-          <div className="interest-container w-full bg-white shadow-md rounded-lg p-2 flex flex-col items-center sm:items-start sm:grid sm:grid-cols-12 mt-5">
+          <div className="interest-container w-full bg-gray-900 shadow-md rounded-lg p-2 flex flex-col items-center sm:items-start sm:grid sm:grid-cols-12 mt-5">
                <img
                     src={interest?.image}
                     alt=""

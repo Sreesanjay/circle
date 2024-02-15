@@ -125,14 +125,14 @@ export default function CreatePost() {
                                    </h1>
                                    <div className="body grid grid-cols-4 ">
                                         <div className="preview-section col-span-4 lg:col-span-2">
-                                             <div className="mb-2 block pe-10">
+                                             <div className="mb-2 block pe-10 text-white">
                                                   <Label
                                                        htmlFor="file-upload"
                                                        value="Upload file"
                                                   />
                                                   <FileInput
                                                        id="file-upload"
-                                                       className="h-24"
+                                                       className="h-24 "
                                                        onChange={handleChange}
                                                   />
                                              </div>
@@ -154,7 +154,7 @@ export default function CreatePost() {
                                                             Add Caption
                                                        </label>
                                                        <textarea
-                                                            className="rounded-md"
+                                                            className="rounded-md bg-gray-800"
                                                             onChange={(e) =>
                                                                  setCaption(
                                                                       e.target
@@ -171,7 +171,7 @@ export default function CreatePost() {
                                                        <select
                                                             name=""
                                                             id=""
-                                                            className="rounded-md"
+                                                            className="rounded-md bg-gray-800"
                                                             defaultValue={
                                                                  visibility
                                                             }
@@ -244,7 +244,7 @@ export default function CreatePost() {
                                                        <select
                                                             name=""
                                                             id=""
-                                                            className="rounded-md "
+                                                            className="rounded-md bg-gray-800"
                                                             onChange={(e) =>
                                                                  setSelectedInterest(
                                                                       (

@@ -1,0 +1,7 @@
+.options {
+    display: none;
+
+}
+.message-box:hover .options {
+    display: block;
+}

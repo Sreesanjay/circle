@@ -171,7 +171,11 @@ export default function PostModal({
                                         </div>
                                    </div>
                               )}
-                              {type === "PROFILE" && <button className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white">Boost this post</button>}
+                              {type === "PROFILE" && (
+                                   <button className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white">
+                                        Boost this post
+                                   </button>
+                              )}
                          </div>
                          <div className="flex flex-col sm:w-1/2">
                               <div className="header flex items-center gap-3 shadow-md w-full h-min py-2 px-3">

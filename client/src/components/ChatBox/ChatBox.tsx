@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { ProfileIconWithText } from "../../assets/Icons";
 import {
      deleteFile,
+     deleteMessage,
      getMessages,
      isBlocked,
      readMessage,
@@ -212,6 +213,22 @@ export default function ChatBox({
                          file_type: e.target.files[0].type,
                     });
                }
+          }
+     }
+
+     async function hanleDelete(id: string) {
+          console.log("reached")
+          const response = await deleteMessage(id);
+          if (response.messages) {
+               setMessages(
+                    messages.map((item) => {
+                         if (item._id === id) {
+                              item.is_delete = true;
+                         }
+                         return item;
+                         AttachmentIcon;
+                    })
+               );
           }
      }
 
@@ -463,6 +480,7 @@ export default function ChatBox({
                                              <MessageBox
                                                   key={index}
                                                   message={message}
+                                                  hanleDelete={hanleDelete}
                                              />
                                         );
                                    })}

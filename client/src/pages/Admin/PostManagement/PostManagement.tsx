@@ -7,6 +7,7 @@ import Loader from "../../../components/Loader/Loader";
 import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import { Breadcrumb, Pagination, Table } from "flowbite-react";
 import { FormControl, InputLabel, NativeSelect } from "@mui/material";
+import "./PostManagement.css"
 export default function PostManagement() {
      const [analytics, setAnalytics] = useState({
           total_posts: 0,
@@ -29,7 +30,6 @@ export default function PostManagement() {
                          }
                     );
                     if (response.data) {
-                         console.log(response.data);
                          setPostList(response.data.postList);
                          setIsLoading(false);
                     }
@@ -99,7 +99,8 @@ export default function PostManagement() {
      async function undoDelete(id: string) {
           try {
                const response = await API.put(
-                    `/admin/post-management/undo-remove/${id}`,{},
+                    `/admin/post-management/undo-remove/${id}`,
+                    {},
                     {
                          withCredentials: true,
                     }
@@ -137,7 +138,7 @@ export default function PostManagement() {
                                    </Breadcrumb.Item>
                               </Breadcrumb>
                               <div className="analytics flex justify-around gap-2 flex-wrap mt-5">
-                                   <div className="analytics-card">
+                                   <div className="analytics-card ">
                                         <h1>Total Posts</h1>
                                         <h1 className="text-4xl">
                                              {analytics.total_posts}
@@ -162,7 +163,7 @@ export default function PostManagement() {
                                         </h1>
                                    </div>
                               </div>
-                              <div className="user-list pe-5">
+                              <div className="post-list pe-5">
                                    <h1 className="my-10">User Management</h1>
                                    <section className="filter flex justify-between my-5">
                                         <div className="sort">
@@ -221,7 +222,7 @@ export default function PostManagement() {
                                              <input
                                                   type="text"
                                                   placeholder="Search account"
-                                                  className="rounded-md"
+                                                  className="rounded-md text-black"
                                              />
                                         </div>
                                    </section>
@@ -325,9 +326,9 @@ export default function PostManagement() {
                                    <div className="pagination">
                                         <Pagination
                                              currentPage={page}
-                                             totalPages={
+                                             totalPages={Math.ceil(
                                                   analytics.total_posts / 10
-                                             }
+                                             )}
                                              onPageChange={(newpage: number) =>
                                                   setPage(newpage)
                                              }

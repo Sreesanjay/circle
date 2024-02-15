@@ -3,11 +3,13 @@ import { useEffect } from "react";
 
 export default function IsAuthenticated() {
      const navigate = useNavigate();
-     const user = localStorage.getItem("user");
+     const user = JSON.parse(localStorage.getItem("user") as string);
+
 
      useEffect(() => {
           if (user) {
-               navigate("/");
+               user.role === 'USER' ? navigate("/") : navigate("/admin") 
+               
           }
      }, [user, navigate]);
 

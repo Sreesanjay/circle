@@ -361,7 +361,10 @@ export default function ChatDrawer({
                                    ) && (
                                         <button
                                              className="exit-group px-4 py-1 rounded-md text-secondary bg-primary hover:bg-primary-hover"
-                                             onClick={handleExitChat}
+                                             onClick={() => {
+                                                  setShowAddMemberInput(false)
+                                                  handleExitChat();
+                                             }}
                                         >
                                              Exit
                                         </button>

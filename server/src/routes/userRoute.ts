@@ -10,6 +10,7 @@ import messageRoute from "./messageRoute";
 import notificationRoute from "./notificationRoute";
 const router: Router = Router();
 
+
 router.post('/signup', signup)
 router.post('/google-auth', googleAuth)
 router.post('/verify-mail', verifyMail)
@@ -23,4 +24,5 @@ router.use('/posts', postsRoute)
 router.use('/chat', chatRoute)
 router.use('/message', messageRoute)
 router.use('/notifications', notificationRoute)
+
 export default router;  

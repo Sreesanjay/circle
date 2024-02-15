@@ -186,6 +186,23 @@ export async function isBlocked(user: string) {
     }
 }
 
+export async function deleteMessage(id: string) {
+    try {
+        const response = await API.delete(`/message/${id}`, { withCredentials: true })
+        if (response.data) {
+            return response.data
+        } else {
+            throw new Error('Internal Error')
+        }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
+    }
+}
+
 
 export async function changeGroupIcon({ chat_id, icon }: { chat_id: string, icon: Blob }) {
     try {
@@ -241,7 +258,7 @@ export async function sendFileMessage(file: File) {
 export async function deleteFile(url: string) {
     try {
         const storageRef = ref(storage, url);
-         deleteObject(storageRef);
+        deleteObject(storageRef);
     } catch (error) {
         const err = error as AxiosError<{
             message?: string;

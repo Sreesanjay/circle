@@ -165,4 +165,28 @@ export const readMessage: RequestHandler = asyncHandler(
         }
     })
 
+/**
+ * @desc request for deleting message
+ * @route DELETE /api/message/:id
+ * @access private
+ */
+export const deleteMessage: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const message_id = req.params.id;
+        if (!message_id) {
+            res.status(400);
+            return next(new Error('message not found'))
+        }
+        const messages = await Message.findByIdAndUpdate(message_id, { $set: { is_delete: true } }, { new: true })
+        if (messages) {
+            res.status(200).json({
+                status: "ok",
+                message: 'message deleted successfully',
+                messages
+            })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    })
+
 

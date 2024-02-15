@@ -42,7 +42,7 @@ export default function CreateTextStory() {
           dispatch(resetStory());
           if (isSuccess) {
                toast("Success");
-               navigate('/')
+               navigate("/");
           }
           if (isError) {
                toast.error(errorMessage);
@@ -171,7 +171,10 @@ export default function CreateTextStory() {
                               </div>
                          </div>
                          <div className="sm:flex">
-                              <button className="bg-red-500 py-2 px-3 rounded-md text-white max-w-56">
+                              <button
+                                   className="bg-red-500 py-2 px-3 rounded-md text-white max-w-56"
+                                   onClick={() => navigate("/add-story")}
+                              >
                                    Discard
                               </button>
                               <button

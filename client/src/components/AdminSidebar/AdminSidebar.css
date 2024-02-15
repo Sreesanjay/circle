@@ -13,3 +13,9 @@
 .sidebarLogo-text{
     line-height: 10px;
 }
+.admin-sidebar nav div:first-child{
+    background-color:#111827;
+}
+.admin-sidebar nav li span{
+    color:white;
+}

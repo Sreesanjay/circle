@@ -116,9 +116,25 @@ export interface IMessage extends Document {
      is_delete: boolean;
 }
 
-export interface INotification extends Document{
-     user_id:ObjectId,
-     message:string,
-     sender_id:ObjectId,
-     is_read:boolean
+export interface INotification extends Document {
+     user_id: ObjectId,
+     message: string,
+     sender_id: ObjectId,
+     is_read: boolean
+}
+
+export interface IBoostedPost {
+     post_id: ObjectId,
+     clicks: ObjectId[],
+     startingDate: Date,
+     endingDate: Date,
+     action: string,
+     payment_details: ObjectId
+}
+
+export interface IPayment {
+     user_id: ObjectId,
+     amount: number,
+     payment_method: string,
+     transaction_id: string,
 }

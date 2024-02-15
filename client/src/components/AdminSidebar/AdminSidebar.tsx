@@ -17,7 +17,7 @@ export default function AdminSidebar() {
      const dispatch = useAppDispatch();
      const navigate = useNavigate();
      return (
-          <div className="md:h-screen md:fixed">
+          <div className="admin-sidebar md:h-screen md:fixed">
                <Sidebar
                     className="admin-sidebar w-full md:w-auto"
                     aria-label="Sidebar with logo branding example"
@@ -32,7 +32,7 @@ export default function AdminSidebar() {
                               <h1>Circle</h1>
                          </div>
                     </Sidebar.Logo>
-                    <Sidebar.Items className="sidebar-itmes">
+                    <Sidebar.Items className="sidebar-itmes ">
                          <button
                               className="bg-primary p-2 md:hidden rounded-sm"
                               onClick={() =>
@@ -46,7 +46,7 @@ export default function AdminSidebar() {
                               <MenuIcon />
                          </button>
                          <Sidebar.ItemGroup
-                              className={`${showSidebar} md:block`}
+                              className={`${showSidebar} md:block `}
                               onClick={() =>
                                    setShowSidebar(
                                         showSidebar === "block"
@@ -57,7 +57,7 @@ export default function AdminSidebar() {
                          >
                               <Sidebar.Item
                                    icon={HiChartPie}
-                                   className="cursor-pointer"
+                                   className="cursor-pointer "
                                    onClick={() => navigate("/admin")}
                               >
                                    Dashboard

@@ -1,8 +1,11 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { jwtDecode } from "jwt-decode";
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
+import env from "../util/validateEnv"
 import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
-import generateToken from "../util/generateJwt";
+import generateToken, { getAccessToken } from "../util/generateJwt";
 import User from "../models/userModel";
 import OTP from "../models/otpSchema"
 import UserProfile from "../models/userProfile"
@@ -11,7 +14,7 @@ import generateUsername from "../util/generateUsername";
 import generateFourDigitOTP from "../util/generateOtp";
 import { sendMail } from "../config/nodeMailer";
 
-interface JwtPayload {
+interface IJwtPayload {
      email: string;
      given_name: string;
 }
@@ -111,7 +114,7 @@ export const signup: RequestHandler = asyncHandler(
                const userProfile = new UserProfile({ username, user_id: newUser._id })
                const newUserProfile: IUserProfile = await userProfile.save();
                if (newUserProfile) {
-                    const token = generateToken(newUser.email, newUser._id);
+                    const { accessToken, refreshToken } = await generateToken(newUser.email, newUser._id);
                     res.status(201).json({
                          status: "created",
                          message: "User registered successfully",
@@ -120,7 +123,8 @@ export const signup: RequestHandler = asyncHandler(
                               email: newUser.email,
                               role: newUser.role
                          },
-                         token,
+                         token: accessToken,
+                         refreshToken
                     });
                }
           }
@@ -141,14 +145,14 @@ export const googleAuth: RequestHandler = asyncHandler(
                return next(Error("Invalid credentials"));
           }
 
-          const { email }: JwtPayload = jwtDecode(credential);
+          const { email }: IJwtPayload = jwtDecode(credential);
           const existingUser = await User.findOne({ email: email });
 
           if (existingUser) {
                if (existingUser.password) {
                     return next(Error("Invalid Email"))
                }
-               const token = generateToken(
+               const { accessToken, refreshToken } = await generateToken(
                     existingUser.email,
                     existingUser._id
                );
@@ -160,7 +164,8 @@ export const googleAuth: RequestHandler = asyncHandler(
                          email: existingUser.email,
                          role: existingUser.role
                     },
-                    token,
+                    token: accessToken,
+                    refreshToken
                });
           } else {
                const username = await generateUsername();
@@ -172,7 +177,8 @@ export const googleAuth: RequestHandler = asyncHandler(
                     const userProfile = new UserProfile({ username, user_id: newUser._id })
                     const newUserProfile: IUserProfile = await userProfile.save();
                     if (newUserProfile) {
-                         const token = generateToken(newUser.email, newUser._id);
+
+                         const { accessToken, refreshToken } = await generateToken(newUser.email, newUser._id);
                          res.status(201).json({
                               status: "created",
                               message: "User registered successfully",
@@ -181,7 +187,8 @@ export const googleAuth: RequestHandler = asyncHandler(
                                    email: newUser.email,
                                    role: newUser.role
                               },
-                              token,
+                              token: accessToken,
+                              refreshToken
                          });
                     }
                }
@@ -204,7 +211,7 @@ export const signin = asyncHandler(
           }
           const match = await bcrypt.compare(password, user.password);
           if (match) {
-               const token = generateToken(user.email, user._id);
+               const { accessToken, refreshToken } = await generateToken(user.email, user._id);
                res.status(201).json({
                     status: "ok",
                     message: "User loged in successfully",
@@ -213,7 +220,8 @@ export const signin = asyncHandler(
                          email: user.email,
                          role: user.role
                     },
-                    token,
+                    token: accessToken,
+                    refreshToken
                });
           } else {
                res.status(401);
@@ -254,3 +262,31 @@ export const resetPassword = asyncHandler(
 )
 
 
+export const refreshToken = asyncHandler(
+     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+          const { refreshToken } = req.body;
+          if (!refreshToken) {
+               res.status(401);
+               return next(new Error('Invalid refresh token'))
+          }
+          const decoded = jwt.verify(refreshToken, env.JWT_REFRESHTOKEN_SECRET) as JwtPayload;
+
+          const userId = new ObjectId(
+               decoded.id
+          );
+          const user = await User.findOne({ _id: userId })
+          if (user) {
+               const token = getAccessToken(user.email, user._id)
+               if (token) {
+                    res.status(201).json({
+                         status: 'created',
+                         message: 'Access token created',
+                         token
+                    })
+               }
+          } else {
+               res.status(401)
+               next(new Error('user not found'))
+          }
+
+     })

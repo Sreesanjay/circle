@@ -102,7 +102,7 @@ export default function UserHeader() {
                     <Link to="/">
                          <HomeIcon />
                     </Link>
-                    <button
+                    <div
                          onClick={() => setOpenDrawer(!openDrawer)}
                          className="relative"
                     >
@@ -112,7 +112,7 @@ export default function UserHeader() {
                               </div>
                          )}
                          <Notification />
-                    </button>
+                    </div>
                     <div
                          className="user-proifle relative"
                          onClick={() =>

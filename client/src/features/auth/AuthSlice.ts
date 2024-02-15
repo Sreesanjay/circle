@@ -43,6 +43,9 @@ export const authSlice = createSlice({
           logout: (state) => {
                state.user = null;
                localStorage.removeItem('user');
+               localStorage.removeItem('userProfile');
+               localStorage.removeItem('token');
+               localStorage.removeItem('refreshToken');
           }
      },
      extraReducers: (builder) => {
@@ -57,8 +60,12 @@ export const authSlice = createSlice({
                          "user",
                          JSON.stringify(action.payload.user)
                     );
+                    localStorage.setItem(
+                         "refreshToken",
+                         JSON.stringify(action.payload.refreshToken)
+                    );
                     state.user = action.payload.user;
-                    Cookies.set("token", action.payload.token, { expires: 2 });
+                    Cookies.set("token", action.payload.token, { expires: (1 / 1440) * 15 });
                })
                .addCase(signup.rejected, (state, action) => {
                     state.isLoading = false;
@@ -82,9 +89,12 @@ export const authSlice = createSlice({
                               JSON.stringify(action.payload.user)
                          );
                          state.user = action.payload.user;
-                         Cookies.set("token", action.payload.token, {
-                              expires: 2,
-                         });
+                         console.log(action.payload)
+                         localStorage.setItem(
+                              "refreshToken",
+                              JSON.stringify(action.payload.refreshToken)
+                         );
+                         Cookies.set("token", action.payload.token, { expires: (1 / 1440) * 15 });
                     }
                })
                .addCase(googleAuth.rejected, (state, action) => {
@@ -109,9 +119,11 @@ export const authSlice = createSlice({
                               JSON.stringify(action.payload.user)
                          );
                          state.user = action.payload.user;
-                         Cookies.set("token", action.payload.token, {
-                              expires: 2,
-                         });
+                         localStorage.setItem(
+                              "refreshToken",
+                              JSON.stringify(action.payload.refreshToken)
+                         );
+                         Cookies.set("token", action.payload.token, { expires: (1 / 1440) * 15 });
                     }
                })
                .addCase(signin.rejected, (state, action) => {

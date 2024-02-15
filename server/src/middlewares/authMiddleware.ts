@@ -15,23 +15,24 @@ export const protect = asyncHandler(async (req: Request, res: Response, next: Ne
     const token = req.cookies.token;
     if (token) {
         try {
-            const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+            const decoded = jwt.verify(token, env.JWT_ACCESSTOKEN_SECRET) as JwtPayload;
             const userId = new mongoose.Types.ObjectId(
                 decoded.id
             );
-            const user = await User.findOne({ _id: userId })
+            const user = await User.findById({ _id: userId })
             if (!user || user.role !== 'USER') {
                 res.status(401)
                 next(Error('Unauthorized user'))
-            } else if( user.is_blocked){
+            } else if (user.is_blocked) {
                 res.status(401)
                 next(Error('Account has been blocked'))
             }
-            else{
+            else {
                 req.user = user;
             }
             next();
         } catch (error) {
+            console.log(error)
             res.status(401);
             next(new Error('Not authorized, token failed'));
         }
@@ -46,7 +47,7 @@ export const protectAdmin = asyncHandler(async (req: Request, res: Response, nex
     const token = req.cookies.token;
     if (token) {
         try {
-            const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+            const decoded = jwt.verify(token, env.JWT_ACCESSTOKEN_SECRET) as JwtPayload;
             const userId = new mongoose.Types.ObjectId(
                 decoded.id
             );

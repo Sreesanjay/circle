@@ -18,11 +18,11 @@ export const addStory = createAsyncThunk(
     async (data: IAddStory, thunkAPI) => {
         try {
             if (data.story_type === 'MEDIA') {
-                const content = new File([data.content], "post", {
+                const content = new File([data.content], "story", {
                     type: (data.content as Blob).type,
                 });
                 const filename = new Date().getTime() + (content as File).name;
-                const storageRef = ref(storage, 'posts/' + filename);
+                const storageRef = ref(storage, 'story/' + filename);
                 const snapshot = await uploadBytes(storageRef, (content))
                 if (snapshot) {
                     data.content = await getDownloadURL(storageRef);

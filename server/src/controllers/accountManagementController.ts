@@ -13,7 +13,6 @@ import User from "../models/userModel";
 export const getAllInterest: RequestHandler = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
         const interest = await Interest.find();
-        console.log(interest)
         res.status(200).json({
             status: "ok",
             message: "Interest fetched",

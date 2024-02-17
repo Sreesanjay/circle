@@ -89,13 +89,14 @@ export default function CreatePost() {
      useEffect(() => {
           if (isSuccess) {
                toast("New post created");
+               dispatch(postReset());
                navigate("/");
           }
           if (isError) {
                toast.error(errorMessage);
+               dispatch(postReset());
           }
-          dispatch(postReset());
-     }, [isSuccess, isError, errorMessage, dispatch,navigate]);
+     }, [isSuccess, isError, errorMessage, dispatch, navigate]);
 
      return (
           <>

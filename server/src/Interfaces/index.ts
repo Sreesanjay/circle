@@ -138,3 +138,31 @@ export interface IPayment {
      payment_method: string,
      transaction_id: string,
 }
+
+export interface ICommunity {
+     community_name: string,
+     members: ObjectId[],
+     admins: ObjectId[],
+     removed_members: ObjectId[],
+     icon: string,
+     topic: ObjectId,
+     about: string,
+     privacy: string,
+     is_delete: boolean,
+}
+
+export interface IMember{
+     community_id:ObjectId,
+     user_id:ObjectId,
+     is_admin: boolean,
+     is_removed: boolean,
+}
+
+export interface IDiscussions {
+     community_id: ObjectId,
+     user_id: ObjectId,
+     content: string,
+     content_type: string,
+     file_type: string;
+     is_delete: boolean;
+}

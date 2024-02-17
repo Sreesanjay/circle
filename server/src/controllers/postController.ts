@@ -20,10 +20,113 @@ export const uploadPost: RequestHandler = asyncHandler(
         }
         const newpost = new Post({ ...req.body, user_id: req.user?._id });
         const post = await newpost.save();
+        const newPost = await Post.aggregate([
+            {
+                $match: {
+                    _id: post._id
+                }
+            },
+            {
+                $lookup: {
+                    from: "savedposts",
+                    localField: '_id',
+                    foreignField: 'post_id',
+                    as: "is_saved",
+                    pipeline: [
+                        {
+                            $match: {
+                                user_id: req.user?._id
+                            }
+                        },
+                        {
+                            $project: {
+                                user_id: 0,
+                                post_id: 0,
+                                createdAt: 0,
+                                updatedAt: 0,
+                                __v: 0
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $lookup: {
+                    from: 'comments',
+                    localField: '_id',
+                    foreignField: 'post_id',
+                    as: 'comments'
+                }
+            },
+            {
+                $project: {
+                    user_id: 1,
+                    is_saved: { $cond: { if: { $gt: [{ $size: "$is_saved" }, 0] }, then: true, else: false } },
+                    user_details: 1,
+                    comment: { $size: "$comments" },
+                    type: 1,
+                    content: 1,
+                    caption: 1,
+                    tags: 1,
+                    visibility: 1,
+                    impressions: 1,
+                    profile_visit: 1,
+                    createdAt: 1,
+                    likes: 1
+                }
+            },
+            {
+                $lookup: {
+                    from: 'userprofiles',
+                    localField: 'user_id',
+                    foreignField: 'user_id',
+                    as: "user_details",
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: 'users',
+                                localField: 'user_id',
+                                foreignField: '_id',
+                                as: "email",
+                                pipeline: [
+                                    {
+                                        $project: {
+                                            _id: 0,
+                                            email: 1
+                                        }
+                                    }
+                                ]
+
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$email"
+                            }
+                        },
+                        {
+                            $project: {
+                                username: 1,
+                                profile_img: 1,
+                                email: 1
+                            }
+                        },
+
+                    ]
+                }
+            }, {
+                $unwind: {
+                    path: "$user_details"
+                }
+            }
+
+        ])
+
         if (post) {
             res.status(201).json({
                 status: 'created',
-                message: 'new post was created'
+                message: 'new post was created',
+                post: newPost[0]
             })
         } else {
             next(new Error('Internal Server Error'))
@@ -37,18 +140,23 @@ export const uploadPost: RequestHandler = asyncHandler(
  */
 export const getPosts: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const page: number = parseInt(req.query.page as string, 10) || 0;
+        const page = (req.query.page && typeof (req.query.page) === "string") ? req.query.page : null
         const pageSize = 3;
         const interest = await UserProfile.findOne({ user_id: req.user?._id })
         const connection = await Connection.findOne({ user_id: req.user?._id });
         const following = connection?.following || [];
         const userId = req.user?._id;
+        const query = page ? {
+            createdAt: { $lt: new Date(page) }
+        } : {}
+        console.log(query)
         const posts = await Post.aggregate([
             {
                 $match: {
                     user_id: { $in: [...following, userId].filter(Boolean) },
                     is_archive: false,
-                    is_delete: false
+                    is_delete: false,
+
                 }
             },
             {
@@ -57,7 +165,7 @@ export const getPosts: RequestHandler = asyncHandler(
                 }
             },
             {
-                $skip: page * pageSize
+                $match: query
             },
             {
                 $limit: pageSize
@@ -98,7 +206,6 @@ export const getPosts: RequestHandler = asyncHandler(
                 $project: {
                     user_id: 1,
                     is_saved: { $cond: { if: { $gt: [{ $size: "$is_saved" }, 0] }, then: true, else: false } },
-                    user_details: 1,
                     comment: { $size: "$comments" },
                     type: 1,
                     content: 1,
@@ -540,7 +647,6 @@ export const unsavePost: RequestHandler = asyncHandler(
             return next(new Error('post not not found'))
         }
         const unsaved = await SavedPost.findOneAndDelete({ post_id: post_id, user_id: req.user?._id })
-        console.log(unsaved)
         if (unsaved) {
             res.status(200).json({
                 status: 'ok',

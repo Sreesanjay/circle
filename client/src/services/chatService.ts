@@ -207,11 +207,11 @@ export async function deleteMessage(id: string) {
 export async function changeGroupIcon({ chat_id, icon }: { chat_id: string, icon: Blob }) {
     try {
 
-        const content = new File([icon], "post", {
+        const content = new File([icon], "groupIocn", {
             type: (icon).type,
         });
         const filename = new Date().getTime() + (content as File).name;
-        const storageRef = ref(storage, 'posts/' + filename);
+        const storageRef = ref(storage, 'groupIcon/' + filename);
         const snapshot = await uploadBytes(storageRef, (content))
         if (snapshot) {
             const url = await getDownloadURL(storageRef);

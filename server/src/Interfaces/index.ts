@@ -141,9 +141,6 @@ export interface IPayment {
 
 export interface ICommunity {
      community_name: string,
-     members: ObjectId[],
-     admins: ObjectId[],
-     removed_members: ObjectId[],
      icon: string,
      topic: ObjectId,
      about: string,
@@ -151,17 +148,19 @@ export interface ICommunity {
      is_delete: boolean,
 }
 
-export interface IMember{
-     community_id:ObjectId,
-     user_id:ObjectId,
+export interface IMember {
+     community_id: ObjectId,
+     user_id: ObjectId,
      is_admin: boolean,
-     is_removed: boolean,
+     status: string
 }
 
 export interface IDiscussions {
      community_id: ObjectId,
      user_id: ObjectId,
      content: string,
+     likes: ObjectId[],
+     captions: string,
      content_type: string,
      file_type: string;
      is_delete: boolean;

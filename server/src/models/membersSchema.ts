@@ -15,9 +15,10 @@ const membersSchema: Schema<IMember> = new Schema({
         type: Boolean,
         default: false
     },
-    is_removed: {
-        type: Boolean,
-        default: false
+    status: {
+        type: 'string',
+        enum: ['pending', 'active', 'removed'],
+        default: 'active'
     }
 }, { timestamps: true });
 

@@ -149,7 +149,6 @@ export const getPosts: RequestHandler = asyncHandler(
         const query = page ? {
             createdAt: { $lt: new Date(page) }
         } : {}
-        console.log(query)
         const posts = await Post.aggregate([
             {
                 $match: {

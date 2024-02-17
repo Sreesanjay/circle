@@ -8,6 +8,7 @@ import postsRoute from "./postsRoute";
 import chatRoute from "./chatRoute";
 import messageRoute from "./messageRoute";
 import notificationRoute from "./notificationRoute";
+import communityRoute from "./communityRoute";
 const router: Router = Router();
 
 
@@ -25,5 +26,6 @@ router.use('/posts', postsRoute)
 router.use('/chat', chatRoute)
 router.use('/message', messageRoute)
 router.use('/notifications', notificationRoute)
+router.use('/community', communityRoute)
 
 export default router;  

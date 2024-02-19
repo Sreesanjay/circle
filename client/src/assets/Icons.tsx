@@ -21,6 +21,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CloseIcon from "@mui/icons-material/Close";
 import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
+import SendIcon from "@mui/icons-material/Send";
 import { useEffect, useState } from "react";
 const PRIMARY = "#388087";
 export function Notification() {
@@ -52,6 +53,15 @@ export function LikeIcon({ size }: { size: number }) {
                     <FavoriteBorderIcon
                          sx={{ fontSize: { size }, color: "red" }}
                     />
+               </IconButton>
+          </>
+     );
+}
+export function IconSend({ size }: { size: number }) {
+     return (
+          <>
+               <IconButton>
+                    <SendIcon sx={{ fontSize: { size }, color: PRIMARY }} />
                </IconButton>
           </>
      );

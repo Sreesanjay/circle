@@ -19,6 +19,8 @@ import Header from "./pages/user/Header";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import Messages from "./pages/Messages/Messages";
 import { setOnlineUsers } from "./features/Socket/SocketSlice";
+import Communities from "./pages/Community/Community";
+import ViewCommunity from "./pages/Community/ViewCommunity";
 const PasswordPrivacy = lazy(
      () => import("./pages/PasswordSecurity/PasswordPrivacy")
 );
@@ -144,6 +146,15 @@ function App() {
                                    element={
                                         socket && <Messages socket={socket} />
                                    }
+                              />
+                              {/* community */}
+                              <Route
+                                   path="/community/:tab"
+                                   element={<Communities />}
+                              />
+                              <Route
+                                   path="/community/view/:id"
+                                   element={<ViewCommunity />}
                               />
                          </Route>
 

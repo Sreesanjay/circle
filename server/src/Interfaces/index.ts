@@ -87,6 +87,7 @@ export interface IComment extends Document {
      post_id: ObjectId;
      user_id: ObjectId;
      content: string;
+     likes: ObjectId[]
      reply: ObjectId;
 }
 
@@ -160,7 +161,7 @@ export interface IDiscussions {
      user_id: ObjectId,
      content: string,
      likes: ObjectId[],
-     captions: string,
+     caption: string,
      content_type: string,
      file_type: string;
      is_delete: boolean;

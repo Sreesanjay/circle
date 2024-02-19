@@ -5,6 +5,7 @@ import interestReducer from "../features/interest/interestSlice"
 import storyReducer from "../features/story/storySlice"
 import postReducer from "../features/post/postSlice"
 import socketReducer from '../features/Socket/SocketSlice'
+import communityReducer from '../features/community/communitySlice'
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -12,7 +13,8 @@ export const store = configureStore({
     interest: interestReducer,
     story: storyReducer,
     post: postReducer,
-    socket: socketReducer
+    socket: socketReducer,
+    community: communityReducer
   },
 })
 

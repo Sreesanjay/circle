@@ -1,9 +1,11 @@
 import { Request, RequestHandler, Response, NextFunction } from "express";
+import { ObjectId } from "mongodb";
 import asyncHandler from "express-async-handler";
 import Community from "../models/communitySchema";
 import Members from "../models/membersSchema";
-import Interest from "../models/interestSchema";
-import UserProfile from "../models/userProfile";
+import Notification from "../models/notificationSchema";
+// import Interest from "../models/interestSchema";
+// import UserProfile from "../models/userProfile";
 
 /**
  * @desc function creating new community
@@ -24,7 +26,7 @@ export const createCommunity: RequestHandler = asyncHandler(
         const newCommunity = new Community(req.body);
         const community = await newCommunity.save();
         if (community) {
-            await new Members({
+            const members = await new Members({
                 community_id: community._id,
                 user_id: req.user?._id,
                 is_admin: true
@@ -33,7 +35,8 @@ export const createCommunity: RequestHandler = asyncHandler(
             res.status(201).json({
                 status: 'created',
                 message: 'Community created successfully',
-                community
+                community,
+                members
             })
         } else {
             next(new Error("Internal server error"))
@@ -98,11 +101,10 @@ export const updateIcon: RequestHandler = asyncHandler(
  */
 export const getCommunities: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const interest = await UserProfile.findOne({ user_id: req.user?._id }, { _id: 0, interest: 1 });
+        // const interest = await UserProfile.findOne({ user_id: req.user?._id }, { _id: 0, interest: 1 });
         const community = await Community.aggregate([
             {
                 $match: {
-                    topic: { $in: interest?.interest },
                     is_delete: false
                 }
             }, {
@@ -110,7 +112,14 @@ export const getCommunities: RequestHandler = asyncHandler(
                     from: 'members',
                     localField: '_id',
                     foreignField: 'community_id',
-                    as: 'members'
+                    as: 'members',
+                    pipeline: [
+                        {
+                            $match: {
+                                status: { $ne: 'removed' },
+                            }
+                        }
+                    ]
 
                 }
             }
@@ -171,8 +180,10 @@ export const joinCommunity: RequestHandler = asyncHandler(
  */
 export const getMyCommunities: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const member = await Members.find({ user_id: req.user?._id }, { _id: 0, community_id: 1 });
+        console.log("user id")
+        const member = await Members.find({ user_id: req.user?._id, status: 'active' }, { _id: 0, community_id: 1 });
         const memberIds = member.map(item => item.community_id);
+        console.log("members ids", memberIds);
         const community = await Community.aggregate([
             {
                 $match: {
@@ -196,6 +207,148 @@ export const getMyCommunities: RequestHandler = asyncHandler(
                 message: 'fetched your communities',
                 community
             })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    }
+)
+
+/**
+ * @desc request fetching community
+ * @route GET /api/community/get-details/:id
+ * @access private
+ */
+export const getCommunity: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const id = req.params.id;
+        if (!id) {
+            return next(new Error('Community not found'))
+        }
+        const community = await Community.aggregate([
+            {
+                $match: {
+                    _id: new ObjectId(id),
+                    is_delete: false
+                }
+            }, {
+                $lookup: {
+                    from: 'members',
+                    localField: '_id',
+                    foreignField: 'community_id',
+                    as: 'members'
+
+                }
+            }
+
+        ])
+        if (community) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'fetched community details',
+                community: community[0]
+            })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    }
+)
+
+/**
+ * @desc request fetching my communities
+ * @route GET /api/community/pending-request/:id
+ * @access private
+ */
+export const pendingRequest: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const id = req.params.id;
+        if (!id) {
+            return next(new Error('Community not found'))
+        }
+
+        const userList = await Members.aggregate([
+            {
+                $match: {
+                    community_id: new ObjectId(id),
+                    status: 'pending'
+                }
+            },
+            {
+                $lookup: {
+                    from: "userprofiles",
+                    localField: 'user_id',
+                    foreignField: 'user_id',
+                    as: 'userProfile',
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: "users",
+                                localField: 'user_id',
+                                foreignField: '_id',
+                                as: 'user',
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: '$user'
+                            }
+                        },
+                        {
+                            $project: {
+                                username: 1,
+                                profile_img: 1,
+                                fullname: 1,
+                                user_id: 1,
+                                verified: 1,
+                                email: '$user.email'
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: {
+                    path: '$userProfile'
+                }
+            }
+        ])
+        if (userList) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'pending requests fetched',
+                userList
+            })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    }
+)
+
+
+/**
+ * @desc request fetching my communities
+ * @route GET /api/community/pending-request/:id
+ * @access private
+ */
+export const acceptRequest: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { community_id, user_id } = req.body;
+        const member = await Members.findOneAndUpdate({ community_id: community_id, user_id: user_id }, { $set: { status: 'active' } }, { new: true })
+        if (member) {
+            const community = await Community.findOne({ _id: community_id });
+            if (community) {
+                const newMessage = new Notification({
+                    user_id: user_id,
+                    sender_id: req.user?._id,
+                    message: `Accepted your request to join ${community.community_name}`
+                })
+                newMessage.save()
+            }
+            res.status(200).json({
+                status: 'ok',
+                message: 'accept user request',
+                member
+            })
+
         } else {
             next(new Error("Internal server error"))
         }

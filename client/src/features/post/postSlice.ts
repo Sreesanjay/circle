@@ -6,6 +6,7 @@ interface IInitialState {
     posts: IPost[] | [];
     myPosts: IPost[] | [],
     isLoading: boolean;
+    pagination: Date | null;
     isError: boolean;
     status: number | null;
     errorMessage: string;
@@ -14,6 +15,7 @@ interface IInitialState {
 const initialState: IInitialState = {
     posts: [],
     myPosts: [],
+    pagination: null,
     isLoading: false,
     isError: false,
     errorMessage: "",
@@ -30,6 +32,13 @@ export const postSlice = createSlice({
             state.isSuccess = false;
             state.errorMessage = "";
             state.status = null;
+        },
+        setPostEmpty: (state) => {
+            state.posts = []
+        },
+        setPagination: (state, action) => {
+            console.log(state.pagination, "set by", action.payload)
+            state.pagination = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -37,7 +46,8 @@ export const postSlice = createSlice({
             .addCase(uploadPost.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(uploadPost.fulfilled, (state) => {
+            .addCase(uploadPost.fulfilled, (state, action) => {
+                state.posts = [action.payload.post, ...state.posts]
                 state.isLoading = false;
                 state.isSuccess = true;
             })
@@ -57,7 +67,11 @@ export const postSlice = createSlice({
             .addCase(getPosts.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.posts = [...state.posts, ...action.payload.posts];
+                if (state.pagination && state.pagination != action.payload.posts[action.payload.posts.length - 1]?.createdAt) {
+                    state.posts = [...state.posts, ...action.payload.posts];
+                } else if (state.posts.length == 0) {
+                    state.posts = action.payload.posts
+                }
             })
             .addCase(getPosts.rejected, (state, action) => {
                 state.isError = true;
@@ -258,6 +272,6 @@ export const postSlice = createSlice({
     }
 })
 
-export const { postReset } = postSlice.actions;
+export const { postReset, setPostEmpty, setPagination } = postSlice.actions;
 
 export default postSlice.reducer;

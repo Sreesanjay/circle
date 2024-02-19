@@ -4,45 +4,51 @@ import { getPosts } from "../../services/postService";
 import { toast } from "react-toastify";
 import PostCard from "./PostCard";
 import { IPost } from "../../types";
-import { postReset } from "../../features/post/postSlice";
+import { postReset, setPagination } from "../../features/post/postSlice";
 import { Skeleton } from "@mui/material";
 
 export default function Post() {
      const dispatch = useAppDispatch();
-     const pagination = useRef(0);
+     // const pagination = useRef<Date | null>(null);
      const postContainerRef = useRef<HTMLDivElement | null>(null);
-     const { posts, errorMessage, isLoading, isError, isSuccess } =
+     const { posts, pagination, errorMessage, isLoading, isError, isSuccess } =
           useAppSelector((state) => state.post);
      useEffect(() => {
-          if (posts.length === 0) {
-               dispatch(getPosts(pagination.current));
-               pagination.current = pagination.current + 1;
+          if (pagination == null && posts.length === 0) {
+               dispatch(getPosts(null));
           }
-     }, [dispatch, posts]);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, []);
 
      useEffect(() => {
           if (isError) {
                toast(errorMessage);
           }
+          if (isSuccess) {
+               if (pagination !== posts[posts.length - 1]?.createdAt) {
+                    dispatch(setPagination(posts[posts.length - 1]?.createdAt));
+               }
+          }
           dispatch(postReset());
-     }, [isError, errorMessage, isSuccess, dispatch]);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [isError, errorMessage, isSuccess, dispatch, posts]);
 
      useEffect(() => {
           const handleScroll = () => {
                const bodyHeight = document.body.clientHeight;
                const scrollHeight = window.scrollY;
                const innerHeight = window.innerHeight;
-               const isAtBottom = bodyHeight - (scrollHeight + innerHeight) < 5;
+               const isAtBottom = bodyHeight - (scrollHeight + innerHeight) < 1;
                if (isAtBottom) {
-                    dispatch(getPosts(pagination.current));
-                    pagination.current = pagination.current + 1;
+                    dispatch(getPosts(pagination));
                }
           };
           window.addEventListener("scroll", handleScroll);
           return () => {
                window.removeEventListener("scroll", handleScroll);
           };
-     }, [dispatch]);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [dispatch, pagination]);
 
      return (
           <div

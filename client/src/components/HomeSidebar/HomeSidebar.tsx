@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 export default function HomeSidebar() {
      const [showSidebar, setShowSidebar] = useState("hidden");
-     const navigate = useNavigate()
+     const navigate = useNavigate();
      return (
           <Sidebar
                className="home-sidebar md:fixed w-full md:w-min bg-gray-900 text-white"
@@ -36,27 +36,30 @@ export default function HomeSidebar() {
                          <Sidebar.Item
                               icon={FaUserFriends}
                               className="text-xl icon "
-                              onClick={()=>navigate('/find-friends')}
+                              onClick={() => navigate("/find-friends")}
                          >
                               Find Friends
                          </Sidebar.Item>
                          <Sidebar.Item
                               icon={FaPeopleGroup}
                               className="text-xl icon"
+                              onClick={() =>
+                                   navigate("/community/recent_discussions")
+                              }
                          >
                               Community
                          </Sidebar.Item>
                          <Sidebar.Item
                               icon={MdOutlineMessage}
                               className="text-xl icon"
-                              onClick={()=>navigate('/messages')}
+                              onClick={() => navigate("/messages")}
                          >
                               Message
                          </Sidebar.Item>
                          <Sidebar.Item
                               icon={IoIosAddCircle}
                               className="text-xl icon"
-                              onClick={()=>navigate('/create-post')}
+                              onClick={() => navigate("/create-post")}
                          >
                               Create
                          </Sidebar.Item>

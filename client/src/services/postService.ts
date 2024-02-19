@@ -15,9 +15,10 @@ type ICreatePost = {
 //upload new post
 export const getPosts = createAsyncThunk(
     "post/getPosts",
-    async (page:number, thunkAPI) => {
+    async (page: Date | null, thunkAPI) => {
+        console.log(page)
         try {
-            const response = await API.get(`/posts?page=${page}`, {
+            const response = await API.get(`/posts?page=${page ? page : ''}`, {
                 withCredentials: true,
             });
             return response.data;

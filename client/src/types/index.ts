@@ -133,11 +133,40 @@ export interface SendMessage {
     userDetails: userList
 }
 
-export interface INotification{
+export interface INotification {
     _id: string;
     user_id: string;
     message: string;
     createdAt: Date;
     is_read: boolean;
-    userProfile : userList
+    userProfile: userList
+}
+
+export interface ICommunity {
+    _id: string;
+    community_name: string;
+    topic: string;
+    about: string;
+    icon: string;
+    privacy: string;
+    createdAt: Date;
+    members: {
+        community_id: string;
+        user_id: string;
+        is_admin: boolean;
+        status: string;
+        createdAt: Date
+    }[]
+}
+
+export interface IDiscussion {
+    _id: string;
+    content: string;
+    user_id: string;
+    likes: string[];
+    content_type: string;
+    file_type: string;
+    caption: string;
+    is_delete: boolean;
+    userProfile: userList
 }

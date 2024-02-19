@@ -23,9 +23,11 @@ instance.interceptors.response.use(
                 if (refreshToken) {
                     const response = await instance.post('/refresh-token', { refreshToken: JSON.parse(refreshToken) });
                     const { token } = response.data;
-                    console.log("new token", token)
                     Cookies.set("token", token, { expires: (1 / 1440) * 15 });
                     return axios(originalRequest);
+                } else {
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('userProfile');
                 }
             } catch (error) {
                 const err = error as AxiosError<{

@@ -1,12 +1,18 @@
 import { useAppSelector } from "../../app/hooks";
 import { DislikeIcon, LikeIcon, ProfileIconWithText } from "../../assets/Icons";
-import { likeDiscussion } from "../../services/communityService";
+import {
+     dislikeDiscussion,
+     likeDiscussion,
+} from "../../services/communityService";
 import { IDiscussion } from "../../types";
+import { Dispatch, SetStateAction } from "react";
 
 export default function DiscussionCard({
      discussion,
+     setDiscussion,
 }: {
      discussion: IDiscussion;
+     setDiscussion: Dispatch<SetStateAction<IDiscussion[]>>;
 }) {
      const { user } = useAppSelector((state) => state.auth);
 
@@ -14,7 +20,27 @@ export default function DiscussionCard({
           const response = await likeDiscussion(discussion._id);
           if (response.likedDiscussion) {
                setDiscussion((current) => {
-                return current.map(item=>)
+                    return current.map((item: IDiscussion) => {
+                         if (item._id === discussion._id) {
+                              item.likes.push(user?._id as string);
+                         }
+                         return item;
+                    });
+               });
+          }
+     }
+     async function dislikeHandle() {
+          const response = await dislikeDiscussion(discussion._id);
+          if (response.likedDiscussion) {
+               setDiscussion((current) => {
+                    return current.map((item: IDiscussion) => {
+                         if (item._id === discussion._id) {
+                              item.likes = item.likes.filter(
+                                   (userId) => userId !== user?._id
+                              );
+                         }
+                         return item;
+                    });
                });
           }
      }
@@ -52,11 +78,14 @@ export default function DiscussionCard({
                </div>
                <div className="footer">
                     {discussion.likes.includes(user?._id as string) ? (
-                         <div>
+                         <div
+                              className="dislike-button"
+                              onClick={dislikeHandle}
+                         >
                               <DislikeIcon size={25} />
                          </div>
                     ) : (
-                         <div className="like-button" onClick={likeDiscussion}>
+                         <div className="like-button" onClick={likeHandle}>
                               <LikeIcon size={25} />
                          </div>
                     )}

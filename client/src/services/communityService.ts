@@ -174,3 +174,15 @@ export const likeDiscussion = async (id: string) => {
         toast.error(err.response?.data.message)
     }
 }
+export const dislikeDiscussion = async (id: string) => {
+    try {
+        const response = await API.put(`/community/discussions/dislike/${id}`);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}

@@ -169,6 +169,7 @@ export default function ViewCommunity() {
                                         return (
                                              <DiscussionCard
                                                   discussion={item}
+                                                  setDiscussion={setDiscussion}
                                              />
                                         );
                                    })}

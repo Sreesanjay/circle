@@ -32,7 +32,6 @@ const postSchema: Schema<IBoostedPost> = new Schema({
         ref: 'Payment',
     }
 
-
 }, { timestamps: true });
 
 export default mongoose.model<IBoostedPost>("BoostedPost", postSchema);

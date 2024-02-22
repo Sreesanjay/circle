@@ -4,9 +4,9 @@ import { activatePlan, createPlan, deactivatePlan, getPlans } from "../controlle
 const router: Router = Router();
 
 router.route('/')
-    .get(getPlans)
-    .post(createPlan)
-router.put('/activate/:id', activatePlan)
-router.put('/deactivate/:id', deactivatePlan)
+    .get(protectAdmin, getPlans)
+    .post(protectAdmin, createPlan)
+router.put('/activate/:id', protectAdmin, activatePlan)
+router.put('/deactivate/:id', protectAdmin, deactivatePlan)
 
 export default router;

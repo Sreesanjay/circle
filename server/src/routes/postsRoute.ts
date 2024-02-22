@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { protect } from "../middlewares/authMiddleware";
 import { getPosts, postComment, uploadPost, getReplys, getComments, addLike, disLike, savePost, unsavePost, deletePost, editPost, likedUserList } from "../controllers/postController";
+import { getPlans } from "../controllers/planController";
+import { boostPost } from "../controllers/postBoostController";
 const router: Router = Router();
 
 router.route('/')
@@ -16,4 +18,9 @@ router.put('/dislike/:id', protect, disLike)
 router.post('/save/', protect, savePost)
 router.delete('/unsave/:id', protect, unsavePost)
 router.get('/liked-user-list/:id', protect, likedUserList)
+
+
+//post boost
+router.get('/plans', protect, getPlans)
+router.post('/boost', protect, boostPost)
 export default router;

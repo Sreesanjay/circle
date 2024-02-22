@@ -34,14 +34,12 @@ const postSchema: Schema<IPost> = new Schema({
             default: []
         }
     ],
-    impressions: {
-        type: Number,
-        default: 0
-    },
-    profile_visit: {
-        type: Number,
-        default: 0
-    },
+    impressions: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ],
     is_delete: {
         type: Boolean,
         default: false

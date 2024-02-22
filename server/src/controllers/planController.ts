@@ -45,7 +45,7 @@ export const getPlans: RequestHandler = asyncHandler(
             return next(new Error('Invalid plan type'))
         }
 
-        const plan = await Plan.find({ type: planType });
+        const plan = await Plan.find({ type: planType, is_active: true});
 
         if (plan) {
             res.status(201).json({

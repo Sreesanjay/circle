@@ -74,9 +74,8 @@ export interface IPost extends Document {
      caption: string;
      visibility: string;
      tags: ObjectId[];
-     impressions: number;
+     impressions: ObjectId[];
      likes: ObjectId[];
-     profile_visit: number;
      comment: ObjectId;
      is_delete: boolean;
      is_archive: boolean;

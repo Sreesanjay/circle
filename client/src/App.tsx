@@ -24,6 +24,7 @@ import ViewCommunity from "./pages/Community/ViewCommunity";
 import CommunityManagement from "./pages/Admin/Community/CommunityManagement";
 import DiscussionManagement from "./pages/Admin/Discussion/DiscussionManagement";
 import ChatManagement from "./pages/Admin/Chat/ChatManagement";
+import BoostPost from "./pages/Post/BoostPost";
 const PasswordPrivacy = lazy(
      () => import("./pages/PasswordSecurity/PasswordPrivacy")
 );
@@ -158,6 +159,11 @@ function App() {
                               <Route
                                    path="/community/view/:id"
                                    element={<ViewCommunity />}
+                              />
+
+                              <Route
+                                   path="/posts/boost/:id"
+                                   element={<BoostPost />}
                               />
                          </Route>
 

@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { storage } from "../app/firebase";
 import API from "../api";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { toast } from "react-toastify";
 
 
 type ICreatePost = {
@@ -238,3 +239,19 @@ export const getMyPost = createAsyncThunk(
         }
     })
 
+export async function getPlans() {
+    try {
+        const response = await API.get('/posts/plans?planType=POST_BOOSTER');
+        return response.data
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        if (err.response) {
+            toast.error(err.response?.data.message)
+        } else {
+            toast.error(err.message)
+        }
+    }
+}

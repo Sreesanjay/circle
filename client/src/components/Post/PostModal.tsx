@@ -23,6 +23,7 @@ import { deletePost, unsavePost } from "../../services/postService";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import EditPost from "../Modal/EditPost";
 import { postReset } from "../../features/post/postSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function PostModal({
      openModal,
@@ -36,6 +37,7 @@ export default function PostModal({
      post: IPost;
 }) {
      const dispatch = useAppDispatch();
+     const navigate = useNavigate();
      const { isSuccess, isError, errorMessage } = useAppSelector(
           (state) => state.post
      );
@@ -172,7 +174,14 @@ export default function PostModal({
                                    </div>
                               )}
                               {type === "PROFILE" && (
-                                   <button className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white">
+                                   <button
+                                        className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white"
+                                        onClick={() =>
+                                             navigate(
+                                                  `/posts/boost/${post?._id}`
+                                             )
+                                        }
+                                   >
                                         Boost this post
                                    </button>
                               )}

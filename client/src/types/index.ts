@@ -194,3 +194,12 @@ export interface IDiscussionComment {
     createdAt: Date;
 
 }
+
+export interface IPlan {
+    _id: string,
+    amount: number,
+    discription: string,
+    type: string,
+    duration: number,
+    is_active: boolean
+}

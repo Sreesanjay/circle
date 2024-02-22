@@ -3,6 +3,8 @@ import { AxiosError } from "axios";
 // import { storage } from "../app/firebase";
 import API from "../api";
 import { toast } from "react-toastify";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../app/firebase";
 // import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 type UploadCommunity = {
@@ -19,6 +21,26 @@ export const newCommunity = createAsyncThunk(
     async (body: UploadCommunity, thunkAPI) => {
         try {
             const response = await API.post('/community', body);
+            return response.data;
+        } catch (error) {
+            const err = error as AxiosError<{
+                message?: string;
+                status?: string;
+            }>
+            const payload = {
+                message: err.response?.data?.message,
+                status: err.response?.status
+            };
+            return thunkAPI.rejectWithValue(payload);
+        }
+    })
+
+//update interest
+export const editCommunity = createAsyncThunk(
+    "community/editCommunity",
+    async ({ formData, id }: { formData: UploadCommunity, id: string }, thunkAPI) => {
+        try {
+            const response = await API.put(`/community/${id}`, formData);
             return response.data;
         } catch (error) {
             const err = error as AxiosError<{
@@ -133,13 +155,25 @@ export const acceptJoinRequest = createAsyncThunk(
 type IPostDiscussion = {
     community_id: string,
     user_id: string,
-    content: string,
+    content: string | File,
     content_type: string,
     file_type?: string,
     caption?: string
 }
 export const createDiscussion = async (payload: IPostDiscussion) => {
     try {
+
+        if (payload.content_type === 'MEDIA') {
+            const filename = new Date().getTime() + (payload.content as File).name;
+            const storageRef = ref(storage, 'discussion/' + filename);
+            const snapshot = await uploadBytes(storageRef, (payload.content as File))
+            if (snapshot) {
+                const url = await getDownloadURL(storageRef);
+                if (url) {
+                    payload.content = url;
+                }
+            }
+        }
         const response = await API.post('/community/discussions', payload);
         return response.data;
     } catch (error) {
@@ -150,9 +184,9 @@ export const createDiscussion = async (payload: IPostDiscussion) => {
         toast.error(err.response?.data.message)
     }
 }
-export const getDiscussions = async (id: string) => {
+export const getDiscussions = async (id: string, pagination: Date | null) => {
     try {
-        const response = await API.get(`/community/discussions/${id}`);
+        const response = await API.get(`/community/discussions/${id}?page=${pagination ? pagination : ''}`);
         return response.data;
     } catch (error) {
         const err = error as AxiosError<{
@@ -162,6 +196,22 @@ export const getDiscussions = async (id: string) => {
         toast.error(err.response?.data.message)
     }
 }
+
+
+export const getAnalytics = async (id: string) => {
+    try {
+        const response = await API.get(`/community/analytics/${id}`);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}
+
+
 export const likeDiscussion = async (id: string) => {
     try {
         const response = await API.put(`/community/discussions/like/${id}`);
@@ -177,6 +227,96 @@ export const likeDiscussion = async (id: string) => {
 export const dislikeDiscussion = async (id: string) => {
     try {
         const response = await API.put(`/community/discussions/dislike/${id}`);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}
+export const getComments = async (id: string) => {
+    try {
+        const response = await API.get(`/community/discussions/comment/${id}`);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}
+export const likeComment = async (id: string) => {
+    try {
+        const response = await API.put(`/community/discussions/comment/like/${id}`);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}
+export const dislikeComment = async (id: string) => {
+    try {
+        const response = await API.put(`/community/discussions/comment/dislike/${id}`);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}
+type commentPayload = {
+    user_id: string;
+    discussion_id: string;
+    content: string;
+    reply?: string
+}
+export const addComment = async (payload: commentPayload) => {
+    try {
+        const response = await API.post("/community/discussions/comment", payload);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}
+export const deleteDiscussion = async (id: string) => {
+    try {
+        const response = await API.delete(`/community/discussions/${id}`);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}
+export const getMemberes = async (members: string[]) => {
+    try {
+        const response = await API.post("/community/get-members", { members });
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}
+export const removeMember = async (payload: { community_id?: string, user_id?: string }) => {
+    try {
+        const response = await API.post("/community/remove-member", payload);
         return response.data;
     } catch (error) {
         const err = error as AxiosError<{

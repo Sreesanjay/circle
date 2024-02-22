@@ -45,11 +45,11 @@ export default function InterestCard({ interest }: { interest: IInterest }) {
                          <h1 className="font-medium mb-10 mt-5">
                               Total Communities
                          </h1>
-                         <h1 className="text-5xl">123</h1>
+                         <h1 className="text-5xl">{interest.total_community}</h1>
                     </div>
                     <div className="flex flex-col items-center">
                          <h1 className="font-medium mb-10 mt-5">Total Posts</h1>
-                         <h1 className="text-5xl">123</h1>
+                         <h1 className="text-5xl">{interest.total_posts}</h1>
                     </div>
                </div>
                <div className="manage-btn flex absolute right-5">

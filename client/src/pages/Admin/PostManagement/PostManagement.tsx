@@ -25,9 +25,6 @@ export default function PostManagement() {
                     setIsLoading(true);
                     const response = await API.get(
                          `/admin/post-management/postlist?page=${page}&&sort=${sort}`,
-                         {
-                              withCredentials: true,
-                         }
                     );
                     if (response.data) {
                          setPostList(response.data.postList);
@@ -131,7 +128,7 @@ export default function PostManagement() {
                ) : (
                     <section className="user-management">
                          <AdminSidebar />
-                         <section className="body md:ms-64 py-5">
+                         <section className="body md:ms-80 py-5">
                               <Breadcrumb aria-label="Default breadcrumb example">
                                    <Breadcrumb.Item href="#">
                                         Post Management

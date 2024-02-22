@@ -12,7 +12,7 @@ const communitySchema: Schema<ICommunity> = new Schema({
     },
     topic: {
         type: mongoose.Types.ObjectId,
-        ref: 'Interest'
+        ref: 'interests'
     },
     about: {
         type: 'string'

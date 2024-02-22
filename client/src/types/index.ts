@@ -150,6 +150,8 @@ export interface ICommunity {
     icon: string;
     privacy: string;
     createdAt: Date;
+    is_delete?: boolean;
+    reports?: []
     members: {
         community_id: string;
         user_id: string;
@@ -164,9 +166,30 @@ export interface IDiscussion {
     content: string;
     user_id: string;
     likes: string[];
+    comments: number,
     content_type: string;
     file_type: string;
     caption: string;
+    community_id: string;
     is_delete: boolean;
+    reports?: [];
+    createdAt: Date;
     userProfile: userList
+}
+
+export interface IDiscussionComment {
+    _id: string;
+    user_id: string;
+    post_id: string;
+    user_details: {
+        user_id: string;
+        username: string;
+        profile_img: string;
+        email: string
+    }
+    reply: string;
+    likes: string[];
+    content: string;
+    createdAt: Date;
+
 }

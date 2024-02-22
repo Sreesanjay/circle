@@ -1,0 +1,3 @@
+.drawer-body .members::-webkit-scrollbar {
+     display: none;
+}

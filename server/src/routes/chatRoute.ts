@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { protect } from "../middlewares/authMiddleware";
-import { createChat, userChats, createGroup, getMembers, updateChatName, updateGroupIcon, addMember, removeMember,isBlocked } from "../controllers/chatController";
+import { createChat, userChats, createGroup, updateChatName, updateGroupIcon, addMember, removeMember,isBlocked } from "../controllers/chatController";
+import { getMembers } from "../controllers/usersController";
 const router: Router = Router();
 
 router.post('/', protect, createChat);

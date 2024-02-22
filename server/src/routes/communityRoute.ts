@@ -1,18 +1,23 @@
 import { Router } from "express";
 import { protect } from "../middlewares/authMiddleware";
-import { createCommunity, updateCommunity, updateIcon, getCommunities, joinCommunity, getMyCommunities, getCommunity, pendingRequest, acceptRequest } from "../controllers/communityController";
+import { createCommunity, updateCommunity, updateIcon, getCommunities, joinCommunity, getMyCommunities, getCommunity, pendingRequest, acceptRequest, removeMember, getAnalytics, removeCommunity } from "../controllers/communityController";
 import { addComment, createDiscussion, deleteComment, deleteDiscussion, dislikeComment, dislikeDiscussion, getComments, getDiscussions, getReplyCommemts, likeComment, likeDiscussion } from "../controllers/discussionController";
+import { getMembers } from "../controllers/usersController";
 const router: Router = Router();
 
 router.post('/', protect, createCommunity)
 router.put('/:id', protect, updateCommunity)
 router.put('/icon/:id', protect, updateIcon)
+router.put('/remove/:id', protect, removeCommunity)
 router.get('/', protect, getCommunities)
+router.get('/analytics/:id', protect, getAnalytics)
 router.get('/my-communities', protect, getMyCommunities)
 router.get('/get-details/:id', protect, getCommunity)
 router.post('/join', protect, joinCommunity)
 router.get('/pending-request/:id', protect, pendingRequest)
 router.post('/accept-request', protect, acceptRequest)
+router.post('/get-members', protect, getMembers)
+router.post('/remove-member', protect, removeMember)
 
 
 //discussion

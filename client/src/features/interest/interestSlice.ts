@@ -8,7 +8,7 @@ export interface IInterest {
     interest: string;
     discription: string;
     total_users: number;
-    total_communities: number;
+    total_community: number;
     total_posts: number;
 }
 interface Interest {
@@ -48,7 +48,12 @@ export const interestSlice = createSlice({
             .addCase(newInterest.fulfilled, (state, action: PayloadAction<{ interest: IInterest; message: string }>) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.interest?.push(action.payload.interest);
+                state.interest?.push({
+                    ...action.payload.interest,
+                    total_users: 0,
+                    total_community: 0,
+                    total_posts: 0
+                });
                 toast(action.payload.message)
             })
             .addCase(newInterest.rejected, (state, action) => {
@@ -69,9 +74,7 @@ export const interestSlice = createSlice({
                 state.isSuccess = true;
                 const newInterest = state.interest?.map((item) => {
                     if (item._id === action.payload.interest._id) {
-                        console.log("got id")
                         item = action.payload.interest;
-                        console.log(item)
                     }
                     return item;
                 })
@@ -133,7 +136,7 @@ export const interestSlice = createSlice({
                 state.errorMessage = error.message;
                 state.status = error.status;
             })
-            
+
     }
 })
 

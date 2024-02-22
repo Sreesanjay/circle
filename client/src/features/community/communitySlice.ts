@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICommunity } from "../../types";
-import { acceptJoinRequest, getAllCommunity, getMyCommunity, joinCommunity, newCommunity } from "../../services/communityService";
+import { acceptJoinRequest, editCommunity, getAllCommunity, getMyCommunity, joinCommunity, newCommunity } from "../../services/communityService";
 import { toast } from "react-toastify";
 // import { toast } from "react-toastify";
 
@@ -145,6 +145,38 @@ export const communitySlice = createSlice({
             state.isSuccess = true;
         })
         builder.addCase(acceptJoinRequest.rejected, (state, action) => {
+            state.isError = true;
+            state.isLoading = false;
+            const error = action.payload as {
+                message: string,
+                status: number
+            };
+            state.errorMessage = error.message;
+            state.status = error.status;
+
+        })
+        //accept join request
+        builder.addCase(editCommunity.pending, (state) => {
+            state.isLoading = true;
+        })
+        builder.addCase(editCommunity.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.myCommunity = state.myCommunity.map((item) => {
+                if (item._id === action.payload.community._id) {
+                    item = {
+                        ...item,
+                        community_name: action.payload.community.community_name,
+                        topic: action.payload.community.topic,
+                        about: action.payload.community.about,
+                        privacy: action.payload.community.privacy
+                    }
+                }
+                return item;
+            })
+            state.isSuccess = true;
+            toast.success("Community edited");
+        })
+        builder.addCase(editCommunity.rejected, (state, action) => {
             state.isError = true;
             state.isLoading = false;
             const error = action.payload as {

@@ -42,13 +42,13 @@ export const updateInterest: RequestHandler = asyncHandler(
             interest.image = req.body.image !== '' ? req.body.image : interest.image
             const newInterest = await interest.save();
             if (newInterest) {
-                res.status(201).json({
-                    status: "created",
-                    message: "New interest created",
+                res.status(200).json({
+                    status: "ok ",
+                    message: "interest updated",
                     interest: newInterest
                 })
             }
-        }else{
+        } else {
             next(new Error())
         }
     }
@@ -71,8 +71,26 @@ export const getAllInterest: RequestHandler = asyncHandler(
                 },
             },
             {
+                $lookup: {
+                    from: 'posts',
+                    localField: '_id',
+                    foreignField: 'tags',
+                    as: 'posts',
+                },
+            },
+            {
+                $lookup: {
+                    from: 'communities',
+                    localField: '_id',
+                    foreignField: 'topic',
+                    as: 'community',
+                },
+            },
+            {
                 $addFields: {
-                    total_users: { $size: "$users" }
+                    total_users: { $size: "$users" },
+                    total_community: { $size: "$community" },
+                    total_posts: { $size: "$posts" }
                 }
             },
             {
@@ -81,7 +99,9 @@ export const getAllInterest: RequestHandler = asyncHandler(
                     image: 1,
                     interest: 1,
                     discription: 1,
-                    total_users: 1
+                    total_users: 1,
+                    total_community: 1,
+                    total_posts: 1
                 },
             },
         ]);

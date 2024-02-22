@@ -1,10 +1,5 @@
 import { Sidebar } from "flowbite-react";
-import {
-     HiChartPie,
-     HiInbox,
-     HiTable,
-     HiUser,
-} from "react-icons/hi";
+import { HiChartPie, HiInbox, HiTable, HiUser } from "react-icons/hi";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./AdminSidebar.css";
 import { useNavigate } from "react-router-dom";
@@ -57,14 +52,14 @@ export default function AdminSidebar() {
                          >
                               <Sidebar.Item
                                    icon={HiChartPie}
-                                   className="cursor-pointer "
+                                   className="cursor-pointer list-nav-item"
                                    onClick={() => navigate("/admin")}
                               >
                                    Dashboard
                               </Sidebar.Item>
                               <Sidebar.Item
                                    icon={HiInbox}
-                                   className="cursor-pointer"
+                                   className="cursor-pointer list-nav-item"
                                    onClick={() => navigate("/admin/interest")}
                               >
                                    Interest
@@ -72,22 +67,44 @@ export default function AdminSidebar() {
 
                               <Sidebar.Item
                                    icon={HiUser}
-                                   className="cursor-pointer"
-                                   onClick={() => navigate("/admin/user-management")}
+                                   className="cursor-pointer list-nav-item"
+                                   onClick={() =>
+                                        navigate("/admin/user-management")
+                                   }
                               >
                                    User Management
                               </Sidebar.Item>
 
                               <Sidebar.Item
                                    icon={HiUser}
-                                   className="cursor-pointer"
-                                   onClick={() => navigate("/admin/post-management")}
+                                   className="cursor-pointer list-nav-item"
+                                   onClick={() =>
+                                        navigate("/admin/post-management")
+                                   }
                               >
                                    Post Management
                               </Sidebar.Item>
-                              
                               <Sidebar.Item
-                                   className="cursor-pointer"
+                                   icon={HiUser}
+                                   className="cursor-pointer list-nav-item"
+                                   onClick={() =>
+                                        navigate("/admin/community-management")
+                                   }
+                              >
+                                   Community Management
+                              </Sidebar.Item>
+                              <Sidebar.Item
+                                   icon={HiUser}
+                                   className="cursor-pointer list-nav-item"
+                                   onClick={() =>
+                                        navigate("/admin/discussion-management")
+                                   }
+                              >
+                                   Discussion Management
+                              </Sidebar.Item>
+
+                              <Sidebar.Item
+                                   className="cursor-pointer list-nav-item"
                                    icon={HiTable}
                                    onClick={() => dispatch(logout())}
                               >

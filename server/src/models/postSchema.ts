@@ -29,8 +29,8 @@ const postSchema: Schema<IPost> = new Schema({
     },
     tags: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            type: Schema.Types.ObjectId,
+            ref: 'interests',
             default: []
         }
     ],

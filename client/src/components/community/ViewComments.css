@@ -1,0 +1,11 @@
+.comment-view {
+     max-height: 80vh;
+     overflow-y: scroll;
+}
+.comment-view::-webkit-scrollbar {
+     display: none;
+}
+.comment-view .content-body {
+     border-radius: 0 15px 15px 15px;
+}
+

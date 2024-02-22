@@ -5,9 +5,6 @@ import asyncHandler from "express-async-handler";
 import Discussion from "../models/discussionSchema";
 import Comment from "../models/commentSchema";
 // import Members from "../models/membersSchema";
-// import Notification from "../models/notificationSchema";
-// import Interest from "../models/interestSchema";
-// import UserProfile from "../models/userProfile"
 
 
 
@@ -97,10 +94,37 @@ export const getDiscussions: RequestHandler = asyncHandler(
             res.status(400);
             return next(new Error('community not found'))
         }
+
+        const page = (req.query.page && typeof (req.query.page) === "string") ? req.query.page : null
+        const pageSize = 3;
+        const query = page ? {
+            createdAt: { $lt: new Date(page) }
+        } : {}
+
         const discussions = await Discussion.aggregate([
             {
                 $match: {
-                    community_id: new ObjectId(id)
+                    community_id: new ObjectId(id),
+                    is_delete: false
+                }
+            },
+            {
+                $sort: {
+                    createdAt: -1
+                }
+            },
+            {
+                $match: query
+            },
+            {
+                $limit: pageSize
+            },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: '_id',
+                    foreignField: 'post_id',
+                    as: "comments",
                 }
             },
             {
@@ -139,6 +163,22 @@ export const getDiscussions: RequestHandler = asyncHandler(
             {
                 $unwind: {
                     path: '$userProfile'
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    content: 1,
+                    user_id: 1,
+                    likes: 1,
+                    community_id:1,
+                    content_type: 1,
+                    file_type: 1,
+                    caption: 1,
+                    is_delete: 1,
+                    createdAt: 1,
+                    userProfile: 1,
+                    comments: { $size: "$comments" },
                 }
             }
         ])
@@ -334,8 +374,7 @@ export const getComments: RequestHandler = asyncHandler(
         const comments = await Comment.aggregate([
             {
                 $match: {
-                    post_id: new ObjectId(id),
-                    reply: { $exists: false }
+                    post_id: new ObjectId(id)
                 }
             },
             {
@@ -551,4 +590,5 @@ export const dislikeComment: RequestHandler = asyncHandler(
         }
     }
 )
+
 

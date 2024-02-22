@@ -35,7 +35,7 @@ export default function Interest() {
                               setShowModal={setShowModal}
                          />
                          <AdminSidebar />
-                         <div className="interest md:ms-64 p-5">
+                         <div className="interest md:ms-80 p-5">
                               <Breadcrumb aria-label="Default breadcrumb example">
                                    <Breadcrumb.Item icon={MdOutlineInterests}>
                                         <Link to="/admin/interest">

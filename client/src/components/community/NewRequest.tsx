@@ -10,10 +10,12 @@ export default function NewRequest({
      openDrawer,
      setOpenDrawer,
      community,
+     setCommunity,
 }: {
      openDrawer: boolean;
      setOpenDrawer: Dispatch<SetStateAction<boolean>>;
      community: ICommunity | null;
+     setCommunity: Dispatch<SetStateAction<ICommunity | null>>;
 }) {
      const dispatch = useAppDispatch();
      const [userList, setUserList] = useState<
@@ -52,9 +54,27 @@ export default function NewRequest({
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [community]);
 
-     function acceptRequest(user_id: string) {
+     async function acceptRequest(user_id: string) {
           if (community) {
-               dispatch(acceptJoinRequest({ id: community._id, user_id }));
+               const response = await dispatch(
+                    acceptJoinRequest({ id: community._id, user_id })
+               );
+               if (response.payload.member) {
+                    setUserList((current) =>
+                         current.filter((item) => item.user_id !== user_id)
+                    );
+                    if (community) {
+                         setCommunity({
+                              ...community,
+                              members: community.members.map((item) => {
+                                   if (item.user_id === user_id) {
+                                        item.status = "active";
+                                   }
+                                   return item;
+                              }),
+                         });
+                    }
+               }
           }
      }
 
@@ -104,7 +124,7 @@ export default function NewRequest({
                                                   </h1>
                                              </div>
                                              <div
-                                                  className="add-btn text-4xl text-white"
+                                                  className="add-btn text-4xl text-white cursor-pointer"
                                                   onClick={() =>
                                                        acceptRequest(
                                                             item.user_id

@@ -217,20 +217,39 @@ export default function ChatBox({
      }
 
      async function hanleDelete(id: string) {
-          console.log("reached")
           const response = await deleteMessage(id);
           if (response.messages) {
                setMessages(
                     messages.map((item) => {
+                         socket?.current?.emit("deleteMessage", {
+                              chat_id: item.chat_id,
+                              message_id: item._id,
+                         });
                          if (item._id === id) {
                               item.is_delete = true;
                          }
                          return item;
-                         AttachmentIcon;
                     })
                );
           }
      }
+
+     useEffect(() => {
+          socket?.current?.on("delete-message", ({ chat_id, message_id }) => {
+               console.log("reached front")
+               if (chat_id === currentChat?._id) {
+                    setMessages(
+                         messages.map((item) => {
+                              if (item._id === message_id) {
+                                   item.is_delete = true;
+                              }
+                              return item;
+                         })
+                    );
+               }
+          });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [socket?.current]);
 
      async function handleSend(type: string) {
           if (user && currentChat?._id) {

@@ -80,6 +80,12 @@ export default {
                 });
             })
 
+            socket.on('deleteMessage', ({ chat_id, message_id }: { chat_id: string, message_id: string }) => {
+                console.log("reached here", chat_id, message_id)
+                socket.to(chat_id).emit('delete-message', { chat_id, message_id })
+
+            });
+
 
             socket.on('disconnect', () => {
                 activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);

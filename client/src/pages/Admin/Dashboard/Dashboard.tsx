@@ -4,19 +4,70 @@ import { BarChart } from "@mui/x-charts/BarChart";
 
 import "./Dashboard.css";
 import { useEffect, useRef, useState } from "react";
+import {
+     getDashboardAnalytics,
+     getUserReport,
+} from "../../../services/adminDashboard";
 export default function Dashboard() {
+     const [analytics, setAnalytics] = useState({
+          total_users: 0,
+          total_posts: 0,
+          total_community: 0,
+          total_discussions: 0,
+     });
+     const [yearRange, setYearRange] = useState<number[]>([]);
+     const [userReport, setUserReport] = useState({
+          January: 0,
+          February: 0,
+          March: 0,
+          April: 0,
+          May: 0,
+          June: 0,
+          July: 0,
+          August: 0,
+          September: 0,
+          October: 0,
+          November: 0,
+          December: 0,
+     });
      const containerRef = useRef<HTMLOptionElement | null>(null);
      const [year, setYear] = useState<number>(1111);
-     const [date, setDate] = useState<number>(1111);
+     // const [date, setDate] = useState<number>(1111);
      useEffect(() => {
           const date = new Date();
-          setDate(date.getFullYear());
+          // setDate(date.getFullYear());
           setYear(date.getFullYear());
+          const arr = [];
+          for (
+               let yearCount = date.getFullYear();
+               yearCount >= 2020;
+               yearCount--
+          ) {
+               arr.push(yearCount);
+          }
+          setYearRange(arr);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
      }, []);
 
-     useEffect(()=>{
-         
-     },[year])
+     useEffect(() => {
+          (async () => {
+               const response = await getDashboardAnalytics();
+               if (response.analytics) {
+                    setAnalytics(response.analytics);
+               }
+          })();
+     }, []);
+
+     useEffect(() => {
+          (async () => {
+               if (year > 1111) {
+                    const response = await getUserReport(year);
+                    if (response.userCount) {
+                         setUserReport(response.userCount);
+                    }
+               }
+          })();
+     }, [year]);
 
      useEffect(() => {
           const handleResize = () => {
@@ -50,19 +101,27 @@ export default function Dashboard() {
                     <section className="analytics flex w-full justify-around mt-5 gap-2">
                          <div className="analytics-card">
                               <h1>Total Users</h1>
-                              <h1 className="text-4xl">52</h1>
+                              <h1 className="text-4xl">
+                                   {analytics.total_users}
+                              </h1>
                          </div>
                          <div className="analytics-card">
-                              <h1>Total Users</h1>
-                              <h1 className="text-4xl">32</h1>
+                              <h1>Total Posts</h1>
+                              <h1 className="text-4xl">
+                                   {analytics.total_posts}
+                              </h1>
                          </div>
                          <div className="analytics-card">
-                              <h1>Total Users</h1>
-                              <h1 className="text-4xl">13</h1>
+                              <h1>Total Community</h1>
+                              <h1 className="text-4xl">
+                                   {analytics.total_community}
+                              </h1>
                          </div>
                          <div className="analytics-card">
-                              <h1>Total Users</h1>
-                              <h1 className="text-4xl">51</h1>
+                              <h1>Total Discussions</h1>
+                              <h1 className="text-4xl">
+                                   {analytics.total_discussions}
+                              </h1>
                          </div>
                     </section>
                     <section className="chart-header p-5 flex justify-between">
@@ -72,10 +131,22 @@ export default function Dashboard() {
                               value={year}
                               onChange={(e) => setYear(Number(e.target.value))}
                          >
-                              <option value={date}>{date}</option>
+                              {yearRange &&
+                                   yearRange.map((currentYear, index) => {
+                                        // console.log(yearRange);
+                                        return (
+                                             <option
+                                                  value={currentYear}
+                                                  key={index}
+                                             >
+                                                  {currentYear}
+                                             </option>
+                                        );
+                                   })}
+                              {/* <option value={date}>{date}</option>
                               <option value={date - 1}>{date - 1}</option>
                               <option value={date - 2}>{date - 2}</option>
-                              <option value={date - 3}>{date - 3}</option>
+                              <option value={date - 3}>{date - 3}</option> */}
                          </select>
                     </section>
                     <section
@@ -107,7 +178,18 @@ export default function Dashboard() {
                               series={[
                                    {
                                         data: [
-                                             2, 5, 3, 5, 3, 5, 2, 3, 2, 3, 5, 6,
+                                             userReport.January,
+                                             userReport.February,
+                                             userReport.March,
+                                             userReport.April,
+                                             userReport.May,
+                                             userReport.June,
+                                             userReport.July,
+                                             userReport.August,
+                                             userReport.September,
+                                             userReport.October,
+                                             userReport.November,
+                                             userReport.December,
                                         ],
                                    },
                               ]}

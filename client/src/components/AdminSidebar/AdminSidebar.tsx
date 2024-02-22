@@ -102,6 +102,15 @@ export default function AdminSidebar() {
                               >
                                    Discussion Management
                               </Sidebar.Item>
+                              <Sidebar.Item
+                                   icon={HiUser}
+                                   className="cursor-pointer list-nav-item"
+                                   onClick={() =>
+                                        navigate("/admin/chat-management")
+                                   }
+                              >
+                                   Chat Management
+                              </Sidebar.Item>
 
                               <Sidebar.Item
                                    className="cursor-pointer list-nav-item"

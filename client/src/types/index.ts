@@ -102,6 +102,7 @@ export interface IChat {
     latest_message: IMessage;
     createdAt: Date;
     icon: string;
+    reports?: [];
     removed_members: string[];
 }
 export interface IMessage {

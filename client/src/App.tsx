@@ -23,6 +23,7 @@ import Communities from "./pages/Community/Community";
 import ViewCommunity from "./pages/Community/ViewCommunity";
 import CommunityManagement from "./pages/Admin/Community/CommunityManagement";
 import DiscussionManagement from "./pages/Admin/Discussion/DiscussionManagement";
+import ChatManagement from "./pages/Admin/Chat/ChatManagement";
 const PasswordPrivacy = lazy(
      () => import("./pages/PasswordSecurity/PasswordPrivacy")
 );
@@ -183,6 +184,10 @@ function App() {
                               <Route
                                    path="/admin/discussion-management"
                                    element={<DiscussionManagement />}
+                              />
+                              <Route
+                                   path="/admin/chat-management"
+                                   element={<ChatManagement />}
                               />
                          </Route>
                     </Routes>

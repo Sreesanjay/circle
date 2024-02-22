@@ -128,9 +128,17 @@ export interface IBoostedPost {
      post_id: ObjectId,
      clicks: ObjectId[],
      startingDate: Date,
-     endingDate: Date,
+     plan_id: ObjectId,
      action: string,
      payment_details: ObjectId
+}
+
+export interface IPlans {
+     amount: number,
+     is_active: boolean,
+     discription: string,
+     type: string,
+     duration: number
 }
 
 export interface IPayment {

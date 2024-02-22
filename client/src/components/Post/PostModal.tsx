@@ -142,7 +142,7 @@ export default function PostModal({
                               {post.type.includes("image") ? (
                                    <img
                                         src={post?.content}
-                                        className="w-full rounded-md"
+                                        className="w-4/5 rounded-md"
                                    />
                               ) : (
                                    <div className="relative">

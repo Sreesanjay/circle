@@ -160,7 +160,7 @@ export default function UserProfilePage() {
                                    </div>
                               </div>
                          </section>
-                         <section className="profile-body h-screen w-full md:grid md:grid-cols-12">
+                         <section className="profile-body min-h-screen w-full md:grid md:grid-cols-12">
                               <div className="left-section col-span-3 px-5 bg-gray-800 shadow-xl pt-5">
                                    <FriendList />
                                    <hr className="my-3" />
@@ -182,7 +182,7 @@ export default function UserProfilePage() {
                                    </div>
                                    <CloseFriends />
                               </div>
-                              <div className="right-section col-span-9 pt-5 px-3 ">
+                              <div className="right-section col-span-9 pt-5 px-3">
                                    {content === "PROFILE" && <ProfileSection />}
                                    {content === "POST" && <PostSection />}
                                    {content === "SAVED" && <SavedSection />}

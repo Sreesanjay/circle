@@ -10,7 +10,7 @@ const stripePromise = loadStripe(
 export default function App() {
      const options = {
           // passing the client secret obtained from the server
-          clientSecret: "{{CLIENT_SECRET}}",
+          clientSecret: import.meta.env.VITE_STRIPE_SECRET,
      };
 
      return (

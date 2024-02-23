@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { IPlan } from "../../types";
 import { getPlans } from "../../services/postService";
 import { useParams } from "react-router-dom";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
+import { loadStripe } from "@stripe/stripe-js";
+import API from "../../api";
+import { AxiosError } from "axios";
 
 export default function BoostPost() {
      const [plans, setPlans] = useState<IPlan[]>([]);
      const { id } = useParams();
      const [selectedPlan, setSelectedPlan] = useState<IPlan | null>(null);
      const [action, setAction] = useState<string>("PROFILE_VISIT");
-     useEffect(() => {
-          //   toast(action);
-     }, [action]);
 
      useEffect(() => {
           (async () => {
@@ -21,6 +21,37 @@ export default function BoostPost() {
                }
           })();
      }, []);
+
+     async function handleSubmit() {
+          if (!selectedPlan) toast.error("Please select a plan");
+          if (!action) toast.error("Please select an objective");
+          if (!id) toast.error("Post not found");
+          else {
+               try {
+                    const stripe = await loadStripe(
+                         "pk_test_51OjOtHSDKgqAJtydyKh9dYWyh0oPQZbUkHDcapbtR9hqcn3rYNrExDOFZniReU6BtEDoxzVkYGbWeEfpK5Usf6t100pVuQ5g7O"
+                    );
+                    const response = await API.post("/posts/create-payment", {
+                         post_id: id,
+                         plan_id: selectedPlan?._id,
+                    });
+                    const result = stripe?.redirectToCheckout({
+                         sessionId: response.data.id,
+                    });
+                    console.log(result);
+               } catch (error) {
+                    const err = error as AxiosError<{
+                         message?: string;
+                         status?: string;
+                    }>;
+                    if (err.response) {
+                         toast.error(err.response?.data.message);
+                    } else {
+                         toast.error(err.message);
+                    }
+               }
+          }
+     }
 
      return (
           <section className="post-boos p-10 grid grid-cols-3">
@@ -142,8 +173,13 @@ export default function BoostPost() {
                               </li>
                          </ul>
                          <div className="button py-8">
-                              <button className="px-4 py-2 bg-red-600 hover:bg-red-800 rounded-md">Cancel</button>
-                              <button className="pay-button px-3 py-2 ms-5 bg-primary hover:bg-primary-hover rounded-md">
+                              <button className="px-4 py-2 bg-red-600 hover:bg-red-800 rounded-md">
+                                   Cancel
+                              </button>
+                              <button
+                                   className="pay-button px-3 py-2 ms-5 bg-primary hover:bg-primary-hover rounded-md"
+                                   onClick={handleSubmit}
+                              >
                                    Proceed to play
                               </button>
                          </div>

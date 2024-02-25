@@ -17,7 +17,6 @@ type ICreatePost = {
 export const getPosts = createAsyncThunk(
     "post/getPosts",
     async (page: Date | null, thunkAPI) => {
-        console.log(page)
         try {
             const response = await API.get(`/posts?page=${page ? page : ''}`, {
                 withCredentials: true,
@@ -278,7 +277,6 @@ export async function paymentSuccess(post_id: string, plan_id: string, amount: n
     }
 }
 export async function getInsights(post_id: string) {
-    console.log("get insights called", post_id)
     try {
         const response = await API.get(
             `/posts/analytics?post_id=${post_id}`)

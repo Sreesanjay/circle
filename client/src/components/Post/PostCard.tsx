@@ -49,9 +49,6 @@ export default function PostCard({ post }: { post: IPost }) {
      const [openReport, setOpenReport] = useState(false);
      const [openLike, setOpenLike] = useState(false);
 
-     useEffect(() => {
-          console.log(post);
-     }, [post]);
 
      const { ref, inView } = useInView({
           threshold: 1,
@@ -103,7 +100,6 @@ export default function PostCard({ post }: { post: IPost }) {
      async function handleClick() {
           const response = await addClick(post._id);
           if (response && post.user_details) {
-               console.log(post.user_details);
                const userId = post.user_id;
                if (post.is_boosted?.action === "PROFILE_VISIT") {
                     navigate(`/view-profile/${userId}`);

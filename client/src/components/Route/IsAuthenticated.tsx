@@ -17,7 +17,6 @@ export default function IsAuthenticated() {
                          const response = await API.post("/refresh-token", {
                               refreshToken: refreshToken,
                          });
-                         console.log("response", response);
                          if (response.data) {
                               const { token } = response.data;
                               Cookies.set("token", token, {

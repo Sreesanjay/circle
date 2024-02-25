@@ -153,7 +153,6 @@ export async function addMember({ chat_id, user }: { user: string, chat_id: stri
 
 export async function removeMember({ chat_id, user }: { user: string, chat_id: string }) {
     try {
-        console.log("remove member", chat_id)
         const response = await API.put(`/chat/members/remove/${chat_id}`, { user }, { withCredentials: true })
         if (response.data) {
             return response.data

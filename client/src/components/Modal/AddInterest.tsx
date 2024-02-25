@@ -35,7 +35,6 @@ export default function AddInterest({
           (async () => {
                try {
                     if (openModal) {
-                         console.log("--------------------req send ------------------")
                          const response = await API.get(
                               "/manage-account/interest",
                               {

@@ -40,9 +40,7 @@ export default function PostManagement() {
                }
           })();
      }, [page, sort]);
-     useEffect(() => {
-          console.log(postList);
-     }, [postList]);
+
 
      useEffect(() => {
           (async () => {

@@ -16,9 +16,6 @@ export default function YourCommunity() {
           dispatch(resetCommunity());
      }, [isSuccess, isError, dispatch]);
 
-     useEffect(() => {
-          console.log(myCommunity);
-     }, [myCommunity]);
      return (
           <section className="your-community flex p-5 flex-wrap gap-5 justify-evenly bg-gray-800 min-h-full">
                {myCommunity.map((item, index) => {

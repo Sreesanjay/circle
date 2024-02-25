@@ -35,7 +35,6 @@ export const authSlice = createSlice({
      initialState,
      reducers: {
           reset: (state) => {
-               console.log("dispactch reset");
                state.isError = false;
                state.errorMessage = "";
                state.isSuccess = false;
@@ -89,7 +88,6 @@ export const authSlice = createSlice({
                               JSON.stringify(action.payload.user)
                          );
                          state.user = action.payload.user;
-                         console.log(action.payload)
                          localStorage.setItem(
                               "refreshToken",
                               JSON.stringify(action.payload.refreshToken)

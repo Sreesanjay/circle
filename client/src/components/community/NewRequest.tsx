@@ -5,6 +5,8 @@ import API from "../../api";
 import AddCircle from "@mui/icons-material/AddCircle";
 import { useAppDispatch } from "../../app/hooks";
 import { acceptJoinRequest } from "../../services/communityService";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 export default function NewRequest({
      openDrawer,
@@ -47,7 +49,11 @@ export default function NewRequest({
                               setUserList(response.data.userList);
                          }
                     } catch (error) {
-                         console.log(error);
+                         const err = error as AxiosError<{
+                              message?: string;
+                              status?: string;
+                         }>;
+                         toast.error(err.response?.data.message);
                     }
                })();
           }

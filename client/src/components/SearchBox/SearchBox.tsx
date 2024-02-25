@@ -86,37 +86,6 @@ export default function SearchBox() {
                          })}
                     </div>
                )}
-               {/* <Stack spacing={2} sx={{ width: 300 }}>
-                    <Autocomplete
-                         id="free-solo-demo"
-                         freeSolo
-                         options={userData.map(
-                              (user: { username: string }, index) =>
-                                   index < 3 && user.username
-                         )}
-                         renderInput={(params) => (
-                              <TextField
-                                   {...params}
-                                   label="Search"
-                                   className="textfield"
-                                   onChange={(e) => setSearch(e.target.value)}
-                                   sx={{
-                                        '& .MuiOutlinedInput-root': {
-                                          '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                            borderColor: 'transparent', // Or any other transparent color
-                                          },
-                                          borderColor: 'transparent', // Remove default border as well
-                                        },
-                                      }}
-                                      onClick={()=>console.log("clicked")}
-                              />
-                         )}
-                    />
-               </Stack> */}
-               {/* <label htmlFor="input" className="labelforsearch">
-                    <SearchIcon />
-               </label> */}
-               {/* <div className="border" /> */}
           </div>
      );
 }

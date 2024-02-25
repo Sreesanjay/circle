@@ -48,7 +48,6 @@ export default function BoostPost() {
                );
                if (res.boostedPost) {
                     setIsLoading(false);
-                    console.log(res);
                     toast.success("Your post boosted successfully");
                     navigate("/profile");
                }

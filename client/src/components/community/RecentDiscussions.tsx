@@ -13,7 +13,6 @@ export default function RecentDiscussions() {
 
      async function fetchDiscussion() {
           let pagination: Date | null = null;
-          console.log(discussion);
           pagination =
                discussion.length > 0
                     ? discussion[discussion.length - 1].createdAt
@@ -35,7 +34,6 @@ export default function RecentDiscussions() {
                if (current) {
                     const { scrollTop, scrollHeight, clientHeight } = current;
                     if (scrollTop + clientHeight >= scrollHeight - 1) {
-                         console.log("called");
                          fetchDiscussion();
                     }
                }

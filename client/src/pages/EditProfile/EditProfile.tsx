@@ -47,7 +47,6 @@ export default function EditProfile() {
      ) {
           const { name, value } = e.target;
           setFormData({ ...formData, [name]: value });
-          console.log(formData.bio);
      }
 
      function handleSubmit() {
@@ -62,7 +61,6 @@ export default function EditProfile() {
      useEffect(() => {
           if (isSubmit) {
                if (!formError.username && !formError.bio) {
-                    console.log(formError.username, formError.bio);
                     dispatch(updateProfile(formData));
                }
                setisSubmit(false);

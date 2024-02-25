@@ -79,7 +79,6 @@ export const getMyCommunity = createAsyncThunk(
 //get community
 export const getCommunity = async (id: string) => {
     try {
-        console.log(id)
         const response = await API.get(`/community/get-details/${id}`);
         return response.data;
     } catch (error) {
@@ -349,7 +348,6 @@ export const removeMember = async (payload: { community_id?: string, user_id?: s
 //get recent discussions 
 
 export const getRecentDiscussions = async (pagination: Date | null) => {
-    console.log(pagination)
     try {
         const response = await API.get(`/community/discussions/recent?page=${pagination ? pagination : ''}`);
         return response.data;

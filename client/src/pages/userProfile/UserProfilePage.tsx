@@ -26,9 +26,6 @@ const PostSection = lazy(
 const SavedSection = lazy(
      () => import("../../components/SavedSection/SavedSection")
 );
-// const AddCloseFriends = lazy(
-//      () => import("../../components/Modal/AddCloseFriends")
-// );
 
 export default function UserProfilePage() {
      const dispatch = useAppDispatch();
@@ -53,7 +50,7 @@ export default function UserProfilePage() {
      }, [isError, errorMessage, isSuccess, userProfile, dispatch]);
 
      function updateProfile() {
-          console.log("updateProfile");
+          toast.success("profile updated");
      }
 
      return (

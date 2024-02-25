@@ -21,7 +21,6 @@ export default function FriendList() {
                          { withCredentials: true }
                     );
                     if (response.data) {
-                         console.log(response.data);
                          setConnections({
                               followers:
                                    response.data.connectionCount.followers,

@@ -73,7 +73,6 @@ export default function NewInterest({
                     !formError.discription &&
                     !formError.interest
                ) {
-                    console.log("submited");
                     dispatch(newInterest(formData));
                     setIsSubmit(false);
                }
@@ -90,7 +89,6 @@ export default function NewInterest({
                dispatch(resetInterest())
                setShowModal(false);
           } else if (isError && status !== 409) {
-            console.log(status);
                toast(errorMessage);
                dispatch(resetInterest())
           }

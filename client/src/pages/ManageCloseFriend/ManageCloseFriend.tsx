@@ -39,7 +39,6 @@ export default function ManageCloseFriend() {
                          withCredentials: true,
                     });
                     if (response.data) {
-                         console.log(response.data);
                          setUsers(response.data.userList);
                     }
                } catch (error) {

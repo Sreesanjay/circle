@@ -133,7 +133,6 @@ export default function Dashboard() {
                          >
                               {yearRange &&
                                    yearRange.map((currentYear, index) => {
-                                        // console.log(yearRange);
                                         return (
                                              <option
                                                   value={currentYear}

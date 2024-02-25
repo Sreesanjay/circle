@@ -118,7 +118,6 @@ export const userSlice = createSlice({
             })
             .addCase(updateCoverImg.pending, (state) => {
                 state.isLoading = true;
-                console.log("before", state.userProfile)
 
             })
             .addCase(updateCoverImg.fulfilled, (state, action) => {

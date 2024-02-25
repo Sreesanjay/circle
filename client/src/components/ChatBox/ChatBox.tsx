@@ -152,7 +152,6 @@ export default function ChatBox({
      const getMessage = async () => {
           if (currentChat) {
                setIsLoading(true);
-               console.log(pagination.current);
                const response = await getMessages(
                     currentChat?._id,
                     pagination.current
@@ -175,7 +174,6 @@ export default function ChatBox({
           pagination.current = null;
           setMessages([]);
           setFileInput(null);
-          console.log("pagination", pagination.current);
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [currentChat]);
 
@@ -185,7 +183,6 @@ export default function ChatBox({
                messages.length === 0 &&
                pagination.current === null
           ) {
-               console.log("called");
                getMessage();
           }
           // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -236,7 +233,6 @@ export default function ChatBox({
 
      useEffect(() => {
           socket?.current?.on("delete-message", ({ chat_id, message_id }) => {
-               console.log("reached front")
                if (chat_id === currentChat?._id) {
                     setMessages(
                          messages.map((item) => {

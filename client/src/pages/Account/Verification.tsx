@@ -43,7 +43,6 @@ export default function Verification() {
                     const response = await API.get(
                          "/posts/plans?planType=VERIFICATION"
                     );
-                    console.log(response.data);
                     setPlans(response.data.plan);
                } catch (error) {
                     const err = error as AxiosError<{
@@ -99,7 +98,6 @@ export default function Verification() {
      }
 
      async function handleSubmit() {
-          console.log(docImage, idType, selectedPlan);
           if (!docImage) {
                setError("Add id card image");
           } else if (!idType) {

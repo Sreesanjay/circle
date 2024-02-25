@@ -42,7 +42,6 @@ export default function ConnectionList({
                     const response = await API.get(url, {
                          withCredentials: true,
                     });
-                    console.log(response.data);
                     if (response.data) {
                          pagination.current = pagination.current + 1;
                          if (isSearch.current) {

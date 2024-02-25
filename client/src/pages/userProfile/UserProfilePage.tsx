@@ -1,6 +1,6 @@
 import { lazy, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
+import { TiStarburst } from "react-icons/ti";
 import PopupModal from "../../components/Modal/PopupModal";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 // import { getUserProfile } from "../../services/userService";
@@ -132,9 +132,16 @@ export default function UserProfilePage() {
                                              />
                                         )}
                                    </div>
-                                   <h1 className="text-center mt-3 text-xl font-medium">
-                                        {userProfile?.username}
-                                   </h1>
+                                   <div className="flex justify-center items-center gap-2">
+                                        <h1 className="text-center mt-3 text-xl font-medium">
+                                             {userProfile?.username}
+                                        </h1>
+                                        {userProfile?.isVerified && (
+                                             <p className="text-blue-600 text-xl">
+                                                  <TiStarburst />
+                                             </p>
+                                        )}
+                                   </div>
                               </div>
                               <div className="right-nav grow ps-7 sm:ps-14 flex">
                                    <div
@@ -168,17 +175,6 @@ export default function UserProfilePage() {
                                         <h1 className="font-medium text-center">
                                              Close Friends
                                         </h1>
-                                        {/* <div
-                                             onClick={() =>
-                                                  setAddCloseFriends(true)
-                                             }
-                                        >
-                                             <AddIcon size={25} />
-                                        </div>
-                                        <AddCloseFriends
-                                             openModal={addCloseFriends}
-                                             setOpenModal={setAddCloseFriends}
-                                        /> */}
                                    </div>
                                    <CloseFriends />
                               </div>

@@ -218,10 +218,8 @@ export const joinCommunity: RequestHandler = asyncHandler(
  */
 export const getMyCommunities: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        console.log("user id")
         const member = await Members.find({ user_id: req.user?._id, status: 'active' }, { _id: 0, community_id: 1 });
         const memberIds = member.map(item => item.community_id);
-        console.log("members ids", memberIds);
         const community = await Community.aggregate([
             {
                 $match: {

@@ -16,7 +16,6 @@ export const getDashboardAnalytics: RequestHandler = asyncHandler(async (req: Re
     const total_posts = await Post.countDocuments();
     const total_community = await Community.countDocuments();
     const total_discussions = await Discussion.countDocuments();
-    console.log(total_community)
     res.status(200).json({
         status: 'ok',
         message: 'details fetched',

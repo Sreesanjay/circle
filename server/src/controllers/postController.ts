@@ -5,6 +5,7 @@ import Post from "../models/postSchema";
 import Connection from "../models/connectionSchema";
 import UserProfile from "../models/userProfile";
 import { ObjectId } from 'mongodb';
+import BoostPost from "../models/boostedPostSchema";
 import Comment from "../models/commentSchema";
 import SavedPost from "../models/savedPost";
 
@@ -195,6 +196,22 @@ export const getPosts: RequestHandler = asyncHandler(
             },
             {
                 $lookup: {
+                    from: "boostedposts",
+                    localField: '_id',
+                    foreignField: 'post_id',
+                    as: "is_boosted",
+                    pipeline: [
+                        {
+                            $match: {
+                                endingDate: { $gt: new Date() }
+                            }
+                        }
+                    ]
+                }
+            },
+            { $unwind: { path: "$is_boosted", preserveNullAndEmptyArrays: true } },
+            {
+                $lookup: {
                     from: 'comments',
                     localField: '_id',
                     foreignField: 'post_id',
@@ -207,12 +224,13 @@ export const getPosts: RequestHandler = asyncHandler(
                     is_saved: { $cond: { if: { $gt: [{ $size: "$is_saved" }, 0] }, then: true, else: false } },
                     comment: { $size: "$comments" },
                     type: 1,
+                    clicks: 1,
                     content: 1,
                     caption: 1,
                     tags: 1,
                     visibility: 1,
+                    is_boosted: 1,
                     impressions: 1,
-                    profile_visit: 1,
                     createdAt: 1,
                     likes: 1
                 }
@@ -255,10 +273,26 @@ export const getPosts: RequestHandler = asyncHandler(
                             }
                         },
                         {
+                            $lookup: {
+                                from: 'verifications',
+                                localField: 'user_id',
+                                foreignField: 'user_id',
+                                as: 'verified',
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            endingDate: { $gt: new Date() }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
                             $project: {
                                 username: 1,
                                 profile_img: 1,
-                                email: 1
+                                email: 1,
+                                verified: { $cond: { if: { $gt: [{ $size: "$verified" }, 0] }, then: true, else: false } },
                             }
                         },
 
@@ -272,7 +306,167 @@ export const getPosts: RequestHandler = asyncHandler(
 
         ])
 
+        const boosted = await BoostPost.aggregate([
+            {
+                $match: {
+                    endingDate: { $gt: new Date() }
+                }
+            },
+            { $sample: { size: 1 } }
+        ])
+
+
+        const add = await Post.aggregate([
+            {
+                $match: {
+                    _id: boosted[0].post_id
+                }
+            },
+            {
+                $lookup: {
+                    from: "savedposts",
+                    localField: '_id',
+                    foreignField: 'post_id',
+                    as: "is_saved",
+                    pipeline: [
+                        {
+                            $match: {
+                                user_id: req.user?._id
+                            }
+                        },
+                        {
+                            $project: {
+                                user_id: 0,
+                                post_id: 0,
+                                createdAt: 0,
+                                updatedAt: 0,
+                                __v: 0
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $lookup: {
+                    from: "boostedposts",
+                    localField: '_id',
+                    foreignField: 'post_id',
+                    as: "is_boosted",
+                    pipeline: [
+                        {
+                            $match: {
+                                endingDate: { $gt: new Date() }
+                            }
+                        }
+                    ]
+                }
+            },
+            { $unwind: { path: "$is_boosted", preserveNullAndEmptyArrays: true } },
+            {
+                $lookup: {
+                    from: 'comments',
+                    localField: '_id',
+                    foreignField: 'post_id',
+                    as: 'comments'
+                }
+            },
+            {
+                $project: {
+                    user_id: 1,
+                    is_saved: { $cond: { if: { $gt: [{ $size: "$is_saved" }, 0] }, then: true, else: false } },
+                    comment: { $size: "$comments" },
+                    type: 1,
+                    clicks: 1,
+                    content: 1,
+                    caption: 1,
+                    tags: 1,
+                    visibility: 1,
+                    is_boosted: 1,
+                    impressions: 1,
+                    createdAt: 1,
+                    likes: 1
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { user_id: userId },
+                        { tags: { $in: interest?.interest || [] } }
+                    ],
+
+                }
+            }, {
+                $lookup: {
+                    from: 'userprofiles',
+                    localField: 'user_id',
+                    foreignField: 'user_id',
+                    as: "user_details",
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: 'users',
+                                localField: 'user_id',
+                                foreignField: '_id',
+                                as: "email",
+                                pipeline: [
+                                    {
+                                        $project: {
+                                            _id: 0,
+                                            email: 1
+                                        }
+                                    }
+                                ]
+
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$email"
+                            }
+                        }, {
+                            $lookup: {
+                                from: 'verifications',
+                                localField: 'user_id',
+                                foreignField: 'user_id',
+                                as: 'verified',
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            endingDate: { $gt: new Date() }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                username: 1,
+                                profile_img: 1,
+                                email: 1,
+                                verified: { $cond: { if: { $gt: [{ $size: "$verified" }, 0] }, then: true, else: false } },
+                            }
+                        },
+
+                    ]
+                }
+            }, {
+                $unwind: {
+                    path: "$user_details"
+                }
+            },
+
+
+
+        ])
+        if (add[0]) {
+            posts.push(add[0])
+        }
+
         if (posts) {
+            if (posts.length) {
+                const postIds = posts.map(post => post?._id);
+                await Post.updateMany({ _id: { $in: postIds } }, { $addToSet: { impressions: req.user?._id } })
+            }
             res.status(200).json({
                 status: 'ok',
                 message: 'Posts fetched successfully',

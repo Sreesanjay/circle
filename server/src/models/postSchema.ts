@@ -34,10 +34,18 @@ const postSchema: Schema<IPost> = new Schema({
             default: []
         }
     ],
+    clicks: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'User',
+            default: []
+        }
+    ],
     impressions: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
+            ref: "User",
+            default: []
         }
     ],
     is_delete: {

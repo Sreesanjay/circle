@@ -146,7 +146,6 @@ export const getAnalytics: RequestHandler = asyncHandler(
         const postsToday = await Post.countDocuments({ createdAt: { $gte: today } });
 
         const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        console.log(firstDayOfMonth)
 
         const postsMonth = await Post.countDocuments({
 
@@ -161,10 +160,6 @@ export const getAnalytics: RequestHandler = asyncHandler(
                 $gte: firstDayOfYear
             }
         });
-        console.log(total_posts,
-            postsToday,
-            postsMonth,
-            postsYear)
         if (total_posts && postsMonth !== null && postsToday !== null && postsYear !== null) {
             res.status(200).json({
                 status: 'ok',

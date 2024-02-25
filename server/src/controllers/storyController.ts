@@ -11,7 +11,6 @@ import Connection from "../models/connectionSchema";
  */
 export const addStory: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        console.log(req.body)
         const { story_type, content, visibility, background, color } = req.body;
         if (!story_type || !content || !visibility) {
             res.status(400);
@@ -280,7 +279,6 @@ export const getUserList: RequestHandler = asyncHandler(
             }
 
         ])
-        console.log(userList)
         if (userList) {
             res.status(200).json({
                 status: 'ok',

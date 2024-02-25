@@ -168,7 +168,8 @@ export const communitySlice = createSlice({
                         community_name: action.payload.community.community_name,
                         topic: action.payload.community.topic,
                         about: action.payload.community.about,
-                        privacy: action.payload.community.privacy
+                        privacy: action.payload.community.privacy,
+                        icon: action.payload.community.icon
                     }
                 }
                 return item;

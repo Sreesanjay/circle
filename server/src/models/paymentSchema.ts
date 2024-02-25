@@ -10,12 +10,15 @@ const paymentSchema: Schema<IPayment> = new Schema({
     amount: {
         type: 'number',
     },
-    payment_method: {
+    // payment_method: {
+    //     type: 'string'
+    // },
+    payment_id: {
         type: 'string'
     },
-    transaction_id: {
+    order_id: {
         type: 'string'
-    },
+    }
 }, { timestamps: true });
 
 export default mongoose.model<IPayment>("Payment", paymentSchema);

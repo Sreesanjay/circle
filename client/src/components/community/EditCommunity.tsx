@@ -12,9 +12,10 @@ import API from "../../api";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { editCommunity } from "../../services/communityService";
+import { editCommunity, updateIcon } from "../../services/communityService";
 import { resetCommunity } from "../../features/community/communitySlice";
 import { useNavigate } from "react-router-dom";
+import ImageCrop from "../ImageCrop/ImageCrop";
 
 export default function EditCommunity({
      showModal,
@@ -34,12 +35,29 @@ export default function EditCommunity({
      const navigate = useNavigate();
      const dispatch = useAppDispatch();
      const [interests, setInterests] = useState<IInterest[] | []>([]);
+     const [isCrop, setIsCrop] = useState(false);
      const [formData, setFormData] = useState({
           community_name: "",
           topic: "",
           privacy: "public",
           about: "",
      });
+     const [icon, setIcon] = useState<Blob | undefined>();
+     const [inputImg, setInputImg] = useState<string>("");
+     const [iconUrl, setIconUrl] = useState<string>("");
+
+     useEffect(() => {
+          if (icon) {
+               (async () => {
+                    const file = new File([icon], "icon", {
+                         type: icon.type,
+                    });
+                    const response = await updateIcon(file);
+                    setIconUrl(response as string);
+               })();
+          }
+     }, [icon]);
+
      useEffect(() => {
           if (community) {
                setFormData({
@@ -90,10 +108,20 @@ export default function EditCommunity({
           }
      }, [isError, isSuccess, dispatch, errorMessage, navigate, setShowModal]);
 
+     function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
+          if (e.target.files) {
+               setInputImg(URL.createObjectURL(e.target.files[0]));
+               setIsCrop(true);
+          }
+     }
+
      async function handleSubmit() {
           if (formData.community_name && formData.topic && community) {
                const response = await dispatch(
-                    editCommunity({ formData, id: community._id })
+                    editCommunity({
+                         formData: { ...formData, icon: iconUrl },
+                         id: community._id,
+                    })
                );
                if (response.payload.community) {
                     setCommunity({
@@ -103,6 +131,7 @@ export default function EditCommunity({
                          topic: response.payload.community.topic,
                          about: response.payload.community.about,
                          privacy: response.payload.community.privacy,
+                         icon: response.payload.community.icon,
                     });
                     setShowModal(false);
                }
@@ -125,7 +154,17 @@ export default function EditCommunity({
                               <div className="p-4">New Community</div>
                          </Modal.Header>
                          <Modal.Body>
-                              <div className="input-group flex flex-col">
+                              <div className="icon flex flex-col">
+                                   <label htmlFor="" className="font-medium">
+                                        Choose icon
+                                   </label>
+                                   <input
+                                        type="file"
+                                        className="rounded-md"
+                                        onChange={handleFileChange}
+                                   />
+                              </div>
+                              <div className="input-group flex flex-col mt-4">
                                    <label htmlFor="" className="font-medium">
                                         Community Name
                                    </label>
@@ -228,6 +267,13 @@ export default function EditCommunity({
                          </Modal.Body>
                     </Modal>
                )}
+               <ImageCrop
+                    src={inputImg}
+                    aspect={1 / 1}
+                    isCrop={isCrop}
+                    setisCrop={setIsCrop}
+                    setImage={setIcon}
+               />
           </>
      );
 }

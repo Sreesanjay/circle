@@ -64,8 +64,8 @@ notificationSchema.post<INotification>("save", async function (doc) {
                 userProfile: user[0]
             })
         }
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        console.error(err)
     }
 });
 

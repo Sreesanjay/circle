@@ -12,6 +12,7 @@ type UploadCommunity = {
     topic: string | null,
     privacy: string,
     about: string,
+    icon?: string,
 }
 
 
@@ -81,6 +82,24 @@ export const getCommunity = async (id: string) => {
         console.log(id)
         const response = await API.get(`/community/get-details/${id}`);
         return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}
+//uplaod icon
+export const updateIcon = async (icon: File) => {
+    try {
+        const filename = new Date().getTime() + (icon).name;
+        const storageRef = ref(storage, 'icon/' + filename);
+        const snapshot = await uploadBytes(storageRef, (icon))
+        if (snapshot) {
+            const url = await getDownloadURL(storageRef);
+            return url;
+        }
     } catch (error) {
         const err = error as AxiosError<{
             message?: string;
@@ -317,6 +336,22 @@ export const getMemberes = async (members: string[]) => {
 export const removeMember = async (payload: { community_id?: string, user_id?: string }) => {
     try {
         const response = await API.post("/community/remove-member", payload);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        toast.error(err.response?.data.message)
+    }
+}
+
+//get recent discussions 
+
+export const getRecentDiscussions = async (pagination: Date | null) => {
+    console.log(pagination)
+    try {
+        const response = await API.get(`/community/discussions/recent?page=${pagination ? pagination : ''}`);
         return response.data;
     } catch (error) {
         const err = error as AxiosError<{

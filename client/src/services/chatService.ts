@@ -267,3 +267,20 @@ export async function deleteFile(url: string) {
         toast.error(err.response?.data.message)
     }
 }
+
+export async function getChat(userId: string) {
+    try {
+        const response = await API.get(`/chat/get-chat/${userId}`)
+        if (response.data) {
+            return response.data
+        } else {
+            throw new Error('Internal Error')
+        }
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
+    }
+}

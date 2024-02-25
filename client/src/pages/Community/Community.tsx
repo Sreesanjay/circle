@@ -5,6 +5,7 @@ import NewCommunity from "../../components/Modal/NewCommunity";
 import YourCommunity from "../../components/community/YourCommunity";
 import DiscoverCommunity from "../../components/community/DiscoverCommunity";
 import { useNavigate, useParams } from "react-router-dom";
+import RecentDiscussions from "../../components/community/RecentDiscussions";
 
 export default function Communities() {
      const { tab } = useParams();
@@ -19,15 +20,15 @@ export default function Communities() {
                     showModal={showNewCommunity}
                     setShowModal={setShowNewCommunity}
                />
-               <section className="sidebar col-span-3 bg-gray-900 flex flex-col p-5 py-8">
-                    <h1 className="text-2xl">Community</h1>
-                    <div className="search my-5">
+               <section className="sidebar sm:col-span-3  bg-gray-900 flex flex-col p-5 py-8">
+                    <h1 className="text-2xl mb-10">Community</h1>
+                    {/* <div className="search my-5">
                          <input
                               type="text"
                               placeholder="search communities"
                               className="bg-gray-800 rounded-md w-full"
                          />
-                    </div>
+                    </div> */}
                     <div className="nav flex flex-col gap-3">
                          <div
                               className={`item hover:bg-gray-800 ${
@@ -77,9 +78,9 @@ export default function Communities() {
                          </button>
                     </div>
                </section>
-               <section className="feeds col-span-9 bg-blue-700">
+               <section className="page-body col-span-9 bg-blue-700">
                     {currentTab === "RECENT_DISCUSSIONS" ? (
-                         <h1>Recent discussion</h1>
+                         <RecentDiscussions />
                     ) : currentTab === "DISCOVER" ? (
                          <DiscoverCommunity />
                     ) : currentTab === "YOUR_COMMUNITY" ? (

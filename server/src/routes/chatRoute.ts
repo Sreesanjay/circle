@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { protect } from "../middlewares/authMiddleware";
-import { createChat, userChats, createGroup, updateChatName, updateGroupIcon, addMember, removeMember,isBlocked } from "../controllers/chatController";
+import { createChat, userChats, createGroup, updateChatName, updateGroupIcon, addMember, removeMember, isBlocked, getPersonalChat } from "../controllers/chatController";
 import { getMembers } from "../controllers/usersController";
 const router: Router = Router();
 
 router.post('/', protect, createChat);
+router.get('/get-chat/:id', protect, getPersonalChat);
 router.post('/group', protect, createGroup);
 router.get('/', protect, userChats);
 router.post('/get-members', protect, getMembers)

@@ -23,6 +23,16 @@ export interface IUserProfile extends Document {
      user_typs: string;
 }
 
+export interface IVerification extends Document {
+     user_id: ObjectId;
+     startingDate: Date,
+     endingDate: Date,
+     plan_id: ObjectId,
+     document: string;
+     document_type: string;
+     payment_details: ObjectId
+}
+
 export interface IInterest extends Document {
      interest: string,
      image: string,
@@ -74,6 +84,7 @@ export interface IPost extends Document {
      caption: string;
      visibility: string;
      tags: ObjectId[];
+     clicks: ObjectId[],
      impressions: ObjectId[];
      likes: ObjectId[];
      comment: ObjectId;
@@ -125,8 +136,8 @@ export interface INotification extends Document {
 
 export interface IBoostedPost {
      post_id: ObjectId,
-     clicks: ObjectId[],
      startingDate: Date,
+     endingDate: Date,
      plan_id: ObjectId,
      action: string,
      payment_details: ObjectId
@@ -144,7 +155,8 @@ export interface IPayment {
      user_id: ObjectId,
      amount: number,
      payment_method: string,
-     transaction_id: string,
+     payment_id: string,
+     order_id: string,
 }
 
 export interface ICommunity {

@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../app/hooks";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
      DislikeIcon,
      LikeIcon,
@@ -9,24 +9,30 @@ import {
 import {
      deleteDiscussion,
      dislikeDiscussion,
+     getCommunity,
      likeDiscussion,
 } from "../../services/communityService";
-import { IDiscussion } from "../../types";
+import { ICommunity, IDiscussion } from "../../types";
 import { FaComment } from "react-icons/fa";
 import ViewComments from "./ViewComments";
 import { ListGroup } from "flowbite-react";
 import Report from "../Modal/Report";
+import { useNavigate } from "react-router-dom";
 
 export default function DiscussionCard({
      discussion,
      setDiscussion,
+     type,
 }: {
      discussion: IDiscussion;
      setDiscussion: Dispatch<SetStateAction<IDiscussion[]>>;
+     type: string;
 }) {
      const { user } = useAppSelector((state) => state.auth);
+     const navigate = useNavigate();
      const [openViewDiscussion, setOpenViewDiscussion] = useState(false);
      const [openList, setOpenList] = useState(false);
+     const [community, setCommunity] = useState<ICommunity | null>(null);
      const [openReport, setOpenReport] = useState(false);
 
      async function likeHandle() {
@@ -42,6 +48,16 @@ export default function DiscussionCard({
                });
           }
      }
+
+     useEffect(() => {
+          (async () => {
+               const response = await getCommunity(discussion.community_id);
+               if (response.community) {
+                    setCommunity(response.community);
+               }
+          })();
+     }, [discussion]);
+
      async function dislikeHandle() {
           const response = await dislikeDiscussion(discussion._id);
           if (response.likedDiscussion) {
@@ -72,27 +88,72 @@ export default function DiscussionCard({
      return (
           <section className="mb-5 bg-gray-900 w-full rounded-md p-2">
                <header className="header flex justify-between relative">
-                    <div className="profile-img flex gap-3">
-                         {discussion.userProfile.profile_img ? (
-                              <img
-                                   src={discussion.userProfile.profile_img}
-                                   alt=""
-                                   className="w-10 h-10 rounded-md"
-                              />
-                         ) : (
-                              <div className="profile-icon">
-                                   <ProfileIconWithText
-                                        email={discussion.userProfile.email}
-                                        size={"small"}
-                                   />{" "}
+                    {type === "RECENT" ? (
+                         <div
+                              className="profile-img flex gap-3 items-start cursor-pointer"
+                              onClick={() =>
+                                   navigate(`/community/view/${community?._id}`)
+                              }
+                         >
+                              {community?.icon ? (
+                                   <img
+                                        src={community.icon}
+                                        alt=""
+                                        className="w-10 h-10 rounded-md"
+                                   />
+                              ) : (
+                                   community?.community_name && (
+                                        <div className="profile-icon">
+                                             <ProfileIconWithText
+                                                  email={
+                                                       community?.community_name as string
+                                                  }
+                                                  size={"small"}
+                                             />{" "}
+                                        </div>
+                                   )
+                              )}
+                              <div
+                                   className="user-name"
+                                   style={{ lineHeight: ".5" }}
+                              >
+                                   <h1 className="text-lg">
+                                        {community?.community_name}
+                                   </h1>
+                                   <span
+                                        className=""
+                                        style={{ fontSize: "10px" }}
+                                   >
+                                        Posted by @
+                                        {discussion.userProfile.username}
+                                   </span>
                               </div>
-                         )}
-                         <div className="user-name">
-                              <h1 className="text-lg">
-                                   {discussion.userProfile.username}
-                              </h1>
                          </div>
-                    </div>
+                    ) : (
+                         <div className="profile-img flex gap-3">
+                              {discussion.userProfile.profile_img ? (
+                                   <img
+                                        src={discussion.userProfile.profile_img}
+                                        alt=""
+                                        className="w-10 h-10 rounded-md"
+                                   />
+                              ) : (
+                                   <div className="profile-icon">
+                                        <ProfileIconWithText
+                                             email={
+                                                  discussion.userProfile.email
+                                             }
+                                             size={"small"}
+                                        />{" "}
+                                   </div>
+                              )}
+                              <div className="user-name">
+                                   <h1 className="text-lg">
+                                        {discussion.userProfile.username}
+                                   </h1>
+                              </div>
+                         </div>
+                    )}
                     <div
                          className="btn cursor-pointer"
                          onClick={() => setOpenList(!openList)}
@@ -122,7 +183,9 @@ export default function DiscussionCard({
                          <p>{discussion.content}</p>
                     ) : (
                          <>
-                              <p className="my-3 text-slate-200">{discussion.caption}</p>
+                              <p className="my-3 text-slate-200">
+                                   {discussion.caption}
+                              </p>
                               <img src={discussion.content} alt="" />
                          </>
                     )}

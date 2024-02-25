@@ -25,8 +25,8 @@ export default function Post() {
                toast(errorMessage);
           }
           if (isSuccess) {
-               if (pagination !== posts[posts.length - 1]?.createdAt) {
-                    dispatch(setPagination(posts[posts.length - 1]?.createdAt));
+               if (pagination !== posts[posts.length - 2]?.createdAt) {
+                    dispatch(setPagination(posts[posts.length - 2]?.createdAt));
                }
           }
           dispatch(postReset());

@@ -7,19 +7,16 @@ const postSchema: Schema<IBoostedPost> = new Schema({
         ref: 'Post',
         required: true
     },
-    clicks: [
-        {
-            type: mongoose.Types.ObjectId,
-            ref: 'User',
-            default: []
-        }
-    ],
     plan_id: {
         type: mongoose.Types.ObjectId,
         ref: 'Plan',
         required: true
     },
     startingDate: {
+        type: Date,
+        required: true
+    },
+    endingDate: {
         type: Date,
         required: true
     },

@@ -15,36 +15,34 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 export default function ManageAccSidebar() {
-     const [showSidebar, setShowSidebar] = useState("hidden") 
+     const [showSidebar, setShowSidebar] = useState("hidden");
      return (
           <Sidebar
                className="manage-acc-sidebar sm:fixed w-screen sm:w-min"
                aria-label="Sidebar with content separator example"
           >
                <button
-                              className="bg-primary p-2 md:hidden rounded-sm mb-3"
-                              onClick={() =>
-                                   setShowSidebar(
-                                        showSidebar === "block"
-                                             ? "hidden"
-                                             : "block"
-                                   )
-                              }
-                         >
-                              <MenuIcon />
-                         </button>
-               <Sidebar.Items className={`sidebar ${showSidebar} md:block bg-gray-900`}>
+                    className="bg-primary p-2 md:hidden rounded-sm mb-3"
+                    onClick={() =>
+                         setShowSidebar(
+                              showSidebar === "block" ? "hidden" : "block"
+                         )
+                    }
+               >
+                    <MenuIcon />
+               </button>
+               <Sidebar.Items
+                    className={`sidebar ${showSidebar} md:block bg-gray-900`}
+               >
                     <Sidebar.ItemGroup>
                          <div className="flex items-center p-3 gap-4">
                               <FaRegUserCircle />
-                              <Link to="/manage-account">
-                              Edit Profile
-                              </Link>
+                              <Link to="/manage-account">Edit Profile</Link>
                          </div>
                          <div className="flex items-center p-3 gap-4">
                               <MdOutlineSecurity />
                               <Link to="/manage-account/password&security">
-                              Password & Security
+                                   Password & Security
                               </Link>
                          </div>
                          <div className="flex items-center p-3 gap-4">
@@ -59,9 +57,13 @@ export default function ManageAccSidebar() {
                                    CloseFriends
                               </Link>
                          </div>
-                         <Sidebar.Item icon={HiUser}>Account</Sidebar.Item>
+                         <Sidebar.Item icon={HiUser}>
+                              <Link to="/manage-account/account">
+                                   Account
+                              </Link>
+                         </Sidebar.Item>
                          <Sidebar.Item icon={HiShoppingBag}>
-                         <Link to="/manage-account/blocked-users">
+                              <Link to="/manage-account/blocked-users">
                                    Blocked Users
                               </Link>
                          </Sidebar.Item>

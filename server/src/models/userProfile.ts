@@ -21,10 +21,6 @@ const ProfileSchema: Schema<IUserProfile> = new Schema<IUserProfile>({
     cover_img: {
         type: "string",
     },
-    verified: {
-        type: "boolean",
-        default: false
-    },
     account_type: {
         type: "string",
         enum: ["DEFAULT", "PROFESSIONAL"],

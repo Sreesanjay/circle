@@ -67,6 +67,7 @@ export interface IuserDetails {
     user_id: string,
     username: string;
     fullname: string;
+    verified?: boolean;
     profile_img: string;
     email: {
         email: string;
@@ -84,12 +85,22 @@ export interface IPost {
     is_delete: boolean,
     tags: string[];
     visibility: string;
-    impressions: number;
-    profile_visit: number;
+    impressions: string[];
     comment: number;
+    clicks?: string[];
+    is_boosted?: IBoosted;
     reports: [];
     createdAt: Date;
     likes: string[];
+}
+
+export interface IBoosted {
+    _id: string;
+    post_id: string;
+    plan_id: string;
+    startingDate: Date;
+    endingDate: Date;
+    action: string;
 }
 
 export interface IChat {

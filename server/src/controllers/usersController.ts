@@ -357,7 +357,6 @@ export const getCloseFriends: RequestHandler = asyncHandler(
 
 export const getFollowingWithoutCloseFriends: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        console.log("request got")
         const connection = await Connection.aggregate([
             {
                 $match: {
@@ -599,6 +598,26 @@ export const searchUser: RequestHandler = asyncHandler(
                         username: 1,
                         fullname: 1,
                         profile_img: 1
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'verifications',
+                        localField: 'user_id',
+                        foreignField: 'user_id',
+                        as: 'verified',
+                        pipeline: [
+                            {
+                                $match: {
+                                    endingDate: { $gt: new Date() }
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    $sort: {
+                        verified: -1
                     }
                 },
                 {

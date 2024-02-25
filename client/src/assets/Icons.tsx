@@ -154,7 +154,7 @@ export function ProfileIconWithText({ email, size }: ProfileIconWithTextProps) {
                          : size === "large"
                          ? "text-9xl px-8"
                          : null
-               } bg-gray-200 hover:bg-gray-300 px-3 rounded-lg w-min`}
+               } bg-gray-200 hover:bg-gray-300 px-3 min-h-10 rounded-lg w-min`}
           >
                {firstLetter?.toUpperCase()}
           </div>
@@ -186,6 +186,7 @@ export function IconSetting({ size }: { size: number }) {
           </IconButton>
      );
 }
+
 export function DeleteBin({ size }: { size: number }) {
      return (
           <IconButton>

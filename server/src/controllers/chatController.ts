@@ -101,7 +101,7 @@ export const userChats: RequestHandler = asyncHandler(
                             }
                         }
                     ],
-                    is_delete : false
+                    is_delete: false
                 }
             },
             {
@@ -164,6 +164,101 @@ export const userChats: RequestHandler = asyncHandler(
             })
         } else {
             next(new Error("Internal server error"))
+        }
+    })
+
+/**
+ * @desc request for fetching all chats of user
+ * @route GET /api/chat/get-chat
+ * @access private
+ */
+export const getPersonalChat: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const user_id = req.params.id;
+        const chats = await Chat.aggregate([
+
+            {
+                $match: {
+                    members: {
+                        $all: [new ObjectId(user_id), new ObjectId(req.user?._id)]
+                    },
+                    is_groupchat: false,
+                    is_delete: false
+                },
+            },
+            {
+                $lookup: {
+                    from: "messages",
+                    localField: '_id',
+                    foreignField: 'chat_id',
+                    as: 'latest_message',
+                    pipeline: [
+                        {
+                            $match: {
+                                delivered_to: {
+                                    $elemMatch: {
+                                        $eq: new ObjectId(req.user?._id)
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            $sort: { createdAt: -1 }
+                        },
+                    ]
+                }
+            },
+            {
+                $addFields: {
+                    latest_message: { $arrayElemAt: ["$latest_message", 0] }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'userprofiles',
+                    localField: 'latest_message.sender_id',
+                    foreignField: 'user_id',
+                    as: 'latest_message.userDetails',
+                    pipeline: [
+                        {
+                            $project: {
+                                username: 1,
+                                profile_img: 1,
+                                fullname: 1,
+                                user_id: 1,
+                                verified: 1,
+                                _id: 0
+                            }
+                        }
+                    ],
+                }
+            },
+            {
+                $unwind: { path: '$latest_message.userDetails', preserveNullAndEmptyArrays: true }
+            },
+        ])
+        if (chats.length) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'all chats fetched',
+                chat: chats[0]
+            })
+            return
+        }
+        else {
+            const newChat = new Chat({
+                members: [req.user?._id, user_id]
+            })
+            const chat = await newChat.save();
+            if (chat) {
+                res.status(200).json({
+                    status: 'ok',
+                    message: 'all chats fetched',
+                    chat
+                })
+            } else {
+                next(new Error('chat creation failed'))
+            }
         }
     })
 

@@ -12,7 +12,6 @@ export const getCommunities: RequestHandler = asyncHandler(
         const page: number = parseInt(req.query.page as string, 10) || 1;
         const pageSize = 10;
         let sort = {}
-        console.log("sort", req.query)
         if (req.query.sort === 'RECENTLTY_CREATED') sort = { createdAt: -1 };
         else if (req.query.sort === 'OLDEST_COMMUNITY') sort = { createdAt: 1 };
         else if (req.query.sort === 'REPORTS') sort = { reports: -1 };

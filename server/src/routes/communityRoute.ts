@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { protect } from "../middlewares/authMiddleware";
 import { createCommunity, updateCommunity, updateIcon, getCommunities, joinCommunity, getMyCommunities, getCommunity, pendingRequest, acceptRequest, removeMember, getAnalytics, removeCommunity } from "../controllers/communityController";
-import { addComment, createDiscussion, deleteComment, deleteDiscussion, dislikeComment, dislikeDiscussion, getComments, getDiscussions, getReplyCommemts, likeComment, likeDiscussion } from "../controllers/discussionController";
+import { addComment, createDiscussion, deleteComment, deleteDiscussion, dislikeComment, dislikeDiscussion, getComments, getDiscussions, getRecentDiscussion, getReplyCommemts, likeComment, likeDiscussion } from "../controllers/discussionController";
 import { getMembers } from "../controllers/usersController";
 const router: Router = Router();
 
@@ -22,6 +22,7 @@ router.post('/remove-member', protect, removeMember)
 
 //discussion
 
+router.get('/discussions/recent', protect, getRecentDiscussion)
 router.get('/discussions/:id', protect, getDiscussions)
 router.post('/discussions', protect, createDiscussion)
 router.delete('/discussions/:id', protect, deleteDiscussion)

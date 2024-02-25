@@ -8,9 +8,11 @@ import {
      VolumeOff,
      VolumeOn,
 } from "../../assets/Icons";
+import { TiStarburst } from "react-icons/ti";
 
 //list
 import List from "@mui/material/List";
+import { FaChevronRight } from "react-icons/fa";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -21,6 +23,7 @@ import "./Post.css";
 import PostModal from "./PostModal";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
+     addClick,
      dislikePost,
      likePost,
      savePost,
@@ -29,9 +32,13 @@ import {
 import { postReset } from "../../features/post/postSlice";
 import Report from "../Modal/Report";
 import LikedUserList from "../Modal/LikedUserList";
+import { useNavigate } from "react-router-dom";
+import { getChat } from "../../services/chatService";
+import { setCurrentChat } from "../../features/Socket/SocketSlice";
 
 export default function PostCard({ post }: { post: IPost }) {
      const dispatch = useAppDispatch();
+     const navigate = useNavigate();
      const { isError, isSuccess } = useAppSelector((state) => state.post);
      const { user } = useAppSelector((state) => state.auth);
      const [captionExpand, setCaptionExpand] = useState(false);
@@ -41,6 +48,10 @@ export default function PostCard({ post }: { post: IPost }) {
      const [showList, setShowList] = useState(false);
      const [openReport, setOpenReport] = useState(false);
      const [openLike, setOpenLike] = useState(false);
+
+     useEffect(() => {
+          console.log(post);
+     }, [post]);
 
      const { ref, inView } = useInView({
           threshold: 1,
@@ -68,6 +79,7 @@ export default function PostCard({ post }: { post: IPost }) {
                setIsMuted(!isMuted);
           }
      };
+
      function handleSave() {
           dispatch(savePost(post._id));
      }
@@ -87,7 +99,23 @@ export default function PostCard({ post }: { post: IPost }) {
           dispatch(postReset());
      }, [isSuccess, isError, dispatch]);
 
-     const date = new Date(post.createdAt);
+     //handle boosted post click
+     async function handleClick() {
+          const response = await addClick(post._id);
+          if (response && post.user_details) {
+               console.log(post.user_details);
+               const userId = post.user_id;
+               if (post.is_boosted?.action === "PROFILE_VISIT") {
+                    navigate(`/view-profile/${userId}`);
+               } else if (post.is_boosted?.action === "MESSAGE") {
+                    const response = await getChat(userId);
+                    dispatch(setCurrentChat(response.chat));
+                    navigate("/messages");
+               }
+          }
+     }
+
+     const date = new Date(post?.createdAt);
 
      return (
           <>
@@ -116,7 +144,16 @@ export default function PostCard({ post }: { post: IPost }) {
                                    )}
                               </div>
                               <div className="name">
-                                   <h1>{post.user_details.username}</h1>
+                                   <div className="flex gap-1">
+                                        <h1>{post.user_details.username}</h1>
+                                        <p>
+                                             {post.user_details.verified && (
+                                                  <p className="text-blue-600 text-xl">
+                                                       <TiStarburst />
+                                                  </p>
+                                             )}
+                                        </p>
+                                   </div>
                                    <small className="text-xs text-slate-500">{`${date.getDay()} - ${
                                         date.getMonth() + 1
                                    } - ${date.getFullYear()}`}</small>
@@ -134,7 +171,7 @@ export default function PostCard({ post }: { post: IPost }) {
                                         sx={{
                                              width: "100%",
                                              maxWidth: 360,
-                                             backgroundColor: "#121d33"
+                                             backgroundColor: "#121d33",
                                         }}
                                         className="rounded-md shadow-md "
                                         aria-label="contacts"
@@ -145,7 +182,7 @@ export default function PostCard({ post }: { post: IPost }) {
                                                   disablePadding
                                                   onClick={() => handleUnsave()}
                                              >
-                                                  <ListItemButton >
+                                                  <ListItemButton>
                                                        <ListItemText
                                                             primary="Unsave"
                                                             className="px-5"
@@ -207,7 +244,7 @@ export default function PostCard({ post }: { post: IPost }) {
                               </button>
                          )}
                     </div>
-                    <div className="content p-2">
+                    <div className="content p-2 relative">
                          {post.type.includes("image") ? (
                               <img
                                    src={post?.content}
@@ -237,6 +274,26 @@ export default function PostCard({ post }: { post: IPost }) {
                                              <VolumeOn size={25} />
                                         )}
                                    </div>
+                              </div>
+                         )}
+                         {post.is_boosted && (
+                              <div
+                                   className="boost-action h-12 bg-gray-800 hover:bg-gray-600 rounded-md flex items-center px-3 border bottom-0 justify-between"
+                                   onClick={handleClick}
+                              >
+                                   <button>
+                                        {post.is_boosted.action ===
+                                        "PROFILE_VISIT"
+                                             ? "Visit Profile"
+                                             : post.is_boosted.action ===
+                                               "WEBSITE"
+                                             ? "Visit Website"
+                                             : post.is_boosted.action ===
+                                               "MESSAGE"
+                                             ? "Message"
+                                             : null}
+                                   </button>
+                                   <FaChevronRight />
                               </div>
                          )}
                     </div>

@@ -24,6 +24,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import EditPost from "../Modal/EditPost";
 import { postReset } from "../../features/post/postSlice";
 import { useNavigate } from "react-router-dom";
+import Insights from "./Insights";
 
 export default function PostModal({
      openModal,
@@ -49,6 +50,7 @@ export default function PostModal({
      const [showList, setShowList] = useState(false);
      const [showNormalList, setShowNormalList] = useState(false);
      const [editPost, setEditPost] = useState(false);
+     const [viewInsights, setViewInsights] = useState(false);
 
      useEffect(() => {
           (async () => {
@@ -134,6 +136,13 @@ export default function PostModal({
                     setOpenModal={setEditPost}
                     post={post}
                />
+               {viewInsights && (
+                    <Insights
+                         openModal={viewInsights}
+                         setOpenModal={setViewInsights}
+                         post={post}
+                    />
+               )}
                <Modal
                     show={openModal}
                     onClose={() => setOpenModal(false)}
@@ -144,7 +153,7 @@ export default function PostModal({
                               {post.type.includes("image") ? (
                                    <img
                                         src={post?.content}
-                                        className="w-4/5 rounded-md"
+                                        className="w-5/6 rounded-md"
                                    />
                               ) : (
                                    <div className="relative">
@@ -173,7 +182,7 @@ export default function PostModal({
                                         </div>
                                    </div>
                               )}
-                              {type === "PROFILE" && (
+                              {type === "PROFILE" && !post.is_boosted ? (
                                    <button
                                         className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white"
                                         onClick={() =>
@@ -183,6 +192,13 @@ export default function PostModal({
                                         }
                                    >
                                         Boost this post
+                                   </button>
+                              ) : (
+                                   <button
+                                        className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white"
+                                        onClick={() => setViewInsights(true)}
+                                   >
+                                        View Insights
                                    </button>
                               )}
                          </div>

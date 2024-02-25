@@ -7,12 +7,10 @@ const transporter = nodemailer.createTransport({
     pass: 'muujjvhhtmpekcqe'
   }
 });
-export const sendMail = (mailOptions:IMailOptions) => {
+export const sendMail = (mailOptions: IMailOptions) => {
   transporter.sendMail(mailOptions).then(() => {
-    console.log('Email sent successfully. Message ID:');
 
-  }).catch((error) => {
-    console.error('Error sending email:', error);
+  }).catch(() => {
     throw new Error('Error sending email')
   });
 }

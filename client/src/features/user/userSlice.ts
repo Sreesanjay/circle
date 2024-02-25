@@ -9,7 +9,7 @@ export type userProfile = {
     bio: string;
     username: string;
     profile_img: string;
-    is_premium: boolean;
+    isVerified: boolean;
     account_type: string;
     cover_img: string;
     interest :string[]

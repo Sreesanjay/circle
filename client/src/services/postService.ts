@@ -255,3 +255,60 @@ export async function getPlans() {
         }
     }
 }
+
+type payment = {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+}
+export async function paymentSuccess(post_id: string, plan_id: string, amount: number, action: string, payment: payment) {
+    try {
+        const response = await API.post('/posts/boost', { post_id, plan_id, amount, action, payment });
+        return response.data
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        if (err.response) {
+            toast.error(err.response?.data.message)
+        } else {
+            toast.error(err.message)
+        }
+    }
+}
+export async function getInsights(post_id: string) {
+    console.log("get insights called", post_id)
+    try {
+        const response = await API.get(
+            `/posts/analytics?post_id=${post_id}`)
+        return response.data
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        if (err.response) {
+            toast.error(err.response?.data.message)
+        } else {
+            toast.error(err.message)
+        }
+    }
+}
+export async function addClick(post_id: string) {
+    try {
+        const response = await API.post(
+            "/posts/add-click", { post_id })
+        return response.data
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>
+        if (err.response) {
+            toast.error(err.response?.data.message)
+        } else {
+            toast.error(err.message)
+        }
+    }
+}

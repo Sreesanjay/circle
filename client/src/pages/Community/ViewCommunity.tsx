@@ -202,14 +202,15 @@ export default function ViewCommunity() {
                <section className="body col-span-12 sm:col-span-7 md:col-span-7 lg:col-span-9">
                     <header className="header flex justify-between shadow-lg p-2 px-5">
                          <div className="profile flex gap-3">
-                              <div className="icon h-16 w-28 bg-gray-700 rounded-md flex items-center justify-center relative">
+                              <div className="icon h-16 w-28  rounded-md flex items-center justify-center relative">
                                    {currentCommunity?.icon ? (
                                         <img
                                              src={currentCommunity.icon}
                                              alt=""
+                                             className="h-14 w-14 rounded-md"
                                         />
                                    ) : (
-                                        <h1 className="text-2xl">
+                                        <h1 className="text-2xl bg-gray-700 px-8 py-3 rounded-md">
                                              {currentCommunity?.community_name[0].toUpperCase()}
                                         </h1>
                                    )}
@@ -264,6 +265,7 @@ export default function ViewCommunity() {
                                                   discussion={item}
                                                   setDiscussion={setDiscussion}
                                                   key={index}
+                                                  type={"DEFAULT"}
                                              />
                                         );
                                    })}

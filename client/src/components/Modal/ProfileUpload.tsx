@@ -8,7 +8,7 @@ import {
 } from "react";
 import ImageCrop from "../ImageCrop/ImageCrop";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { updateProfileImg } from "../../services/userService";
+import { deleteProfile, updateProfileImg } from "../../services/userService";
 
 export default function UploadProfileImg({
      showUploadProfile,
@@ -55,7 +55,7 @@ export default function UploadProfileImg({
           }
      }
      function deleteCoverImg() {
-        //   dispatch(deleteCover());
+          dispatch(deleteProfile());
           onCloseModal();
      }
      return (
@@ -77,7 +77,7 @@ export default function UploadProfileImg({
                     <Modal.Body>
                          <div className="space-y-6">
                               <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-                                   Upload Cover Image
+                                   Upload Profile Image
                               </h3>
                               <div>
                                    <div className="mb-2">

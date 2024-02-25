@@ -25,6 +25,8 @@ import CommunityManagement from "./pages/Admin/Community/CommunityManagement";
 import DiscussionManagement from "./pages/Admin/Discussion/DiscussionManagement";
 import ChatManagement from "./pages/Admin/Chat/ChatManagement";
 import BoostPost from "./pages/Post/BoostPost";
+import AccountPage from "./pages/Account/AccountPage";
+import Verification from "./pages/Account/Verification";
 const PasswordPrivacy = lazy(
      () => import("./pages/PasswordSecurity/PasswordPrivacy")
 );
@@ -128,6 +130,14 @@ function App() {
                               <Route
                                    path="/manage-account/close-friends"
                                    element={<ManageCloseFriend />}
+                              />
+                              <Route
+                                   path="/manage-account/account"
+                                   element={<AccountPage />}
+                              />
+                              <Route
+                                   path="/manage-account/account/verify-account"
+                                   element={<Verification />}
                               />
                               <Route
                                    path="/view-profile/:id"

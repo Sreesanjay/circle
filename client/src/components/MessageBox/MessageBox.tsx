@@ -43,7 +43,9 @@ export default function MessageBox({
                          </div>
                     )}
                     {message.is_delete ? (
-                         <h1 className="bg-gray-700 text-gray-500 p-2 rounded-md">This message has been deleted</h1>
+                         <h1 className="bg-gray-700 text-gray-500 p-2 rounded-md">
+                              This message has been deleted
+                         </h1>
                     ) : (
                          <div className="body flex flex-col gap-2">
                               <div className="user_details flex justify-between items-baseline">
@@ -121,13 +123,13 @@ export default function MessageBox({
                               </div>
                          </div>
                     )}
-                    {!message.is_delete && message.sender_id !== user?._id && (
+                    {/* {!message.is_delete && message.sender_id !== user?._id && (
                          <div className="options mt-5">
                               <button onClick={() => hanleDelete(message._id)}>
                                    <DeleteBin size={20} />
                               </button>
                          </div>
-                    )}
+                    )} */}
                </div>
           </>
      );

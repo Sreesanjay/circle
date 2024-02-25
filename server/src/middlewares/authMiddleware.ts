@@ -3,11 +3,13 @@ import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel';
 import env from "../util/validateEnv";
-import mongoose, { Document } from 'mongoose';
+import { IUser } from '../Interfaces';
+import mongoose from 'mongoose';
+
 
 declare module 'express' {
     interface Request {
-        user?: Document;
+        user?: IUser;
     }
 }
 
@@ -32,7 +34,6 @@ export const protect = asyncHandler(async (req: Request, res: Response, next: Ne
             }
             next();
         } catch (error) {
-            console.log(error)
             res.status(401);
             next(new Error('Not authorized, token failed'));
         }

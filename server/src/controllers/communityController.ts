@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import asyncHandler from "express-async-handler";
 import Community from "../models/communitySchema";
 import Members from "../models/membersSchema";
+import Discussion from "../models/discussionSchema";
 import Notification from "../models/notificationSchema";
 // import Interest from "../models/interestSchema";
 // import UserProfile from "../models/userProfile";
@@ -95,6 +96,31 @@ export const updateIcon: RequestHandler = asyncHandler(
 )
 
 /**
+ * @desc request for removing community
+ * @route PUT /api/community/remove/:id
+ * @access private
+ */
+export const removeCommunity: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const community_id = req.params.id;
+        if (!community_id) {
+            res.status(400);
+            return next(new Error('Invalid community'))
+        }
+        const community = await Community.findOneAndUpdate({ _id: community_id }, { $set: { is_delete: true } }, { new: true });
+        if (community) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'Community deleted successfully',
+                community
+            })
+        } else {
+            next(new Error("Internal server error"))
+        }
+    }
+)
+
+/**
  * @desc function fetching all interest matched community
  * @route GET /api/community
  * @access private
@@ -113,13 +139,13 @@ export const getCommunities: RequestHandler = asyncHandler(
                     localField: '_id',
                     foreignField: 'community_id',
                     as: 'members',
-                    pipeline: [
-                        {
-                            $match: {
-                                status: { $ne: 'removed' },
-                            }
-                        }
-                    ]
+                    // pipeline: [
+                    //     {
+                    //         $match: {
+                    //             status: { $ne: 'removed' },
+                    //         }
+                    //     }
+                    // ]
 
                 }
             }
@@ -153,8 +179,20 @@ export const joinCommunity: RequestHandler = asyncHandler(
         }
         const exist = await Members.findOne({ community_id: community_id, user_id: req.user?._id });
         if (exist) {
-            res.status(409);
-            return next(new Error("You are already a member"))
+            if (exist.status !== 'removed') {
+                res.status(409);
+                return next(new Error("You are already a member"))
+            } else {
+                const newMember = await Members.findOneAndUpdate({ community_id: community_id, user_id: req.user?._id }, { $set: { status: 'pending' } }, { new: true });
+                if (newMember) {
+                    res.status(200).json({
+                        status: 'ok',
+                        message: 'request added',
+                        newMember
+                    })
+                    return;
+                }
+            }
         }
         const newMember = await new Members({
             community_id,
@@ -180,10 +218,8 @@ export const joinCommunity: RequestHandler = asyncHandler(
  */
 export const getMyCommunities: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        console.log("user id")
         const member = await Members.find({ user_id: req.user?._id, status: 'active' }, { _id: 0, community_id: 1 });
         const memberIds = member.map(item => item.community_id);
-        console.log("members ids", memberIds);
         const community = await Community.aggregate([
             {
                 $match: {
@@ -235,8 +271,14 @@ export const getCommunity: RequestHandler = asyncHandler(
                     from: 'members',
                     localField: '_id',
                     foreignField: 'community_id',
-                    as: 'members'
-
+                    as: 'members',
+                    pipeline: [
+                        {
+                            $match: {
+                                status: { $ne: 'removed' }
+                            }
+                        }
+                    ]
                 }
             }
 
@@ -356,3 +398,71 @@ export const acceptRequest: RequestHandler = asyncHandler(
 )
 
 
+
+/**
+ * @desc rquest for removing a member
+ * @route POST /api/community/remove-member
+ * @access private
+ */
+export const removeMember: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { community_id, user_id } = req.body;
+        const exist = await Members.findOne({ community_id, user_id });
+        if (!exist) {
+            res.status(400);
+            return next(new Error('Invalid Member'))
+        }
+        if (exist.is_admin) {
+            const secondlastmember = await Members.find({ community_id, user_id: { $ne: user_id } }).sort({ createdAt: 1 })
+            if (secondlastmember[0]) {
+                await Members.findOneAndUpdate({ community_id, user_id: secondlastmember[0].user_id }, { $set: { is_admin: true } })
+            }
+
+        }
+        const member = await Members.findOneAndUpdate({ community_id, user_id }, { $set: { status: 'removed', is_admin: false } }, { new: true });
+        if (member) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'member removed',
+                member
+            })
+        } else {
+            next(new Error('Internal server error'))
+        }
+    }
+)
+
+/**
+ * @desc rquest for fetching analytics
+ * @route POST /api/community/analytics
+ * @access private
+ */
+export const getAnalytics: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const exist = await Community.findOne({ _id: id });
+        if (!exist) {
+            res.status(400);
+            return next(new Error('Invalid Community'))
+        }
+        const total_members = await Members.countDocuments({ community_id: id, status: 'active' });
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const discussions_today = await Discussion.countDocuments({ community_id: id, createdAt: { $gte: today } });
+        const total_discussion = await Discussion.countDocuments({ community_id: id });
+
+        if (total_members || discussions_today || total_discussion) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'analytics fetched',
+                analytics: {
+                    total_members,
+                    discussions_today,
+                    total_discussion
+                }
+            })
+        } else {
+            next(new Error('Internal server error'))
+        }
+    }
+)

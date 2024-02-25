@@ -62,7 +62,6 @@ export const getMessages: RequestHandler = asyncHandler(
             res.status(400);
             return next(new Error('Chat not found'))
         }
-        console.log(req.query.page)
         const page = (req.query.page && typeof req.query.page === 'string') ? req.query.page : null;
         const query = page ? {
             chat_id: new ObjectId(chat_id),

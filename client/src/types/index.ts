@@ -67,6 +67,7 @@ export interface IuserDetails {
     user_id: string,
     username: string;
     fullname: string;
+    verified?: boolean;
     profile_img: string;
     email: {
         email: string;
@@ -84,12 +85,22 @@ export interface IPost {
     is_delete: boolean,
     tags: string[];
     visibility: string;
-    impressions: number;
-    profile_visit: number;
+    impressions: string[];
     comment: number;
+    clicks?: string[];
+    is_boosted?: IBoosted;
     reports: [];
     createdAt: Date;
     likes: string[];
+}
+
+export interface IBoosted {
+    _id: string;
+    post_id: string;
+    plan_id: string;
+    startingDate: Date;
+    endingDate: Date;
+    action: string;
 }
 
 export interface IChat {
@@ -102,6 +113,7 @@ export interface IChat {
     latest_message: IMessage;
     createdAt: Date;
     icon: string;
+    reports?: [];
     removed_members: string[];
 }
 export interface IMessage {
@@ -150,6 +162,8 @@ export interface ICommunity {
     icon: string;
     privacy: string;
     createdAt: Date;
+    is_delete?: boolean;
+    reports?: []
     members: {
         community_id: string;
         user_id: string;
@@ -164,9 +178,39 @@ export interface IDiscussion {
     content: string;
     user_id: string;
     likes: string[];
+    comments: number,
     content_type: string;
     file_type: string;
     caption: string;
+    community_id: string;
     is_delete: boolean;
+    reports?: [];
+    createdAt: Date;
     userProfile: userList
+}
+
+export interface IDiscussionComment {
+    _id: string;
+    user_id: string;
+    post_id: string;
+    user_details: {
+        user_id: string;
+        username: string;
+        profile_img: string;
+        email: string
+    }
+    reply: string;
+    likes: string[];
+    content: string;
+    createdAt: Date;
+
+}
+
+export interface IPlan {
+    _id: string,
+    amount: number,
+    discription: string,
+    type: string,
+    duration: number,
+    is_active: boolean
 }

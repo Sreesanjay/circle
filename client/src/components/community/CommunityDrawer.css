@@ -1,0 +1,10 @@
+.drawer-body .members::-webkit-scrollbar {
+     display: none;
+}
+.edit-profile-icon{
+     display: none;
+}
+
+.icon:hover .edit-profile-icon{
+     display:block;
+}

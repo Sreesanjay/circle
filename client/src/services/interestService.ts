@@ -69,7 +69,6 @@ export const updateInterest = createAsyncThunk(
                     throw new Error("Internal error")
                 }
             }
-            console.log(data)
             const response = await API.put(`/admin/interest/${data._id}`,
                 body
                 , {
@@ -123,7 +122,6 @@ export const getAllInterests = createAsyncThunk(
 export const deleteInterest = createAsyncThunk(
     "interest/deleteInterest",
     async (id: string, thunkAPI) => {
-        console.log("request got")
         try {
             const response = await API.delete(`/admin/interest/${id}`, {
                 withCredentials: true,

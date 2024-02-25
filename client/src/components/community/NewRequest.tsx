@@ -5,15 +5,19 @@ import API from "../../api";
 import AddCircle from "@mui/icons-material/AddCircle";
 import { useAppDispatch } from "../../app/hooks";
 import { acceptJoinRequest } from "../../services/communityService";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 export default function NewRequest({
      openDrawer,
      setOpenDrawer,
      community,
+     setCommunity,
 }: {
      openDrawer: boolean;
      setOpenDrawer: Dispatch<SetStateAction<boolean>>;
      community: ICommunity | null;
+     setCommunity: Dispatch<SetStateAction<ICommunity | null>>;
 }) {
      const dispatch = useAppDispatch();
      const [userList, setUserList] = useState<
@@ -45,16 +49,38 @@ export default function NewRequest({
                               setUserList(response.data.userList);
                          }
                     } catch (error) {
-                         console.log(error);
+                         const err = error as AxiosError<{
+                              message?: string;
+                              status?: string;
+                         }>;
+                         toast.error(err.response?.data.message);
                     }
                })();
           }
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [community]);
 
-     function acceptRequest(user_id: string) {
+     async function acceptRequest(user_id: string) {
           if (community) {
-               dispatch(acceptJoinRequest({ id: community._id, user_id }));
+               const response = await dispatch(
+                    acceptJoinRequest({ id: community._id, user_id })
+               );
+               if (response.payload.member) {
+                    setUserList((current) =>
+                         current.filter((item) => item.user_id !== user_id)
+                    );
+                    if (community) {
+                         setCommunity({
+                              ...community,
+                              members: community.members.map((item) => {
+                                   if (item.user_id === user_id) {
+                                        item.status = "active";
+                                   }
+                                   return item;
+                              }),
+                         });
+                    }
+               }
           }
      }
 
@@ -104,7 +130,7 @@ export default function NewRequest({
                                                   </h1>
                                              </div>
                                              <div
-                                                  className="add-btn text-4xl text-white"
+                                                  className="add-btn text-4xl text-white cursor-pointer"
                                                   onClick={() =>
                                                        acceptRequest(
                                                             item.user_id

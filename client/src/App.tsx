@@ -21,6 +21,12 @@ import Messages from "./pages/Messages/Messages";
 import { setOnlineUsers } from "./features/Socket/SocketSlice";
 import Communities from "./pages/Community/Community";
 import ViewCommunity from "./pages/Community/ViewCommunity";
+import CommunityManagement from "./pages/Admin/Community/CommunityManagement";
+import DiscussionManagement from "./pages/Admin/Discussion/DiscussionManagement";
+import ChatManagement from "./pages/Admin/Chat/ChatManagement";
+import BoostPost from "./pages/Post/BoostPost";
+import AccountPage from "./pages/Account/AccountPage";
+import Verification from "./pages/Account/Verification";
 const PasswordPrivacy = lazy(
      () => import("./pages/PasswordSecurity/PasswordPrivacy")
 );
@@ -126,6 +132,14 @@ function App() {
                                    element={<ManageCloseFriend />}
                               />
                               <Route
+                                   path="/manage-account/account"
+                                   element={<AccountPage />}
+                              />
+                              <Route
+                                   path="/manage-account/account/verify-account"
+                                   element={<Verification />}
+                              />
+                              <Route
                                    path="/view-profile/:id"
                                    element={
                                         socket && (
@@ -156,6 +170,11 @@ function App() {
                                    path="/community/view/:id"
                                    element={<ViewCommunity />}
                               />
+
+                              <Route
+                                   path="/posts/boost/:id"
+                                   element={<BoostPost />}
+                              />
                          </Route>
 
                          <Route
@@ -173,6 +192,18 @@ function App() {
                               <Route
                                    path="/admin/post-management"
                                    element={<PostManagement />}
+                              />
+                              <Route
+                                   path="/admin/community-management"
+                                   element={<CommunityManagement />}
+                              />
+                              <Route
+                                   path="/admin/discussion-management"
+                                   element={<DiscussionManagement />}
+                              />
+                              <Route
+                                   path="/admin/chat-management"
+                                   element={<ChatManagement />}
                               />
                          </Route>
                     </Routes>

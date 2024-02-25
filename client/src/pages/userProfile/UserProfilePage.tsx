@@ -1,6 +1,6 @@
 import { lazy, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
+import { TiStarburst } from "react-icons/ti";
 import PopupModal from "../../components/Modal/PopupModal";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 // import { getUserProfile } from "../../services/userService";
@@ -26,9 +26,6 @@ const PostSection = lazy(
 const SavedSection = lazy(
      () => import("../../components/SavedSection/SavedSection")
 );
-// const AddCloseFriends = lazy(
-//      () => import("../../components/Modal/AddCloseFriends")
-// );
 
 export default function UserProfilePage() {
      const dispatch = useAppDispatch();
@@ -53,7 +50,7 @@ export default function UserProfilePage() {
      }, [isError, errorMessage, isSuccess, userProfile, dispatch]);
 
      function updateProfile() {
-          console.log("updateProfile");
+          toast.success("profile updated");
      }
 
      return (
@@ -132,9 +129,16 @@ export default function UserProfilePage() {
                                              />
                                         )}
                                    </div>
-                                   <h1 className="text-center mt-3 text-xl font-medium">
-                                        {userProfile?.username}
-                                   </h1>
+                                   <div className="flex justify-center items-center gap-2">
+                                        <h1 className="text-center mt-3 text-xl font-medium">
+                                             {userProfile?.username}
+                                        </h1>
+                                        {userProfile?.isVerified && (
+                                             <p className="text-blue-600 text-xl">
+                                                  <TiStarburst />
+                                             </p>
+                                        )}
+                                   </div>
                               </div>
                               <div className="right-nav grow ps-7 sm:ps-14 flex">
                                    <div
@@ -160,7 +164,7 @@ export default function UserProfilePage() {
                                    </div>
                               </div>
                          </section>
-                         <section className="profile-body h-screen w-full md:grid md:grid-cols-12">
+                         <section className="profile-body min-h-screen w-full md:grid md:grid-cols-12">
                               <div className="left-section col-span-3 px-5 bg-gray-800 shadow-xl pt-5">
                                    <FriendList />
                                    <hr className="my-3" />
@@ -168,21 +172,10 @@ export default function UserProfilePage() {
                                         <h1 className="font-medium text-center">
                                              Close Friends
                                         </h1>
-                                        {/* <div
-                                             onClick={() =>
-                                                  setAddCloseFriends(true)
-                                             }
-                                        >
-                                             <AddIcon size={25} />
-                                        </div>
-                                        <AddCloseFriends
-                                             openModal={addCloseFriends}
-                                             setOpenModal={setAddCloseFriends}
-                                        /> */}
                                    </div>
                                    <CloseFriends />
                               </div>
-                              <div className="right-section col-span-9 pt-5 px-3 ">
+                              <div className="right-section col-span-9 pt-5 px-3">
                                    {content === "PROFILE" && <ProfileSection />}
                                    {content === "POST" && <PostSection />}
                                    {content === "SAVED" && <SavedSection />}

@@ -153,7 +153,6 @@ export async function addMember({ chat_id, user }: { user: string, chat_id: stri
 
 export async function removeMember({ chat_id, user }: { user: string, chat_id: string }) {
     try {
-        console.log("remove member", chat_id)
         const response = await API.put(`/chat/members/remove/${chat_id}`, { user }, { withCredentials: true })
         if (response.data) {
             return response.data
@@ -259,6 +258,23 @@ export async function deleteFile(url: string) {
     try {
         const storageRef = ref(storage, url);
         deleteObject(storageRef);
+    } catch (error) {
+        const err = error as AxiosError<{
+            message?: string;
+            status?: string;
+        }>;
+        toast.error(err.response?.data.message)
+    }
+}
+
+export async function getChat(userId: string) {
+    try {
+        const response = await API.get(`/chat/get-chat/${userId}`)
+        if (response.data) {
+            return response.data
+        } else {
+            throw new Error('Internal Error')
+        }
     } catch (error) {
         const err = error as AxiosError<{
             message?: string;

@@ -5,17 +5,60 @@ import UserProfile from "../models/userProfile"
 import Connection from "../models/connectionSchema";
 import Post from "../models/postSchema";
 import SavedPost from "../models/savedPost";
+import Razorpay from "razorpay";
+import env from "../util/validateEnv";
+import Plan from "../models/planSchema";
+import Verification from "../models/verificationSchema";
+import Payment from "../models/paymentSchema";
 // import { IConnections } from "../Interfaces";
 // import User from "../models/userModel";
 // import { IUser } from "../Interfaces";
 
+const instance = new Razorpay({
+    key_id: env.RAZORPAY_KEY,
+    key_secret: env.RAZORPAY_SECRET,
+});
+
 export const getUserProfile: RequestHandler = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-        const userProfile = await UserProfile.findOne({ user_id: req.user?._id }, { reports: 0 })
+        const userProfile = await UserProfile.aggregate([
+            {
+                $match: {
+                    user_id: new ObjectId(req.user?._id)
+                }
+            }, {
+                $lookup: {
+                    from: 'verifications',
+                    localField: 'user_id',
+                    foreignField: 'user_id',
+                    as: 'verified',
+                    pipeline: [
+                        {
+                            $match: {
+                                endingDate: { $gt: new Date() }
+                            }
+                        }
+                    ]
+                }
+            }, {
+                $project: {
+                    fullname: 1,
+                    gender: 1,
+                    bio: 1,
+                    username: 1,
+                    profile_img: 1,
+                    isVerified: { $cond: { if: { $gt: [{ $size: "$verified" }, 0] }, then: true, else: false } },
+                    account_type: 1,
+                    cover_img: 1,
+                    interest: 1
+                }
+            }
+        ])
+
         res.status(200).json({
             status: 'OK',
             message: "User profile details fetched",
-            userProfile
+            userProfile: userProfile[0]
         });
     }
 )
@@ -192,23 +235,45 @@ export const getMyPosts: RequestHandler = asyncHandler(
                 }
             },
             {
+                $lookup: {
+                    from: "boostedposts",
+                    localField: '_id',
+                    foreignField: 'post_id',
+                    as: "is_boosted",
+                    pipeline: [
+                        {
+                            $match: {
+                                endingDate: { $gt: new Date() }
+                            }
+                        },
+                        {
+                            $project: {
+                                post_id: 0,
+                            }
+                        }
+                    ]
+                }
+            },
+            { $unwind: { path: "$is_boosted", preserveNullAndEmptyArrays: true } },
+
+            {
                 $project: {
                     user_id: 1,
                     is_saved: { $cond: { if: { $gt: [{ $size: "$is_saved" }, 0] }, then: true, else: false } },
+                    is_boosted: 1,
                     user_details: 1,
                     type: 1,
+                    clicks: 1,
                     content: 1,
                     caption: 1,
                     tags: 1,
                     visibility: 1,
                     impressions: 1,
-                    profile_visit: 1,
                     createdAt: 1,
                     likes: 1
                 }
             }
         ])
-
         if (posts) {
             res.status(200).json({
                 status: 'ok',
@@ -287,7 +352,6 @@ export const getSavedPosts: RequestHandler = asyncHandler(
         ])
 
         if (posts) {
-            console.log(posts)
             res.status(200).json({
                 status: 'ok',
                 message: 'saved posts fetched',
@@ -298,4 +362,90 @@ export const getSavedPosts: RequestHandler = asyncHandler(
         }
     }
 )
+
+
+/**
+ * @desc function for fetching saved posts
+ * @route GET /api/profile/saved-posts
+ * @access private
+ */
+export const createPaymentRequest: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { plan_id } = req.body;
+        const plan = await Plan.findById(plan_id);
+        if (!plan || !plan.is_active) {
+            res.status(400);
+            return next(new Error('Plan not found'));
+        }
+        const options = {
+            amount: plan.amount * 100,  // amount in the smallest currency unit
+            currency: "INR",
+            receipt: "subscription"
+        };
+        instance.orders.create(options, function (err, order) {
+            res.status(201).json({
+                status: 'created',
+                message: 'payment created',
+                order
+            })
+        });
+    }
+)
+
+/**
+ * @desc function for fetching saved posts
+ * @route GET /api/profile/add-verification
+ * @access private
+ */
+export const addVerification: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { plan_id, amount, document, document_type, payment } = req.body;
+        const plan = await Plan.findById(plan_id);
+        if (!plan || !plan.is_active) {
+            res.status(400);
+            return next(new Error('Plan not found'));
+        }
+        // user_id: ObjectId;
+        // startingDate: Date,
+        // endingDate: Date,
+        // plan_id: ObjectId,
+        // document: string;
+        // document_type: string;
+        // payment_details: ObjectId
+
+        const newPayment = await new Payment({
+            payment_id: payment.razorpay_payment_id,
+            order_id: payment.razorpay_order_id,
+            user_id: req.user?._id,
+            amount: amount
+        }).save();
+        if (!newPayment) {
+            res.status(500);
+            next(new Error('Payment Process failed'));
+            return;
+        }
+
+        const currentDate = new Date();
+        const endingDate = new Date(currentDate.getTime() + plan.duration * 24 * 60 * 60 * 1000); // Adding totalDay days
+
+        const verification = await new Verification({
+            user_id: req.user?._id,
+            plan_id: plan._id,
+            startingDate: new Date(),
+            endingDate: endingDate,
+            document: document,
+            document_type: document_type,
+            payment_details: newPayment._id
+        }).save()
+
+        if (verification) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'verification added'
+            })
+        }
+
+    }
+)
+
 

@@ -71,7 +71,7 @@ export default function BlockedUsers() {
                          {userList &&
                               userList.map((user) => {
                                    return (
-                                        <div className="user-card rounded-md shadow-md  w-40 p-2 flex flex-col items-center justify-center">
+                                        <div className="user-card rounded-md shadow-md  w-40 p-2 flex flex-col items-center justify-center bg-gray-900">
                                              <img
                                                   src={user.profile_img}
                                                   alt=""

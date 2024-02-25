@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAppDispatch} from "../../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import { getUserProfile } from "../../services/userService";
 import HomeSidebar from "../../components/HomeSidebar/HomeSidebar";
 import "./HomePage.css";
@@ -14,13 +14,12 @@ export default function HomePage() {
           })();
      }, [dispatch]);
 
-
      return (
           <div className="flex flex-col">
                <HomeSidebar />
 
                <div className="section md:ms-80 w-full md:w-auto md:p-5">
-                    <Story/>
+                    <Story />
                     <section className="posts">
                          <Post />
                     </section>

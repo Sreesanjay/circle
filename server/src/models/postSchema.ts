@@ -29,19 +29,25 @@ const postSchema: Schema<IPost> = new Schema({
     },
     tags: [
         {
+            type: Schema.Types.ObjectId,
+            ref: 'interests',
+            default: []
+        }
+    ],
+    clicks: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'User',
+            default: []
+        }
+    ],
+    impressions: [
+        {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             default: []
         }
     ],
-    impressions: {
-        type: Number,
-        default: 0
-    },
-    profile_visit: {
-        type: Number,
-        default: 0
-    },
     is_delete: {
         type: Boolean,
         default: false

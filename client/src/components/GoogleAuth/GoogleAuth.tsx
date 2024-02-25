@@ -3,6 +3,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import { useAppDispatch } from "../../app/hooks";
 import { googleAuth } from "../../services/authService";
+import { toast } from "react-toastify";
 export default function GoogleAuth() {
      const dispatch = useAppDispatch();
 
@@ -12,7 +13,7 @@ export default function GoogleAuth() {
           }
      };
      const responseError = async (): Promise<void> => {
-          console.log("error occured");
+          toast.error("error occured")
      };
      return (
           <>

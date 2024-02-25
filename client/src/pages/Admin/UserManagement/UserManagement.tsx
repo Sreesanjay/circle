@@ -132,7 +132,7 @@ export default function UserManagement() {
                ) : (
                     <section className="user-management">
                          <AdminSidebar />
-                         <section className="body md:ms-64 py-5">
+                         <section className="body md:ms-80 py-5">
                               <Breadcrumb aria-label="Default breadcrumb example">
                                    <Breadcrumb.Item href="#" icon={CiUser}>
                                         User Management

@@ -15,7 +15,6 @@ export default function AddCloseFriends({
      const [userList, setUserList] = useState<userList[]>();
      useEffect(() => {
           (async () => {
-               console.log("UserList fetching");
                try {
                     const response = await API.get("/users/get-following", {
                          withCredentials: true,

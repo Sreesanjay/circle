@@ -101,7 +101,7 @@ export const userChats: RequestHandler = asyncHandler(
                             }
                         }
                     ],
-                    is_delete : false
+                    is_delete: false
                 }
             },
             {
@@ -167,55 +167,103 @@ export const userChats: RequestHandler = asyncHandler(
         }
     })
 
-
-
 /**
- * @desc request for fetching members profile details
- * @route POST /api/chat/get-members
+ * @desc request for fetching all chats of user
+ * @route GET /api/chat/get-chat
  * @access private
  */
-export const getMembers: RequestHandler = asyncHandler(
+export const getPersonalChat: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        if (req.body.members.length < 1) {
-            res.status(400);
-            return next(new Error('Members not found'))
-        }
-        const members = await UserProfile.aggregate([
+        const user_id = req.params.id;
+        const chats = await Chat.aggregate([
+
             {
                 $match: {
-                    user_id: { $in: req.body.members.map((memberId: string) => new ObjectId(memberId)) }
-                }
-            }, {
+                    members: {
+                        $all: [new ObjectId(user_id), new ObjectId(req.user?._id)]
+                    },
+                    is_groupchat: false,
+                    is_delete: false
+                },
+            },
+            {
                 $lookup: {
-                    from: 'users',
-                    localField: 'user_id',
-                    foreignField: '_id',
-                    as: 'user'
+                    from: "messages",
+                    localField: '_id',
+                    foreignField: 'chat_id',
+                    as: 'latest_message',
+                    pipeline: [
+                        {
+                            $match: {
+                                delivered_to: {
+                                    $elemMatch: {
+                                        $eq: new ObjectId(req.user?._id)
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            $sort: { createdAt: -1 }
+                        },
+                    ]
                 }
             },
             {
-                $unwind: { path: '$user' }
+                $addFields: {
+                    latest_message: { $arrayElemAt: ["$latest_message", 0] }
+                }
             },
             {
-                $project: {
-                    username: 1,
-                    profile_img: 1,
-                    fullname: 1,
-                    user_id: 1,
-                    verified: 1,
-                    email: '$user.email'
+                $lookup: {
+                    from: 'userprofiles',
+                    localField: 'latest_message.sender_id',
+                    foreignField: 'user_id',
+                    as: 'latest_message.userDetails',
+                    pipeline: [
+                        {
+                            $project: {
+                                username: 1,
+                                profile_img: 1,
+                                fullname: 1,
+                                user_id: 1,
+                                verified: 1,
+                                _id: 0
+                            }
+                        }
+                    ],
                 }
-            }
+            },
+            {
+                $unwind: { path: '$latest_message.userDetails', preserveNullAndEmptyArrays: true }
+            },
         ])
-        if (members) {
+        if (chats.length) {
             res.status(200).json({
                 status: 'ok',
-                message: 'members details fetched',
-                members
+                message: 'all chats fetched',
+                chat: chats[0]
             })
+            return
         }
-
+        else {
+            const newChat = new Chat({
+                members: [req.user?._id, user_id]
+            })
+            const chat = await newChat.save();
+            if (chat) {
+                res.status(200).json({
+                    status: 'ok',
+                    message: 'all chats fetched',
+                    chat
+                })
+            } else {
+                next(new Error('chat creation failed'))
+            }
+        }
     })
+
+
+
 
 /**
  * @desc request for updating chat name (group admin)

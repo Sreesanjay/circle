@@ -9,7 +9,7 @@ export type userProfile = {
     bio: string;
     username: string;
     profile_img: string;
-    is_premium: boolean;
+    isVerified: boolean;
     account_type: string;
     cover_img: string;
     interest :string[]
@@ -118,7 +118,6 @@ export const userSlice = createSlice({
             })
             .addCase(updateCoverImg.pending, (state) => {
                 state.isLoading = true;
-                console.log("before", state.userProfile)
 
             })
             .addCase(updateCoverImg.fulfilled, (state, action) => {

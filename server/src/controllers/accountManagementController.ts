@@ -28,7 +28,6 @@ export const getAllInterest: RequestHandler = asyncHandler(
  */
 export const getMyInterest: RequestHandler = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-        console.log(req.body)
         const interest = await Interest.find({ _id: { $in: req.body.interest } });
         res.status(200).json({
             status: "ok",
@@ -48,7 +47,6 @@ export const addInterest: RequestHandler = asyncHandler(
         const { choosedId } = req.body
         const userid = req.user?._id;
         const newUser = await UserProfile.findOneAndUpdate({ user_id: userid }, { $push: { interest: { $each: choosedId } } }, { new: true })
-        console.log(newUser)
         if (newUser) {
 
             res.status(200).json({
@@ -66,7 +64,6 @@ export const addInterest: RequestHandler = asyncHandler(
  */
 export const deleteMyInterest: RequestHandler = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-        console.log("request gpt")
         const interestId = req.params.id
         const userid = req.user?._id;
         const newUser = await UserProfile.findOneAndUpdate({ user_id: userid }, { $pull: { interest: interestId } }, { new: true })

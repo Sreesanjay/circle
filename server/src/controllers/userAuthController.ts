@@ -199,7 +199,6 @@ export const googleAuth: RequestHandler = asyncHandler(
 export const signin = asyncHandler(
      async (req: Request, res: Response, next: NextFunction): Promise<void> => {
           const { email, password } = req.body;
-          console.log(req.body);
           if (!email || !password) {
                res.status(400);
                return next(Error("Invlalid Credentials"));
@@ -233,7 +232,6 @@ export const signin = asyncHandler(
 
 export const resetPassword = asyncHandler(
      async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-          console.log(req.body)
           const { old_password, new_password } = req.body;
           if (!old_password || !new_password) {
                res.status(400);

@@ -357,7 +357,6 @@ export const getCloseFriends: RequestHandler = asyncHandler(
 
 export const getFollowingWithoutCloseFriends: RequestHandler = asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        console.log("request got")
         const connection = await Connection.aggregate([
             {
                 $match: {
@@ -602,6 +601,26 @@ export const searchUser: RequestHandler = asyncHandler(
                     }
                 },
                 {
+                    $lookup: {
+                        from: 'verifications',
+                        localField: 'user_id',
+                        foreignField: 'user_id',
+                        as: 'verified',
+                        pipeline: [
+                            {
+                                $match: {
+                                    endingDate: { $gt: new Date() }
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    $sort: {
+                        verified: -1
+                    }
+                },
+                {
                     $limit: 50
                 }
             ])
@@ -620,3 +639,51 @@ export const searchUser: RequestHandler = asyncHandler(
 )
 
 
+
+/**
+ * @desc request for fetching members profile details
+ * @route POST /api/users/get-members
+ * @access private
+ */
+export const getMembers: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        if (req.body.members.length < 1) {
+            res.status(400);
+            return next(new Error('Members not found'))
+        }
+        const members = await UserProfile.aggregate([
+            {
+                $match: {
+                    user_id: { $in: req.body.members.map((memberId: string) => new ObjectId(memberId)) }
+                }
+            }, {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user_id',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $unwind: { path: '$user' }
+            },
+            {
+                $project: {
+                    username: 1,
+                    profile_img: 1,
+                    fullname: 1,
+                    user_id: 1,
+                    verified: 1,
+                    email: '$user.email'
+                }
+            }
+        ])
+        if (members) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'members details fetched',
+                members
+            })
+        }
+
+    })

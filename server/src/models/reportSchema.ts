@@ -12,7 +12,7 @@ const reportSchema: Schema<IReport> = new Schema({
     },
     reported_type: {
         type: String,
-        enum: ['account', 'post', 'group', 'community']
+        enum: ['account', 'post', 'group', 'community', 'discussion']
     },
     reason: {
         type: String

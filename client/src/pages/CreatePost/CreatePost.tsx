@@ -106,7 +106,7 @@ export default function CreatePost() {
                     <>
                          <ImageCrop
                               src={inputImg}
-                              aspect={undefined}
+                              aspect={1 / 1}
                               isCrop={isCrop}
                               setisCrop={setisCrop}
                               setImage={setContent}

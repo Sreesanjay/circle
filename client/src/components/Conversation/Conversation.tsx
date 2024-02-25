@@ -83,14 +83,24 @@ export default function Conversation({
                     </h1>
                     <span className="text-xs overflow-hidden text-nowrap max-w-48">
                          {chat?.latest_message?.content ? (
-                              <>
-                                   {chat.latest_message?.userDetails?.username}{" "}
-                                   :
-                                   {chat.latest_message?.content_type ===
-                                   "MEDIA"
-                                        ? "file"
-                                        : chat.latest_message?.content}{" "}
-                              </>
+                              chat.latest_message.is_delete ? (
+                                   <h1 className="text-gray-500 p-2 rounded-md">
+                                        This message has been deleted
+                                   </h1>
+                              ) : (
+                                   <>
+                                        {
+                                             chat.latest_message?.userDetails
+                                                  ?.username
+                                        }{" "}
+                                        :
+                                        {chat.latest_message?.content_type ===
+                                        "MEDIA"
+                                             ? "file"
+                                             : chat.latest_message
+                                                    ?.content}{" "}
+                                   </>
+                              )
                          ) : null}
                     </span>
                </div>

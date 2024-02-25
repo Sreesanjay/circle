@@ -37,7 +37,6 @@ export const postSlice = createSlice({
             state.posts = []
         },
         setPagination: (state, action) => {
-            console.log(state.pagination, "set by", action.payload)
             state.pagination = action.payload
         }
     },
@@ -234,7 +233,6 @@ export const postSlice = createSlice({
                     return post;
                 })
                 if (myPosts) {
-                    console.log(myPosts)
                     state.myPosts = myPosts;
                 }
             })

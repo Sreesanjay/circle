@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useState } from "react";
 import API from "../../api";
 import { toast } from "react-toastify";
-import { IUserList } from "../../types";
+import { IPost, IUserList } from "../../types";
 import "./ProfileView.css";
 import { useParams } from "react-router-dom";
 import { AxiosError } from "axios";
@@ -9,6 +9,8 @@ import { ThreeDot } from "../../assets/Icons";
 import { ListGroup } from "flowbite-react";
 import Report from "../../components/Modal/Report";
 import { Socket } from "socket.io-client";
+import { ImageList, ImageListItem } from "@mui/material";
+import PostModal from "../../components/Post/PostModal";
 
 export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
      const [userProfile, setUserProfile] = useState<IUserList>();
@@ -18,7 +20,37 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
      const [isFollowing, setIsFollowing] = useState(false);
      const [isBlocked, setIsBlocked] = useState(false);
      const [openReport, setOpenReport] = useState(false);
+     const [openComments, setOpenComments] = useState(false);
+     const [choosedPost, setChoosedPost] = useState<IPost | null>(null);
      const { id } = useParams();
+     const [posts, setPosts] = useState<IPost[] | []>([]);
+
+     function handleOpenPost(post: IPost) {
+          setOpenComments(true);
+          setChoosedPost(post);
+     }
+
+     //fetching user posts
+     useEffect(() => {
+          (async () => {
+               try {
+                    const response = await API.get(`/profile/get-posts/${id}`, {
+                         withCredentials: true,
+                    });
+                    if (response.data) {
+                         console.log(response.data.posts)
+                         setPosts(response.data.posts);
+                    }
+               } catch (error) {
+                    const err = error as AxiosError<{
+                         message?: string;
+                         status?: string;
+                    }>;
+                    toast.error(err.response?.data.message);
+               }
+          })();
+     }, [id]);
+
      useEffect(() => {
           (async () => {
                try {
@@ -34,7 +66,11 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                          setIsBlocked(response.data.isBlocked);
                     }
                } catch (error) {
-                    toast("message");
+                    const err = error as AxiosError<{
+                         message?: string;
+                         status?: string;
+                    }>;
+                    toast.error(err.response?.data.message);
                }
           })();
      }, [id]);
@@ -51,7 +87,6 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                if (response.data) {
                     setIsFollowing(false);
                     setFollowers((current) => current - 1);
-                    toast("Account unfollowed");
                }
           } catch (error) {
                const err = error as AxiosError<{
@@ -73,7 +108,6 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                if (response.data) {
                     setFollowers((current) => current + 1);
                     setIsFollowing(true);
-                    toast("Account followed");
                }
           } catch (error) {
                const err = error as AxiosError<{
@@ -255,6 +289,77 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                                    </ListGroup>
                               )}
                          </header>
+                         <div className="body">
+                              <ImageList
+                                   //  sx={{ width:500, height: 450 }}
+                                   style={{
+                                        overflow: "hidden",
+                                        height: "100%",
+                                   }}
+                                   className="image-list"
+                                   variant="masonry"
+                                   cols={3}
+                                   gap={1}
+                              >
+                                   {posts &&
+                                        posts.map((post: IPost) => (
+                                             <>
+                                                  <ImageListItem
+                                                       key={post._id}
+                                                       className=""
+                                                  >
+                                                       <div
+                                                            className="content p-2 shadow-md"
+                                                            onClick={() =>
+                                                                 handleOpenPost(
+                                                                      post
+                                                                 )
+                                                            }
+                                                       >
+                                                            {post.type.includes(
+                                                                 "image"
+                                                            ) ? (
+                                                                 <img
+                                                                      src={
+                                                                           post?.content
+                                                                      }
+                                                                      className="w-full rounded-md"
+                                                                 />
+                                                            ) : (
+                                                                 <div className="relative">
+                                                                      <video
+                                                                           className="w-full"
+                                                                           muted
+                                                                      >
+                                                                           <source
+                                                                                src={
+                                                                                     post?.content
+                                                                                }
+                                                                                type="video/mp4"
+                                                                           />
+                                                                           Error
+                                                                           Message
+                                                                      </video>
+                                                                 </div>
+                                                            )}
+                                                       </div>
+                                                  </ImageListItem>
+                                                  {choosedPost && (
+                                                       <PostModal
+                                                            openModal={
+                                                                 openComments
+                                                            }
+                                                            setOpenModal={
+                                                                 setOpenComments
+                                                            }
+                                                            type={"OTHERS"}
+                                                            post={choosedPost}
+                                                       />
+                                                  )}
+                                             </>
+                                        ))}
+                              </ImageList>
+                         </div>
                     </section>
                </section>
           </section>

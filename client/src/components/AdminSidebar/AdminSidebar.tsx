@@ -1,11 +1,15 @@
 import { Sidebar } from "flowbite-react";
 import { HiChartPie, HiInbox, HiTable, HiUser } from "react-icons/hi";
 import MenuIcon from "@mui/icons-material/Menu";
+import { CgCommunity } from "react-icons/cg";
+import { GiDiscussion } from "react-icons/gi";
 import "./AdminSidebar.css";
 import { useNavigate } from "react-router-dom";
+import { IoIosChatbubbles } from "react-icons/io";
 import { useAppDispatch } from "../../app/hooks";
 import { useState } from "react";
 import { logout } from "../../features/auth/AuthSlice";
+import { SiApostrophe } from "react-icons/si";
 //admin sidebar
 export default function AdminSidebar() {
      const [showSidebar, setShowSidebar] = useState("hidden");
@@ -23,7 +27,7 @@ export default function AdminSidebar() {
                          imgAlt=""
                          className="sidebar-logo flex items-center mb-10"
                     >
-                         <div className="sidebarLogo-text pe-9">
+                         <div className="sidebarLogo-text pe-9 text-primary">
                               <h1>Circle</h1>
                          </div>
                     </Sidebar.Logo>
@@ -76,7 +80,7 @@ export default function AdminSidebar() {
                               </Sidebar.Item>
 
                               <Sidebar.Item
-                                   icon={HiUser}
+                                   icon={SiApostrophe}
                                    className="cursor-pointer list-nav-item"
                                    onClick={() =>
                                         navigate("/admin/post-management")
@@ -85,7 +89,7 @@ export default function AdminSidebar() {
                                    Post Management
                               </Sidebar.Item>
                               <Sidebar.Item
-                                   icon={HiUser}
+                                   icon={CgCommunity}
                                    className="cursor-pointer list-nav-item"
                                    onClick={() =>
                                         navigate("/admin/community-management")
@@ -94,7 +98,7 @@ export default function AdminSidebar() {
                                    Community Management
                               </Sidebar.Item>
                               <Sidebar.Item
-                                   icon={HiUser}
+                                   icon={GiDiscussion}
                                    className="cursor-pointer list-nav-item"
                                    onClick={() =>
                                         navigate("/admin/discussion-management")
@@ -103,7 +107,7 @@ export default function AdminSidebar() {
                                    Discussion Management
                               </Sidebar.Item>
                               <Sidebar.Item
-                                   icon={HiUser}
+                                   icon={IoIosChatbubbles}
                                    className="cursor-pointer list-nav-item"
                                    onClick={() =>
                                         navigate("/admin/chat-management")

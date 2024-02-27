@@ -48,6 +48,7 @@ export default function PostModal({
      const [comments, setComments] = useState<IComment[]>([]);
      const [newComment, setNewComment] = useState("");
      const [showList, setShowList] = useState(false);
+     const [showOthersList, setShowOthersList] = useState(false);
      const [showNormalList, setShowNormalList] = useState(false);
      const [editPost, setEditPost] = useState(false);
      const [viewInsights, setViewInsights] = useState(false);
@@ -182,30 +183,34 @@ export default function PostModal({
                                         </div>
                                    </div>
                               )}
-                              {type === "PROFILE" && !post.is_boosted ? (
-                                   <button
-                                        className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white"
-                                        onClick={() =>
-                                             navigate(
-                                                  `/posts/boost/${post?._id}`
-                                             )
-                                        }
-                                   >
-                                        Boost this post
-                                   </button>
-                              ) : (
-                                   <button
-                                        className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white"
-                                        onClick={() => setViewInsights(true)}
-                                   >
-                                        View Insights
-                                   </button>
-                              )}
+                              {type === "PROFILE" ? (
+                                   !post.is_boosted ? (
+                                        <button
+                                             className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white"
+                                             onClick={() =>
+                                                  navigate(
+                                                       `/posts/boost/${post?._id}`
+                                                  )
+                                             }
+                                        >
+                                             Boost this post
+                                        </button>
+                                   ) : (
+                                        <button
+                                             className="bg-primary py-2 hover:bg-primary-hover px-3 rounded-md mt-5 text-white"
+                                             onClick={() =>
+                                                  setViewInsights(true)
+                                             }
+                                        >
+                                             View Insights
+                                        </button>
+                                   )
+                              ) : null}
                          </div>
                          <div className="flex flex-col sm:w-1/2">
                               <div className="header flex items-center gap-3 shadow-md w-full h-min py-2 px-3">
                                    <div className="profile-img-icon">
-                                        {post?.user_details.profile_img ? (
+                                        {post?.user_details?.profile_img ? (
                                              <img
                                                   src={
                                                        post?.user_details
@@ -247,6 +252,17 @@ export default function PostModal({
                                              className="cursor-pointer"
                                              onClick={() =>
                                                   setShowNormalList(!showList)
+                                             }
+                                        >
+                                             <ThreeDot size={35} />
+                                        </div>
+                                   ) : type === "OTHERS" ? (
+                                        <div
+                                             className="cursor-pointer"
+                                             onClick={() =>
+                                                  setShowOthersList(
+                                                       !showOthersList
+                                                  )
                                              }
                                         >
                                              <ThreeDot size={35} />

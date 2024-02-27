@@ -56,7 +56,7 @@ export default function RecentDiscussions() {
      }, [discussion]);
      return (
           <div
-               className="p-10 bg-gray-800 h-full overflow-y-scroll"
+               className=" p-5 sm:p-10 bg-gray-800 h-full overflow-y-scroll"
                ref={discussionRef}
           >
                {discussion.map((item, index) => {

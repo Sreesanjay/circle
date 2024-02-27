@@ -17,6 +17,7 @@ import {
 } from "react";
 import API from "../../api";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { IoChevronBackCircleSharp } from "react-icons/io5";
 import { userList } from "../../types";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
@@ -215,6 +216,9 @@ export default function ChatDrawer({
                     open={openDrawer}
                     onClose={() => setOpenDrawer(false)}
                >
+                    <div className="btn text-3xl p-3 bg-gray-700 sm:hidden" onClick={() => setOpenDrawer(false)} >
+                         <IoChevronBackCircleSharp />
+                    </div>
                     <div className="chat-drawer bg-gray-700 overflow-y-scroll flex flex-col items-center pt-16">
                          <section className="header flex flex-col items-center">
                               <div className="profile-img relative">
@@ -362,7 +366,7 @@ export default function ChatDrawer({
                                         <button
                                              className="exit-group px-4 py-1 rounded-md text-secondary bg-primary hover:bg-primary-hover"
                                              onClick={() => {
-                                                  setShowAddMemberInput(false)
+                                                  setShowAddMemberInput(false);
                                                   handleExitChat();
                                              }}
                                         >

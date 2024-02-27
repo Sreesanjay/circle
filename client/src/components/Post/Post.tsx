@@ -52,7 +52,7 @@ export default function Post() {
 
      return (
           <div
-               className="mt-5 post-container overflow-y-auto"
+               className="mt-3 post-container overflow-y-auto"
                ref={postContainerRef}
           >
                {posts &&

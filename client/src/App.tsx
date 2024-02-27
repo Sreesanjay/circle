@@ -15,18 +15,22 @@ import Loader from "./components/Loader/Loader";
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import IsAuthenticated from "./components/Route/IsAuthenticated";
 import Header from "./pages/user/Header";
-// const Messages = lazy(() => import("./pages/Messages/Messages"));
 import { useAppDispatch, useAppSelector } from "./app/hooks";
-import Messages from "./pages/Messages/Messages";
 import { setOnlineUsers } from "./features/Socket/SocketSlice";
-import Communities from "./pages/Community/Community";
-import ViewCommunity from "./pages/Community/ViewCommunity";
-import CommunityManagement from "./pages/Admin/Community/CommunityManagement";
-import DiscussionManagement from "./pages/Admin/Discussion/DiscussionManagement";
-import ChatManagement from "./pages/Admin/Chat/ChatManagement";
-import BoostPost from "./pages/Post/BoostPost";
-import AccountPage from "./pages/Account/AccountPage";
-import Verification from "./pages/Account/Verification";
+
+const Messages = lazy(() => import("./pages/Messages/Messages"));
+const Communities = lazy(() => import("./pages/Community/Community"));
+const ViewCommunity = lazy(() => import("./pages/Community/ViewCommunity"));
+const CommunityManagement = lazy(
+     () => import("./pages/Admin/Community/CommunityManagement")
+);
+const DiscussionManagement = lazy(
+     () => import("./pages/Admin/Discussion/DiscussionManagement")
+);
+const ChatManagement = lazy(() => import("./pages/Admin/Chat/ChatManagement"));
+const BoostPost = lazy(() => import("./pages/Post/BoostPost"));
+const AccountPage = lazy(() => import("./pages/Account/AccountPage"));
+const Verification = lazy(() => import("./pages/Account/Verification"));
 const PasswordPrivacy = lazy(
      () => import("./pages/PasswordSecurity/PasswordPrivacy")
 );

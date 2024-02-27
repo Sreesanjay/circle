@@ -1,5 +1,6 @@
 import AddCircle from "@mui/icons-material/AddCircle";
 import "./Community.css";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 import NewCommunity from "../../components/Modal/NewCommunity";
 import YourCommunity from "../../components/community/YourCommunity";
@@ -10,6 +11,7 @@ import RecentDiscussions from "../../components/community/RecentDiscussions";
 export default function Communities() {
      const { tab } = useParams();
      const navigate = useNavigate();
+     const [showSidebar, setShowSidebar] = useState("hidden");
      const [currentTab, setCurrentTab] = useState<string>(
           (tab as string).toUpperCase()
      );
@@ -20,7 +22,28 @@ export default function Communities() {
                     showModal={showNewCommunity}
                     setShowModal={setShowNewCommunity}
                />
-               <section className="sidebar sm:col-span-3  bg-gray-900 flex flex-col p-5 py-8">
+               <div className="flex gap-2 col-span-12">
+                    <button
+                         className="p-2 sm:hidden  flex rounded-sm mb-3"
+                         onClick={() =>
+                              setShowSidebar(
+                                   showSidebar === "block" ? "hidden" : "block"
+                              )
+                         }
+                    >
+                         <MenuIcon />
+                    </button>
+                    <h1
+                         className={`${
+                              showSidebar === 'block' ? 'hidden' : 'block'
+                         } sm:hidden text-xl mt-2`}
+                    >
+                         Community
+                    </h1>
+               </div>
+               <section
+                    className={`sidebar col-span-12 sm:col-span-3  bg-gray-900 flex flex-col p-5 py-8 ${showSidebar} sm:block`}
+               >
                     <h1 className="text-2xl mb-10">Community</h1>
                     {/* <div className="search my-5">
                          <input
@@ -29,7 +52,14 @@ export default function Communities() {
                               className="bg-gray-800 rounded-md w-full"
                          />
                     </div> */}
-                    <div className="nav flex flex-col gap-3">
+                    <div
+                         className="nav flex flex-col gap-3"
+                         onClick={() =>
+                              setShowSidebar(
+                                   showSidebar === "block" ? "hidden" : "block"
+                              )
+                         }
+                    >
                          <div
                               className={`item hover:bg-gray-800 ${
                                    currentTab === "RECENT_DISCUSSIONS" &&
@@ -78,7 +108,7 @@ export default function Communities() {
                          </button>
                     </div>
                </section>
-               <section className="page-body col-span-9 bg-blue-700">
+               <section className="page-body col-span-12 sm:col-span-9 bg-blue-700">
                     {currentTab === "RECENT_DISCUSSIONS" ? (
                          <RecentDiscussions />
                     ) : currentTab === "DISCOVER" ? (

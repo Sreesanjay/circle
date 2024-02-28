@@ -7,7 +7,8 @@ import Loader from "../../../components/Loader/Loader";
 import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import { Breadcrumb, Pagination, Table } from "flowbite-react";
 import { FormControl, InputLabel, NativeSelect } from "@mui/material";
-import "./PostManagement.css"
+import "./PostManagement.css";
+import ViewReports from "../../Reports/ViewReports";
 export default function PostManagement() {
      const [analytics, setAnalytics] = useState({
           total_posts: 0,
@@ -19,12 +20,14 @@ export default function PostManagement() {
      const [page, setPage] = useState(1);
      const [isLoading, setIsLoading] = useState(false);
      const [postList, setPostList] = useState<IPost[]>([]);
+     const [reportedId, setReportId] = useState<string | null>(null);
+     const [openReport, setOpenReport] = useState(false);
      useEffect(() => {
           (async () => {
                try {
                     setIsLoading(true);
                     const response = await API.get(
-                         `/admin/post-management/postlist?page=${page}&&sort=${sort}`,
+                         `/admin/post-management/postlist?page=${page}&&sort=${sort}`
                     );
                     if (response.data) {
                          setPostList(response.data.postList);
@@ -40,7 +43,6 @@ export default function PostManagement() {
                }
           })();
      }, [page, sort]);
-
 
      useEffect(() => {
           (async () => {
@@ -236,6 +238,9 @@ export default function PostManagement() {
                                                   likes
                                              </Table.HeadCell>
                                              <Table.HeadCell>
+                                                  
+                                             </Table.HeadCell>
+                                             <Table.HeadCell>
                                                   Reports
                                              </Table.HeadCell>
                                              <Table.HeadCell>
@@ -280,6 +285,20 @@ export default function PostManagement() {
                                                                                 .likes
                                                                                 .length
                                                                       }
+                                                                 </Table.Cell>
+                                                                 <Table.Cell>
+                                                                      <button
+                                                                           onClick={() => {
+                                                                                setReportId(
+                                                                                     post._id
+                                                                                );
+                                                                                setOpenReport(
+                                                                                     true
+                                                                                );
+                                                                           }}
+                                                                      >
+                                                                           View
+                                                                      </button>
                                                                  </Table.Cell>
                                                                  <Table.Cell>
                                                                       {
@@ -331,6 +350,11 @@ export default function PostManagement() {
                                    </div>
                               </div>
                          </section>
+                         <ViewReports
+                              reportedId={reportedId}
+                              openModal={openReport}
+                              setOpenModal={setOpenReport}
+                         />
                     </section>
                )}
           </>

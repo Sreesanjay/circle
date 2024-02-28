@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import { Breadcrumb, Pagination, Table } from "flowbite-react";
 import "./Discussion.css";
-import {IDiscussion } from "../../../types";
+import { IDiscussion } from "../../../types";
 import { toast } from "react-toastify";
 import { FormControl, NativeSelect } from "@mui/material";
 import {
@@ -11,6 +11,7 @@ import {
      removeDiscussion,
      undoRemoveDiscussion,
 } from "../../../services/adminDiscussionService";
+import ViewReports from "../../Reports/ViewReports";
 
 export default function DiscussionManagement() {
      const [analytics, setAnalytics] = useState({
@@ -24,6 +25,8 @@ export default function DiscussionManagement() {
      const [discussionList, setDiscussionList] = useState<IDiscussion[] | []>(
           []
      );
+     const [reportedId, setReportId] = useState<string | null>(null);
+     const [openReport, setOpenReport] = useState(false);
 
      //fetching the analytics for community
      useEffect(() => {
@@ -213,6 +216,20 @@ export default function DiscussionManagement() {
                                                                  }
                                                             </Table.Cell>
                                                             <Table.Cell>
+                                                                 <button
+                                                                      onClick={() => {
+                                                                           setReportId(
+                                                                                discussion._id
+                                                                           );
+                                                                           setOpenReport(
+                                                                                true
+                                                                           );
+                                                                      }}
+                                                                 >
+                                                                      View
+                                                                 </button>
+                                                            </Table.Cell>
+                                                            <Table.Cell>
                                                                  {
                                                                       discussion
                                                                            .reports
@@ -263,6 +280,11 @@ export default function DiscussionManagement() {
                          </section>
                     </section>
                </div>
+               <ViewReports
+                    reportedId={reportedId}
+                    openModal={openReport}
+                    setOpenModal={setOpenReport}
+               />
           </div>
      );
 }

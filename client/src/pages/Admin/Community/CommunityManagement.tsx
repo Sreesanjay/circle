@@ -11,6 +11,7 @@ import "./Community.css";
 import { ICommunity } from "../../../types";
 import { toast } from "react-toastify";
 import { FormControl, NativeSelect } from "@mui/material";
+import ViewReports from "../../Reports/ViewReports";
 
 export default function CommunityManagement() {
      const [analytics, setAnalytics] = useState({
@@ -22,6 +23,8 @@ export default function CommunityManagement() {
      const [sort, setSort] = useState("RECENTLTY_CREATED");
      const [page, setPage] = useState(1);
      const [communityList, setCommunityList] = useState<ICommunity[] | []>([]);
+     const [reportedId, setReportId] = useState<string | null>(null);
+     const [openReport, setOpenReport] = useState(false);
 
      //fetching the analytics for community
      useEffect(() => {
@@ -157,6 +160,9 @@ export default function CommunityManagement() {
                                         <Table.HeadCell>
                                              Total members
                                         </Table.HeadCell>
+                                        <Table.HeadCell>
+                                           
+                                        </Table.HeadCell>
                                         <Table.HeadCell>Reports</Table.HeadCell>
                                         <Table.HeadCell>
                                              <span className="sr-only">
@@ -191,6 +197,20 @@ export default function CommunityManagement() {
                                                                            .members
                                                                            .length
                                                                  }
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                 <button
+                                                                      onClick={() => {
+                                                                           setReportId(
+                                                                                community._id
+                                                                           );
+                                                                           setOpenReport(
+                                                                                true
+                                                                           );
+                                                                      }}
+                                                                 >
+                                                                      View
+                                                                 </button>
                                                             </Table.Cell>
                                                             <Table.Cell>
                                                                  {
@@ -243,6 +263,11 @@ export default function CommunityManagement() {
                          </section>
                     </section>
                </div>
+               <ViewReports
+                    reportedId={reportedId}
+                    openModal={openReport}
+                    setOpenModal={setOpenReport}
+               />
           </div>
      );
 }

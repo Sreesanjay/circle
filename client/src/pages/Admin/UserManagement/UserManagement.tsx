@@ -11,6 +11,7 @@ import API from "../../../api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Loader from "../../../components/Loader/Loader";
+import ViewReports from "../../Reports/ViewReports";
 
 export default function UserManagement() {
      const [analytics, setAnalytics] = useState({
@@ -23,6 +24,8 @@ export default function UserManagement() {
      const [page, setPage] = useState(1);
      const [isLoading, setIsLoading] = useState(false);
      const [userList, setUserList] = useState<IUserList[]>([]);
+     const [reportedId, setReportId] = useState<string | null>(null);
+     const [openReport, setOpenReport] = useState(false);
      useEffect(() => {
           (async () => {
                try {
@@ -172,7 +175,6 @@ export default function UserManagement() {
                                                   <InputLabel
                                                        variant="standard"
                                                        htmlFor="uncontrolled-native"
-                                                       
                                                   >
                                                        Sort
                                                   </InputLabel>
@@ -275,13 +277,29 @@ export default function UserManagement() {
                                                                       }
                                                                  </Table.Cell>
                                                                  <Table.Cell>
-                                                                      <button className="text-primary">
+                                                                      <button
+                                                                           className="text-primary"
+                                                                           onClick={() => {
+                                                                                setReportId(
+                                                                                     user._id
+                                                                                );
+                                                                                setOpenReport(
+                                                                                     true
+                                                                                );
+                                                                           }}
+                                                                      >
                                                                            View
                                                                       </button>
                                                                  </Table.Cell>
                                                                  <Table.Cell>
                                                                       {user.is_blocked ? (
-                                                                           <button onClick={()=>unblockUser(user._id)}>
+                                                                           <button
+                                                                                onClick={() =>
+                                                                                     unblockUser(
+                                                                                          user._id
+                                                                                     )
+                                                                                }
+                                                                           >
                                                                                 Unblock
                                                                            </button>
                                                                       ) : (
@@ -315,6 +333,11 @@ export default function UserManagement() {
                                    </div>
                               </div>
                          </section>
+                         <ViewReports
+                              reportedId={reportedId}
+                              openModal={openReport}
+                              setOpenModal={setOpenReport}
+                         />
                     </section>
                )}
           </>

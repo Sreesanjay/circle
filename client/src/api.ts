@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
-const baseURL = "http://localhost:5000/api"
+// const baseURL = "http://localhost:5000/api"
+const baseURL = "http://34.93.56.121/api"
 import Cookies from "js-cookie";
 import { toast } from 'react-toastify';
 

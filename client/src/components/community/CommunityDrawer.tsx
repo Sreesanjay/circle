@@ -2,6 +2,7 @@ import { Drawer } from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ICommunity, userList } from "../../types";
 import { getMemberes, removeMember } from "../../services/communityService";
+import { IoChevronBackCircleSharp } from "react-icons/io5";
 import { ProfileIconWithText, RemoveIcon } from "../../assets/Icons";
 import "./CommunityDrawer.css";
 import { useAppSelector } from "../../app/hooks";
@@ -92,6 +93,12 @@ export default function CommunityDrawer({
                     open={openDrawer}
                     onClose={() => setOpenDrawer(false)}
                >
+                    <div
+                         className="btn text-3xl px-10 py-3 bg-gray-700 sm:hidden"
+                         onClick={() => setOpenDrawer(false)}
+                    >
+                         <IoChevronBackCircleSharp />
+                    </div>
                     <div className="container bg-gray-900 w-96 h-screen p-5 flex flex-col items-center">
                          <div className="icon h-28 w-28 bg-gray-700 rounded-full flex items-center justify-center relative">
                               {community?.icon ? (

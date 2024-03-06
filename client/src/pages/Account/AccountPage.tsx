@@ -10,7 +10,7 @@ export default function AccountPage() {
      return (
           <>
                <ManageAccSidebar />
-               <section className="p-5 ms-64">
+               <section className="p-5 md:ms-64">
                     <Breadcrumb aria-label="Default breadcrumb example">
                          <Breadcrumb.Item icon={LiaUserFriendsSolid}>
                               Account

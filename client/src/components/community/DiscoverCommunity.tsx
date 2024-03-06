@@ -18,7 +18,7 @@ export default function DiscoverCommunity() {
      }, [isSuccess, isError, dispatch]);
 
      return (
-          <section className="your-community flex p-5 flex-wrap gap-5 justify-evenly bg-gray-800 min-h-full">
+          <section className="your-community flex sm:p-5 flex-wrap gap-5 justify-evenly bg-gray-800 min-h-full">
                {community.map((item, index) => {
                     const members = item.members
                          .filter((member) => member.status === "active")

@@ -27,7 +27,7 @@ export default function HomeSidebar() {
                     <MenuIcon />
                </button>
                <Sidebar.Items
-                    className={`sidebar ${showSidebar} md:block pe-24 py-0 md:py-14 bg-gray-900 rounded-md`}
+                    className={`sidebar ${showSidebar} md:block pe-24 ps-5 py-0 md:py-14 bg-gray-900 rounded-md`}
                >
                     <Sidebar.ItemGroup className="h-3/4 flex flex-col justify-around">
                          <Sidebar.Item icon={MdHome} className="text-xl icon ">

@@ -11,6 +11,7 @@ import {
      removeChat,
      undoRemoveChat,
 } from "../../../services/adminChat";
+import ViewReports from "../../Reports/ViewReports";
 
 export default function ChatManagement() {
      const [analytics, setAnalytics] = useState({
@@ -22,6 +23,8 @@ export default function ChatManagement() {
      const [sort, setSort] = useState("RECENTLTY_CREATED");
      const [page, setPage] = useState(1);
      const [chatList, setChatList] = useState<IChat[] | []>([]);
+     const [reportedId, setReportId] = useState<string | null>(null);
+     const [openReport, setOpenReport] = useState(false);
 
      //fetching the analytics for community
      useEffect(() => {
@@ -46,7 +49,6 @@ export default function ChatManagement() {
      async function deleteChat(id: string) {
           const response = await removeChat(id);
           if (response.chat) {
-               toast.success("chat removed");
                setChatList((current) => {
                     return current.map((item) => {
                          if (item._id === id) {
@@ -159,6 +161,7 @@ export default function ChatManagement() {
                                         <Table.HeadCell>
                                              Created On
                                         </Table.HeadCell>
+                                        <Table.HeadCell>View</Table.HeadCell>
                                         <Table.HeadCell>Reports</Table.HeadCell>
                                         <Table.HeadCell>
                                              <span className="sr-only">
@@ -177,7 +180,9 @@ export default function ChatManagement() {
                                                             {index}
                                                        </Table.Cell>
                                                        <Table.Cell>
-                                                            {chat.is_groupchat ?chat.chat_name : 'Personal chat'}
+                                                            {chat.is_groupchat
+                                                                 ? chat.chat_name
+                                                                 : "Personal chat"}
                                                        </Table.Cell>
                                                        <Table.Cell>
                                                             {
@@ -197,6 +202,20 @@ export default function ChatManagement() {
                                                             {new Date(
                                                                  chat.createdAt
                                                             ).getFullYear()}
+                                                       </Table.Cell>
+                                                       <Table.Cell>
+                                                            <button
+                                                                 onClick={() => {
+                                                                      setReportId(
+                                                                           chat._id
+                                                                      );
+                                                                      setOpenReport(
+                                                                           true
+                                                                      );
+                                                                 }}
+                                                            >
+                                                                 View
+                                                            </button>
                                                        </Table.Cell>
                                                        <Table.Cell>
                                                             {
@@ -247,6 +266,11 @@ export default function ChatManagement() {
                          </section>
                     </section>
                </div>
+               <ViewReports
+                    reportedId={reportedId}
+                    openModal={openReport}
+                    setOpenModal={setOpenReport}
+               />
           </div>
      );
 }

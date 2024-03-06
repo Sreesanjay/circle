@@ -1,16 +1,14 @@
 import "./ManageAccSidebar.css";
-
 import { Sidebar } from "flowbite-react";
-import { BiBuoy } from "react-icons/bi";
-import {
-     HiChartPie,
-     HiShoppingBag,
-     HiUser,
-     HiViewBoards,
-} from "react-icons/hi";
+import { LiaUserFriendsSolid } from "react-icons/lia";
+import { HiShoppingBag } from "react-icons/hi";
 import MenuIcon from "@mui/icons-material/Menu";
 import { FaRegUserCircle } from "react-icons/fa";
-import { MdOutlineSecurity, MdOutlineInterests } from "react-icons/md";
+import {
+     MdOutlineSecurity,
+     MdOutlineInterests,
+     MdOutlineManageAccounts,
+} from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -32,7 +30,7 @@ export default function ManageAccSidebar() {
                     <MenuIcon />
                </button>
                <Sidebar.Items
-                    className={`sidebar ${showSidebar} md:block bg-gray-900`}
+                    className={`sidebar ${showSidebar} md:block bg-gray-900 w-max`}
                >
                     <Sidebar.ItemGroup>
                          <div className="flex items-center p-3 gap-4">
@@ -52,32 +50,21 @@ export default function ManageAccSidebar() {
                               </Link>
                          </div>
                          <div className="flex items-center p-3 gap-4">
-                              <MdOutlineInterests />
+                              <LiaUserFriendsSolid />
                               <Link to="/manage-account/close-friends">
                                    CloseFriends
                               </Link>
                          </div>
-                         <Sidebar.Item icon={HiUser}>
-                              <Link to="/manage-account/account">
-                                   Account
-                              </Link>
-                         </Sidebar.Item>
-                         <Sidebar.Item icon={HiShoppingBag}>
+                         <div className="flex items-center p-3 gap-4">
+                              <MdOutlineManageAccounts />
+                              <Link to="/manage-account/account">Account</Link>
+                         </div>
+                         <div className="flex items-center p-3 gap-4">
+                              <HiShoppingBag />
                               <Link to="/manage-account/blocked-users">
                                    Blocked Users
                               </Link>
-                         </Sidebar.Item>
-                    </Sidebar.ItemGroup>
-                    <Sidebar.ItemGroup className="">
-                         <Sidebar.Item href="#" icon={BiBuoy} className="item">
-                              Professional Account
-                         </Sidebar.Item>
-                         <Sidebar.Item href="#" icon={HiChartPie}>
-                              Subscribers
-                         </Sidebar.Item>
-                         <Sidebar.Item href="#" icon={HiViewBoards}>
-                              Insights
-                         </Sidebar.Item>
+                         </div>
                     </Sidebar.ItemGroup>
                </Sidebar.Items>
           </Sidebar>

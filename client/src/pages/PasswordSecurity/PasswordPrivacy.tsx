@@ -159,7 +159,7 @@ export default function PasswordPrivacy() {
                                                   className="rounded-lg"
                                              />
                                         </div>
-                                        <div className="btn-container">
+                                        <div className="btn-container flex">
                                              <button
                                                   className="bg-red-600 p-2 px-4 rounded-lg"
                                                   type="reset"

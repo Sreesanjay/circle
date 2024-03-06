@@ -34,8 +34,8 @@ const {userProfile} = useAppSelector((state) => state.user)
           </div>
           
       </div>
-      <div className="recent-activity-section  bg-blue-300 col-span-2">
-      </div>
+      {/* <div className="recent-activity-section  bg-blue-300 col-span-2">
+      </div> */}
     </div>
   )
 }

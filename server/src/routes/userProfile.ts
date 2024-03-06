@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUserProfile, updateCoverImg, deleteCoverImg, updateProfileImg, deleteProfileImg, updateProfile, getConnectionCount, getMyPosts, getSavedPosts, createPaymentRequest, addVerification } from "../controllers/userProfileController";
+import { getUserProfile, updateCoverImg, deleteCoverImg, updateProfileImg, deleteProfileImg, updateProfile, getConnectionCount, getMyPosts, getSavedPosts, createPaymentRequest, addVerification, getUserPosts } from "../controllers/userProfileController";
 import { protect } from "../middlewares/authMiddleware";
 const router: Router = Router();
 
@@ -14,6 +14,7 @@ router.delete('/delete-profile_img', protect, deleteProfileImg)
 router.get('/connection-count', protect, getConnectionCount)
 router.get('/posts', protect, getMyPosts)
 router.get('/saved-posts', protect, getSavedPosts)
+router.get('/get-posts/:id', protect, getUserPosts)
 
 
 //verification

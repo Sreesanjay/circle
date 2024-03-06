@@ -3,7 +3,9 @@ import API from "../../api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { userList } from "../../types";
+import { useNavigate } from "react-router-dom";
 export default function CloseFriends() {
+     const navigate = useNavigate();
      const [users, setUsers] = useState<userList[]>([]);
      useEffect(() => {
           (async () => {
@@ -25,6 +27,19 @@ export default function CloseFriends() {
      }, []);
      return (
           <div className="flex gap-3">
+               {users.length === 0 && (
+                    <div className="flex flex-col gap-5 text-sm">
+                         <h1>You dont have any close friends</h1>
+                         <button
+                              className="bg-gray-700 py-2 rounded-md"
+                              onClick={() =>
+                                   navigate("/manage-account/close-friends")
+                              }
+                         >
+                              Add Close friends
+                         </button>
+                    </div>
+               )}
                {users &&
                     users.map((user: userList, index) => {
                          return (

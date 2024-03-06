@@ -286,6 +286,78 @@ export const getMyPosts: RequestHandler = asyncHandler(
     }
 )
 
+/**
+ * @desc function for fetching all posts of a user
+ * @route GET /api/profile/get-posts/:id
+ * @access private
+ */
+export const getUserPosts: RequestHandler = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const posts = await Post.aggregate([
+            {
+                $match: {
+                    user_id: new ObjectId(req.params.id),
+                    is_archive: false,
+                    is_delete: false
+                }
+            },
+            {
+                $lookup: {
+                    from: 'userprofiles',
+                    localField: 'user_id',
+                    foreignField: 'user_id',
+                    as: "user_details",
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: 'users',
+                                localField: 'user_id',
+                                foreignField: '_id',
+                                as: "email",
+                                pipeline: [
+                                    {
+                                        $project: {
+                                            _id: 0,
+                                            email: 1
+                                        }
+                                    }
+                                ]
+
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$email"
+                            }
+                        },
+                        {
+                            $project: {
+                                username: 1,
+                                profile_img: 1,
+                                email: 1
+                            }
+                        },
+
+                    ]
+                }
+            }, {
+                $unwind: {
+                    path: "$user_details"
+                }
+            }
+        ])
+        if (posts) {
+            res.status(200).json({
+                status: 'ok',
+                message: 'posts fetched',
+                posts
+            })
+        } else {
+            next(new Error('Internal server error'))
+        }
+    }
+)
+
 
 
 /**

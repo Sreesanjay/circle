@@ -256,7 +256,7 @@ export default function ViewCommunity() {
                                    </div>
                               </div>
                               <div
-                                   className="discussions w-full flex flex-col items-center p-5"
+                                   className="discussions w-full flex flex-col items-center py-5 sm:p-5"
                                    ref={discussionRef}
                               >
                                    {discussion?.map((item, index) => {

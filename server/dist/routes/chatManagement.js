@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+const adminChatController_1 = require("../controllers/adminChatController");
+const router = (0, express_1.Router)();
+router.get('/', adminChatController_1.getAllChats);
+router.get('/analytics', authMiddleware_1.protectAdmin, adminChatController_1.getChatAnalytics);
+router.delete('/remove/:id', authMiddleware_1.protectAdmin, adminChatController_1.removechat);
+router.put('/undo-remove/:id', authMiddleware_1.protectAdmin, adminChatController_1.undoRemovechat);
+exports.default = router;

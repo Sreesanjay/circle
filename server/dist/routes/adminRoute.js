@@ -1,0 +1,26 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const interestRoute_1 = __importDefault(require("./interestRoute"));
+const userManagementRoute_1 = __importDefault(require("./userManagementRoute"));
+const postManagementRoute_1 = __importDefault(require("./postManagementRoute"));
+const communityManagementRoute_1 = __importDefault(require("./communityManagementRoute"));
+const discussionManagementRoute_1 = __importDefault(require("./discussionManagementRoute"));
+const dashboardRoute_1 = __importDefault(require("./dashboardRoute"));
+const chatManagement_1 = __importDefault(require("./chatManagement"));
+const plansRoute_1 = __importDefault(require("./plansRoute"));
+const reportsRoute_1 = __importDefault(require("./reportsRoute"));
+const router = (0, express_1.Router)();
+router.use('/dashboard', dashboardRoute_1.default);
+router.use('/reports', reportsRoute_1.default);
+router.use('/interest', interestRoute_1.default);
+router.use('/user-management', userManagementRoute_1.default);
+router.use('/post-management', postManagementRoute_1.default);
+router.use('/community-management', communityManagementRoute_1.default);
+router.use('/discussion-management', discussionManagementRoute_1.default);
+router.use('/chat-management', chatManagement_1.default);
+router.use('/plans', plansRoute_1.default);
+exports.default = router;

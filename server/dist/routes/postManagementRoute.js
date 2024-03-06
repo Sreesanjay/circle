@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+const postManagementController_1 = require("../controllers/postManagementController");
+const postController_1 = require("../controllers/postController");
+const router = (0, express_1.Router)();
+router.get('/postlist', authMiddleware_1.protectAdmin, postManagementController_1.getPostList);
+router.get('/analytics', authMiddleware_1.protectAdmin, postManagementController_1.getAnalytics);
+router.delete('/remove/:id', authMiddleware_1.protectAdmin, postController_1.deletePost);
+router.put('/undo-remove/:id', authMiddleware_1.protectAdmin, postManagementController_1.undoDelete);
+exports.default = router;

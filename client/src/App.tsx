@@ -17,6 +17,7 @@ import IsAuthenticated from "./components/Route/IsAuthenticated";
 import Header from "./pages/user/Header";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { setOnlineUsers } from "./features/Socket/SocketSlice";
+import NotFound from "./components/Route/NotFound";
 
 const Messages = lazy(() => import("./pages/Messages/Messages"));
 const Communities = lazy(() => import("./pages/Community/Community"));
@@ -63,7 +64,7 @@ const UserProfilePage = lazy(
 );
 const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));
-
+//socket context
 export const SocketContext = createContext<RefObject<Socket> | null>(null);
 
 function App() {
@@ -210,6 +211,7 @@ function App() {
                                    element={<ChatManagement />}
                               />
                          </Route>
+                         <Route path="*" element={<NotFound/>}/>
                     </Routes>
                </Suspense>
 

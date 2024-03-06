@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan"
 import cookieParser from "cookie-parser";
-import {errorHandler, notFound} from "./middlewares/errorHandler";
+import { errorHandler, notFound } from "./middlewares/errorHandler";
 import "dotenv/config";
 import userRouter from "./routes/userRoute"
 import adminRouter from './routes/adminRoute'
@@ -12,16 +12,15 @@ const corsConfig = {
     origin: "http://localhost:5173",
     credentials: true,
 };
-
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser());
 app.use(cors(corsConfig))
 
 //routes
-app.use('/api' ,userRouter)
-app.use('/api/admin' ,adminRouter)
+app.use('/api', userRouter)
+app.use('/api/admin', adminRouter)
 
 
 //error handler

@@ -1,0 +1,36 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+const communityController_1 = require("../controllers/communityController");
+const discussionController_1 = require("../controllers/discussionController");
+const usersController_1 = require("../controllers/usersController");
+const router = (0, express_1.Router)();
+router.post('/', authMiddleware_1.protect, communityController_1.createCommunity);
+router.put('/:id', authMiddleware_1.protect, communityController_1.updateCommunity);
+router.put('/icon/:id', authMiddleware_1.protect, communityController_1.updateIcon);
+router.put('/remove/:id', authMiddleware_1.protect, communityController_1.removeCommunity);
+router.get('/', authMiddleware_1.protect, communityController_1.getCommunities);
+router.get('/analytics/:id', authMiddleware_1.protect, communityController_1.getAnalytics);
+router.get('/my-communities', authMiddleware_1.protect, communityController_1.getMyCommunities);
+router.get('/get-details/:id', authMiddleware_1.protect, communityController_1.getCommunity);
+router.post('/join', authMiddleware_1.protect, communityController_1.joinCommunity);
+router.get('/pending-request/:id', authMiddleware_1.protect, communityController_1.pendingRequest);
+router.post('/accept-request', authMiddleware_1.protect, communityController_1.acceptRequest);
+router.post('/get-members', authMiddleware_1.protect, usersController_1.getMembers);
+router.post('/remove-member', authMiddleware_1.protect, communityController_1.removeMember);
+//discussion
+router.get('/discussions/recent', authMiddleware_1.protect, discussionController_1.getRecentDiscussion);
+router.get('/discussions/:id', authMiddleware_1.protect, discussionController_1.getDiscussions);
+router.post('/discussions', authMiddleware_1.protect, discussionController_1.createDiscussion);
+router.delete('/discussions/:id', authMiddleware_1.protect, discussionController_1.deleteDiscussion);
+router.put('/discussions/like/:id', authMiddleware_1.protect, discussionController_1.likeDiscussion);
+router.put('/discussions/dislike/:id', authMiddleware_1.protect, discussionController_1.dislikeDiscussion);
+//comment
+router.get('/discussions/comment/:id', authMiddleware_1.protect, discussionController_1.getComments);
+router.get('/discussions/comment/reply/:id', authMiddleware_1.protect, discussionController_1.getReplyCommemts);
+router.post('/discussions/comment', authMiddleware_1.protect, discussionController_1.addComment);
+router.delete('/discussions/comment/:id', authMiddleware_1.protect, discussionController_1.deleteComment);
+router.put('/discussions/comment/like/:id', authMiddleware_1.protect, discussionController_1.likeComment);
+router.put('/discussions/comment/dislike/:id', authMiddleware_1.protect, discussionController_1.dislikeComment);
+exports.default = router;

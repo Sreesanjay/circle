@@ -11,6 +11,7 @@ let socketIo: Socket;
 
 export default {
     getIo: (server: HttpServer) => {
+        console.log("reached getIo")
         const io = new Server(server, {
             pingTimeout: 60000,
             cors: {
@@ -20,6 +21,7 @@ export default {
         })
 
         io.on('connection', (socket: Socket) => {
+            console.log("connection request got")
             socketIo = socket;
             socket.on("setup", (newUserId) => {
                 const user = activeUsers.find((item) => item.userId === newUserId);

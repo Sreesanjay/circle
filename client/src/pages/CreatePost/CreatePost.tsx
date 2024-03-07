@@ -55,6 +55,9 @@ export default function CreatePost() {
 
      function handleChange(e: ChangeEvent<HTMLInputElement>) {
           if (e.target.files) {
+               if(e.target.files[0].size > (5 * 1024 * 1024)){
+                    toast.error('maximum file size is 5MB')
+               }
                if (e.target.files[0].type.startsWith("image/")) {
                     setInputImg(URL.createObjectURL(e.target.files[0]));
                     setisCrop(true);
@@ -135,6 +138,7 @@ export default function CreatePost() {
                                                        id="file-upload"
                                                        className="h-24 "
                                                        onChange={handleChange}
+                                                       accept="image/*|video/*"
                                                   />
                                              </div>
                                              <img

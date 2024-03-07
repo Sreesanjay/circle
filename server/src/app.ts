@@ -9,7 +9,7 @@ import adminRouter from './routes/adminRoute'
 
 const app = express();
 const corsConfig = {
-    origin: "http://my-circle.online",
+    origin: "https://my-circle.online",
     credentials: true,
 };
 app.use(morgan('dev'));

@@ -162,7 +162,10 @@ exports.getPosts = (0, express_async_handler_1.default)((req, res, next) => __aw
     const posts = yield postSchema_1.default.aggregate([
         {
             $match: {
-                user_id: { $in: [...following, userId].filter(Boolean) },
+                $or: [
+                    { user_id: { $in: [...following, userId].filter(Boolean) } },
+                    { tags: { $in: (interest === null || interest === void 0 ? void 0 : interest.interest) || [] } }
+                ],
                 is_archive: false,
                 is_delete: false,
             }
@@ -241,14 +244,6 @@ exports.getPosts = (0, express_async_handler_1.default)((req, res, next) => __aw
                 impressions: 1,
                 createdAt: 1,
                 likes: 1
-            }
-        },
-        {
-            $match: {
-                $or: [
-                    { user_id: userId },
-                    { tags: { $in: (interest === null || interest === void 0 ? void 0 : interest.interest) || [] } }
-                ],
             }
         }, {
             $lookup: {

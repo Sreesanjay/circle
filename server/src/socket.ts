@@ -27,6 +27,7 @@ export default {
                     const newUser = { userId: newUserId, socketId: socket.id };
                     activeUsers.push(newUser);
                 }
+                console.log("user connected", activeUsers);
                 io.emit("connected", activeUsers);
             });
 
@@ -88,6 +89,7 @@ export default {
 
             socket.on('disconnect', () => {
                 activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
+                console.log("user dis connected", activeUsers);
                 io.emit("connected", activeUsers);
             });
         })

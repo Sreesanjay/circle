@@ -20,6 +20,7 @@ import FriendList from "../../components/FriendList/FriendList";
 import CloseFriends from "../../components/CloseFriend/CloseFriends";
 import ProfileSection from "../../components/Profile/ProfileSection";
 import { resetUser } from "../../features/user/userSlice";
+import { getUserProfile } from "../../services/userService";
 const PostSection = lazy(
      () => import("../../components/PostSection/PostSection")
 );
@@ -48,6 +49,13 @@ export default function UserProfilePage() {
           }
           dispatch(resetUser());
      }, [isError, errorMessage, isSuccess, userProfile, dispatch]);
+     
+     useEffect(() => {
+          (async () => {
+               dispatch(getUserProfile());
+          })();
+     }, [dispatch]);
+
 
      function updateProfile() {
           toast.success("profile updated");

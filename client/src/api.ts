@@ -1,5 +1,4 @@
 import axios, { AxiosError } from 'axios';
-// const baseURL = "http://localhost:5000/api"
 const baseURL = "https://my-circle.online/api"
 import Cookies from "js-cookie";
 import { toast } from 'react-toastify';

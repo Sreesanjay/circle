@@ -14,7 +14,8 @@ export default {
         const io = new Server(server, {
             pingTimeout: 60000,
             cors: {
-                origin: 'https://my-circle.online'
+                origin: "https://my-circle.online",
+                credentials: true,
             },
         })
         console.log("io =>",io)

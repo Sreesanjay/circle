@@ -7,14 +7,12 @@ exports.activeUsers = activeUsers;
 let socketIo;
 exports.default = {
     getIo: (server) => {
-        console.log("reached getIo");
         const io = new socket_io_1.Server(server, {
             pingTimeout: 60000,
             cors: {
                 origin: 'https://my-circle.online'
             },
         });
-        console.log(io);
         io.on('connection', (socket) => {
             console.log("connection request got");
             exports.socketIo = socketIo = socket;

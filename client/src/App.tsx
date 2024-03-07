@@ -74,7 +74,6 @@ function App() {
      const socket = useRef<Socket | null>(null);
      useEffect(() => {
           socket.current = io("https://my-circle.online");
-          console.log(socket.current);
           socket?.current?.emit("setup", user?._id);
           socket?.current?.on("connected", (users) => {
                dispatch(setOnlineUsers(users));
@@ -86,7 +85,7 @@ function App() {
                socket?.current?.disconnect();
           };
           // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [user]);
+     }, [user, socket.current]);
 
      return (
           <div className="bg-gray-800 app min-h-screen text-white">

@@ -72,8 +72,14 @@ function App() {
      const { user } = useAppSelector((state) => state.auth);
      const { currentChat } = useAppSelector((state) => state.socket);
      const socket = useRef<Socket | null>(null);
-     useEffect(() => {
+     useEffect(()=>{
           socket.current = io("https://my-circle.online");
+          return () => {
+               socket?.current?.disconnect();
+          };
+     },[])
+     useEffect(() => {
+          console.log(socket.current)
           socket?.current?.emit("setup", user?._id);
           socket?.current?.on("connected", (users) => {
                dispatch(setOnlineUsers(users));
@@ -81,11 +87,8 @@ function App() {
           if (currentChat) {
                socket?.current?.emit("join-room", currentChat?._id);
           }
-          return () => {
-               socket?.current?.disconnect();
-          };
           // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [user, socket.current]);
+     }, [user]);
 
      return (
           <div className="bg-gray-800 app min-h-screen text-white">

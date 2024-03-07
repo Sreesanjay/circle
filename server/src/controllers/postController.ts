@@ -313,7 +313,7 @@ export const getPosts: RequestHandler = asyncHandler(
         const add = await Post.aggregate([
             {
                 $match: {
-                    _id: boosted[0].post_id
+                    _id: boosted[0]?.post_id
                 }
             },
             {

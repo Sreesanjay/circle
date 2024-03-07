@@ -26,7 +26,15 @@ export default function Post() {
           }
           if (isSuccess) {
                if (pagination !== posts[posts.length - 2]?.createdAt) {
-                    dispatch(setPagination(posts[posts.length - 2]?.createdAt));
+                    if (posts[posts.length - 2]?.is_boosted) {
+                         dispatch(
+                              setPagination(posts[posts.length - 2]?.createdAt)
+                         );
+                    } else {
+                         dispatch(
+                              setPagination(posts[posts.length - 1]?.createdAt)
+                         );
+                    }
                }
           }
           dispatch(postReset());

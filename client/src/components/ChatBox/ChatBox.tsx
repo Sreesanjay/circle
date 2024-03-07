@@ -245,7 +245,7 @@ export default function ChatBox({
                }
           });
           // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [socket?.current]);
+     }, [socket?.current, currentChat]);
 
      async function handleSend(type: string) {
           if (user && currentChat?._id) {
@@ -337,7 +337,7 @@ export default function ChatBox({
                }
           });
           // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [socket?.current]);
+     }, [socket?.current, currentChat]);
      useEffect(() => {
           socket?.current?.on("stop-typing", (details) => {
                if (details.room === currentChat?._id) {
@@ -345,7 +345,7 @@ export default function ChatBox({
                }
           });
           // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [socket?.current]);
+     }, [socket?.current, currentChat]);
 
      //catching read-message
      useEffect(() => {
@@ -554,7 +554,7 @@ export default function ChatBox({
                                              }}
                                         />
                                         <div
-                                             className="send-button button"
+                                             className="send-button button cursor-pointer"
                                              onClick={() => handleSend("text")}
                                         >
                                              Send
@@ -562,6 +562,7 @@ export default function ChatBox({
                                         <input
                                              type="file"
                                              name=""
+                                             accept="image/*"
                                              id=""
                                              ref={imageRef}
                                              style={{ display: "none" }}

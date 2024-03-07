@@ -66,11 +66,8 @@ const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 //socket context
 export const SocketContext = createContext<RefObject<Socket> | null>(null);
-// const host = [
-//      "http://localhost:5000",
-//      "http://my-circle.online",
-//      "https://my-circle.online",
-// ];
+const HOST = "https://my-circle.online"
+// const HOST = "http://localhost:5000";
 function App() {
      const dispatch = useAppDispatch();
      const { user } = useAppSelector((state) => state.auth);
@@ -78,10 +75,9 @@ function App() {
      const socket = useRef<Socket | null>(null);
      useEffect(() => {
           if (user) {
-               socket.current = io("https://my-circle.online",{
-                      transports: ['websocket']
+               socket.current = io(HOST, {
+                    transports: ["websocket"],
                });
-               console.log(socket.current)
                socket?.current?.emit("setup", user?._id);
                socket?.current?.on("connected", (users) => {
                     dispatch(setOnlineUsers(users));

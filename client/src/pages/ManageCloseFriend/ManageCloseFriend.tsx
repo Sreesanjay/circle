@@ -51,9 +51,9 @@ export default function ManageCloseFriend() {
           })();
      }, [addCloseFriends]);
      return (
-          <>
+          <div className="flex flex-col">
                <ManageAccSidebar />
-               <div className="px-5 ms-64">
+               <div className="px-5 sm:ms-64">
                     <div className="header w-full flex justify-between items-center">
                          <Breadcrumb aria-label="Default breadcrumb example">
                               <Breadcrumb.Item
@@ -70,7 +70,7 @@ export default function ManageCloseFriend() {
                               setOpenModal={setAddCloseFriends}
                          />
                     </div>
-                    <div className="close-friends py-5 flex gap-3 flex-wrap">
+                    <div className="close-friends py-5 flex gap-3 flex-wrap justify-center sm:justify-start">
                          {users &&
                               users.map((user) => {
                                    return (
@@ -84,6 +84,6 @@ export default function ManageCloseFriend() {
                               })}
                     </div>
                </div>
-          </>
+          </div>
      );
 }

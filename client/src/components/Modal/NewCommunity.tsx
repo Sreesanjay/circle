@@ -29,6 +29,7 @@ export default function NewCommunity({
 
      const navigate = useNavigate();
      const dispatch = useAppDispatch();
+     const [error, setError] = useState("");
      const [interests, setInterests] = useState<IInterest[] | []>([]);
      const [formData, setFormData] = useState({
           community_name: "",
@@ -78,7 +79,12 @@ export default function NewCommunity({
 
      function handleSubmit() {
           if (formData.community_name && formData.topic) {
+               setError("");
                dispatch(newCommunity(formData));
+          } else if (!formData.community_name) {
+               setError("Please select a name");
+          } else if (!formData.topic) {
+               setError("Please select a topic");
           }
      }
      return (
@@ -90,6 +96,7 @@ export default function NewCommunity({
                          show={showModal}
                          size="2xl"
                          onClose={() => {
+                              setError("");
                               setShowModal(false);
                          }}
                          popup
@@ -98,6 +105,11 @@ export default function NewCommunity({
                               <div className="p-4">New Community</div>
                          </Modal.Header>
                          <Modal.Body>
+                              {error && (
+                                   <small className="text-sm text-red-600">
+                                        {error}
+                                   </small>
+                              )}
                               <div className="input-group flex flex-col">
                                    <label htmlFor="" className="font-medium">
                                         Community Name
@@ -124,6 +136,7 @@ export default function NewCommunity({
                                              className="rounded-md"
                                              onChange={handleChange}
                                         >
+                                             <option value=""></option>
                                              {interests.map((item, index) => {
                                                   return (
                                                        <option

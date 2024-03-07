@@ -84,6 +84,7 @@ export default function UploadProfileImg({
                                         <FileInput
                                              id="small-file-upload"
                                              sizing="sm"
+                                             accept="image/*"
                                              style={buttonStyle}
                                              onChange={handleChange}
                                         />

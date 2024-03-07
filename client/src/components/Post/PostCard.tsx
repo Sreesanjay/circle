@@ -49,7 +49,6 @@ export default function PostCard({ post }: { post: IPost }) {
      const [openReport, setOpenReport] = useState(false);
      const [openLike, setOpenLike] = useState(false);
 
-
      const { ref, inView } = useInView({
           threshold: 1,
      });
@@ -117,7 +116,12 @@ export default function PostCard({ post }: { post: IPost }) {
           <>
                <section className="post-card lg:w-6/6 mb-5 bg-gray-900 rounded-md shadow-lg pb-3">
                     <div className="header flex gap-3 px-5 py-2 shadow-sm justify-between relative">
-                         <div className="flex gap-3">
+                         <div
+                              className="flex gap-3 cursor-pointer"
+                              onClick={() =>
+                                   navigate(`/view-profile/${post.user_id}`)
+                              }
+                         >
                               <div className="profile-img-icon">
                                    {post?.user_details.profile_img ? (
                                         <img
@@ -142,13 +146,13 @@ export default function PostCard({ post }: { post: IPost }) {
                               <div className="name">
                                    <div className="flex gap-1">
                                         <h1>{post.user_details.username}</h1>
-                                        <p>
+                                        <>
                                              {post.user_details.verified && (
                                                   <p className="text-blue-600 text-xl">
                                                        <TiStarburst />
                                                   </p>
                                              )}
-                                        </p>
+                                        </>
                                    </div>
                                    <small className="text-xs text-slate-500">{`${date.getDay()} - ${
                                         date.getMonth() + 1
@@ -158,7 +162,7 @@ export default function PostCard({ post }: { post: IPost }) {
                          <div
                               className="post-options cursor-pointer "
                               onClick={() => setShowList(!showList)}
-                              >
+                         >
                               <ThreeDot size={35} />
                          </div>
                          {showList && (

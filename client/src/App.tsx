@@ -73,8 +73,11 @@ function App() {
      const { currentChat } = useAppSelector((state) => state.socket);
      const socket = useRef<Socket | null>(null);
      useEffect(() => {
-          console.log("enter client side")
-          socket.current = io("https://my-circle.online");
+          console.log("enter client side");
+          socket.current = io("https://my-circle.online", {
+               withCredentials: true,
+          });
+          console.log(socket.current);
           socket?.current?.emit("setup", user?._id);
           socket?.current?.on("connected", (users) => {
                dispatch(setOnlineUsers(users));
@@ -212,11 +215,11 @@ function App() {
                                    element={<ChatManagement />}
                               />
                          </Route>
-                         <Route path="*" element={<NotFound/>}/>
+                         <Route path="*" element={<NotFound />} />
                     </Routes>
                </Suspense>
 
-               <ToastContainer/>
+               <ToastContainer />
           </div>
      );
 }

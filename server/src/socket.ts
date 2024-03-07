@@ -15,11 +15,7 @@ export default {
         const io = new Server(server, {
             pingTimeout: 60000,
             cors: {
-                origin: [
-                    "http://localhost:5173",
-                    "http://my-circle.online",
-                    "https://my-circle.online"
-                ],
+                origin:"https://my-circle.online",
                 credentials: true,
             },
         })

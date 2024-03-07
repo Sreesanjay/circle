@@ -11,11 +11,15 @@ let socketIo: Socket;
 
 export default {
     getIo: (server: HttpServer) => {
-        console.log("server",server)
+        console.log("server", server)
         const io = new Server(server, {
             pingTimeout: 60000,
             cors: {
-                origin: "*",
+                origin: [
+                    "http://localhost:5173",
+                    "http://my-circle.online",
+                    "https://my-circle.online"
+                ],
                 credentials: true,
             },
         })

@@ -153,7 +153,10 @@ export const getPosts: RequestHandler = asyncHandler(
         const posts = await Post.aggregate([
             {
                 $match: {
-                    user_id: { $in: [...following, userId].filter(Boolean) },
+                    $or:[
+                        {user_id: { $in: [...following, userId].filter(Boolean) }},
+                        { tags: { $in: interest?.interest || [] } }
+                    ],
                     is_archive: false,
                     is_delete: false,
 
@@ -233,15 +236,6 @@ export const getPosts: RequestHandler = asyncHandler(
                     impressions: 1,
                     createdAt: 1,
                     likes: 1
-                }
-            },
-            {
-                $match: {
-                    $or: [
-                        { user_id: userId },
-                        { tags: { $in: interest?.interest || [] } }
-                    ],
-
                 }
             }, {
                 $lookup: {

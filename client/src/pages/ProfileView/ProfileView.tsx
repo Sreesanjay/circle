@@ -3,7 +3,7 @@ import API from "../../api";
 import { toast } from "react-toastify";
 import { IPost, IUserList } from "../../types";
 import "./ProfileView.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import { ThreeDot } from "../../assets/Icons";
 import { ListGroup } from "flowbite-react";
@@ -11,8 +11,13 @@ import Report from "../../components/Modal/Report";
 import { Socket } from "socket.io-client";
 import { ImageList, ImageListItem } from "@mui/material";
 import PostModal from "../../components/Post/PostModal";
+import { getChat } from "../../services/chatService";
+import { setCurrentChat } from "../../features/Socket/SocketSlice";
+import { useAppDispatch } from "../../app/hooks";
 
 export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
+     const dispatch = useAppDispatch();
+     const navigate = useNavigate()
      const [userProfile, setUserProfile] = useState<IUserList>();
      const [showList, setShowList] = useState(false);
      const [following, setFollowing] = useState(0);
@@ -38,7 +43,7 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                          withCredentials: true,
                     });
                     if (response.data) {
-                         console.log(response.data.posts)
+                         console.log(response.data.posts);
                          setPosts(response.data.posts);
                     }
                } catch (error) {
@@ -158,6 +163,14 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
           }
      }
 
+    async function handleOpenChat() {
+     if(id){  
+          const response = await getChat(id as string);
+          dispatch(setCurrentChat(response.chat));
+          navigate("/messages");
+     }
+     }
+
      return (
           <section className="profile-view">
                <Report
@@ -207,7 +220,7 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                               <div className="counts flex justify-around w-full">
                                    <div className=" flex flex-col items-center">
                                         <span>{following}</span>
-                                        <h1>Followig</h1>
+                                        <h1>Following</h1>
                                    </div>
                                    <div className=" flex flex-col items-center">
                                         <span>{followers}</span>
@@ -279,11 +292,10 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                                              >
                                                   Report
                                              </ListGroup.Item>
-                                             <ListGroup.Item>
+                                             <ListGroup.Item
+                                                  onClick={handleOpenChat}
+                                             >
                                                   Messages
-                                             </ListGroup.Item>
-                                             <ListGroup.Item>
-                                                  Download
                                              </ListGroup.Item>
                                         </div>
                                    </ListGroup>

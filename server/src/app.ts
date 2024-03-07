@@ -9,7 +9,7 @@ import adminRouter from './routes/adminRoute'
 
 const app = express();
 const corsConfig = {
-    origin: "*",
+    origin: "http://34.93.56.121/api",
     credentials: true,
 };
 app.use(morgan('dev'));

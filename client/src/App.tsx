@@ -73,6 +73,7 @@ function App() {
      const { currentChat } = useAppSelector((state) => state.socket);
      const socket = useRef<Socket | null>(null);
      useEffect(() => {
+          console.log("enter client side")
           socket.current = io("https://my-circle.online");
           socket?.current?.emit("setup", user?._id);
           socket?.current?.on("connected", (users) => {

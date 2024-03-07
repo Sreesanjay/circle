@@ -1,5 +1,5 @@
 import { Button, Modal } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 // import "./Modal.css"
@@ -24,6 +24,9 @@ export default function PopupModal({
           width: "150px",
           height: "40px",
      };
+     useEffect(()=>{
+          setOpenModal(modalState)
+     },[modalState])
      return (
           <>
                <Modal
@@ -32,7 +35,7 @@ export default function PopupModal({
                     onClose={() => setOpenModal(false)}
                     popup
                >
-                    <Modal.Header />
+                    {/* <Modal.Header /> */}
                     <Modal.Body>
                          <div className="text-center">
                               <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />

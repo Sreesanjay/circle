@@ -9,6 +9,9 @@ import { useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import Report from "../Modal/Report";
 import EditCommunity from "./EditCommunity";
+import API from "../../api";
+import { toast } from "react-toastify";
+import PopupModal from "../Modal/PopupModal";
 
 export default function CommunityDrawer({
      openDrawer,
@@ -28,6 +31,7 @@ export default function CommunityDrawer({
      const [openReport, setOpenReport] = useState<boolean>(false);
      const [openEdit, setOpenEdit] = useState<boolean>(false);
      const { user } = useAppSelector((state) => state.auth);
+     const [deleteComm, setDeleteComm] = useState<boolean>(false);
      useEffect(() => {
           (async () => {
                const memberId = community?.members
@@ -86,8 +90,26 @@ export default function CommunityDrawer({
                }
           }
      }
+     async function deleteCommunity() {
+          const response = await API.put(`/community/remove/${community?._id}`);
+          if (response.data) {
+               setOpenDrawer(false);
+               toast.success('community deleted')
+               navigate("/community/recent_discussions");
+          }
+     }
+
+     function isDeleteCommunity(){
+          setDeleteComm(true)
+     }
+     
+     function cancelDeletion(){
+          setDeleteComm(false)
+     }
+
      return (
           <div>
+               <PopupModal modalState={deleteComm} message={"Are you sure you want to delete this community?"} posText={"Delete"} negText={"No"} successCallback={deleteCommunity} cancelCallback={cancelDeletion}/>
                <Drawer
                     anchor={"right"}
                     open={openDrawer}
@@ -133,15 +155,23 @@ export default function CommunityDrawer({
                                              Report
                                         </button>
                                    ) : (
-                                        <button
-                                             className="btn px-5 py-1 ms-3 bg-primary hover:bg-primary-hover text-white rounded-md"
-                                             onClick={() => {
-                                                  setOpenEdit(true);
-                                                  setOpenDrawer(false);
-                                             }}
-                                        >
-                                             Edit
-                                        </button>
+                                        <>
+                                             <button
+                                                  className="btn px-5 py-1 ms-3 bg-primary hover:bg-primary-hover text-white rounded-md"
+                                                  onClick={() => {
+                                                       setOpenEdit(true);
+                                                       setOpenDrawer(false);
+                                                  }}
+                                             >
+                                                  Edit
+                                             </button>
+                                             <button
+                                                  className="btn px-5 py-1 ms-3 bg-primary hover:bg-primary-hover text-white rounded-md"
+                                                  onClick={isDeleteCommunity}
+                                             >
+                                                  Delete
+                                             </button>
+                                        </>
                                    )}
                               </div>
                          )}

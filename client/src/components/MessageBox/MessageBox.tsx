@@ -4,6 +4,8 @@ import { IMessage } from "../../types";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import TimeAgo from "react-timeago";
 import "./MessageBox.css";
+import PopupModal from "../Modal/PopupModal";
+import { useState } from "react";
 export default function MessageBox({
      message,
      hanleDelete,
@@ -11,9 +13,27 @@ export default function MessageBox({
      message: IMessage;
      hanleDelete: (id: string) => void;
 }) {
+     const [deleteMessage, setDeleteMessage] = useState(false);
      const { user } = useAppSelector((state) => state.auth);
+     function isDelete() {
+          setDeleteMessage(true);
+     }
+     function successDelete() {
+          hanleDelete(message._id);
+     }
+     function cancelDelete() {
+          setDeleteMessage(false);
+     }
      return (
           <>
+               <PopupModal
+                    modalState={deleteMessage}
+                    message={"Are you sure you want to delete this message?"}
+                    posText={"Delete"}
+                    negText={"No"}
+                    successCallback={successDelete}
+                    cancelCallback={cancelDelete}
+               />
                <div
                     className={`
     message-box flex gap-4 mb-3 relative
@@ -21,7 +41,7 @@ export default function MessageBox({
                >
                     {!message.is_delete && message.sender_id === user?._id && (
                          <div className="options mt-5">
-                              <button onClick={() => hanleDelete(message._id)}>
+                              <button onClick={isDelete}>
                                    <DeleteBin size={20} />
                               </button>
                          </div>

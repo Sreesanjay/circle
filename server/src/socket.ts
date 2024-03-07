@@ -5,31 +5,28 @@ interface User {
     userId: string;
     socketId: string
 }
-
+const ORIGIN = "https://my-circle.online"
+// const ORIGIN = "http://localhost:5000"
 let activeUsers: User[] = [];
 let socketIo: Socket;
 
 export default {
     getIo: (server: HttpServer) => {
-        console.log("server", server)
         const io = new Server(server, {
             pingTimeout: 60000,
             cors: {
-                origin:"https://my-circle.online",
+                origin: ORIGIN,
                 credentials: true,
             },
         })
         io.on('connection', (socket: Socket) => {
-            console.log("connection request got")
             socketIo = socket;
             socket.on("setup", (newUserId) => {
-                console.log("setup got")
                 const user = activeUsers.find((item) => item.userId === newUserId);
                 if (!user || user.socketId !== socket.id) {
                     const newUser = { userId: newUserId, socketId: socket.id };
                     activeUsers.push(newUser);
                 }
-                console.log("user connected", activeUsers);
                 io.emit("connected", activeUsers);
             });
 
@@ -91,7 +88,6 @@ export default {
 
             socket.on('disconnect', () => {
                 activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
-                console.log("user dis connected", activeUsers);
                 io.emit("connected", activeUsers);
             });
         })

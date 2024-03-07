@@ -5,18 +5,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-// import morgan from "morgan"
+const morgan_1 = __importDefault(require("morgan"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const errorHandler_1 = require("./middlewares/errorHandler");
 require("dotenv/config");
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const adminRoute_1 = __importDefault(require("./routes/adminRoute"));
 const app = (0, express_1.default)();
+const ORIGIN = "https://my-circle.online";
+// const ORIGIN = "http://localhost:5173"
 const corsConfig = {
-    origin: "https://my-circle.online",
+    origin: ORIGIN,
     credentials: true,
 };
-// app.use(morgan('dev'));
+app.use((0, morgan_1.default)('dev'));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());

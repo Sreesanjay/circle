@@ -49,13 +49,12 @@ export default function UserProfilePage() {
           }
           dispatch(resetUser());
      }, [isError, errorMessage, isSuccess, userProfile, dispatch]);
-     
+
      useEffect(() => {
-          (async () => {
+          (() => {
                dispatch(getUserProfile());
           })();
      }, [dispatch]);
-
 
      function updateProfile() {
           toast.success("profile updated");
@@ -173,7 +172,7 @@ export default function UserProfilePage() {
                               </div>
                          </section>
                          <section className="profile-body min-h-screen w-full md:grid md:grid-cols-12">
-                              <div className="left-section col-span-3 px-5 bg-gray-800 shadow-xl pt-5">
+                              <div className="left-section col-span-3 px-5 bg-gray-800 shadow-xl py-5">
                                    <FriendList />
                                    <hr className="my-3" />
                                    <div className="flex items-center mb-3 justify-between">

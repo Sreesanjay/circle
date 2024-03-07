@@ -15,6 +15,8 @@ import { useBottomScrollListener } from "react-bottom-scroll-listener";
 import { userList } from "../../types";
 import SkeletonLoader from "../Loader/Skeleton";
 import { useNavigate } from "react-router-dom";
+import { debaunce } from "../../util/debounce";
+
 export default function ConnectionList({
      openModal,
      setOpenModal,
@@ -25,7 +27,7 @@ export default function ConnectionList({
      title: string;
 }) {
      const [users, setUsers] = useState<userList[]>([]);
-     const navigate = useNavigate()
+     const navigate = useNavigate();
      const isSearch = useRef(false);
      const [isLoading, setIsLoading] = useState(false);
      const pagination = useRef(0);
@@ -101,6 +103,10 @@ export default function ConnectionList({
           }
      }, [openModal, fetchUserList]);
 
+     const debounceSearch = debaunce((value: string) => {
+          fetchUserList(value);
+     },500);
+
      return (
           <Modal
                show={openModal}
@@ -124,7 +130,7 @@ export default function ConnectionList({
                               onChange={(e) => {
                                    isSearch.current = true;
                                    pagination.current = 0;
-                                   fetchUserList(e.target.value);
+                                   debounceSearch(e.target.value);
                               }}
                          />
                          <div className="users-list">
@@ -135,11 +141,14 @@ export default function ConnectionList({
                                                   className="user-card my-4 bg-gray-100 p-2 rounded-md flex items-center gap-3 justify-between"
                                                   key={index}
                                              >
-                                                  <div className="left flex gap-3"  onClick={() =>
-                                                       navigate(
-                                                            `/view-profile/${user.user_id}`
-                                                       )
-                                                  }>
+                                                  <div
+                                                       className="left flex gap-3"
+                                                       onClick={() =>
+                                                            navigate(
+                                                                 `/view-profile/${user.user_id}`
+                                                            )
+                                                       }
+                                                  >
                                                        {user.profile_img ? (
                                                             <img
                                                                  src={

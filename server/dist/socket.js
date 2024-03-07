@@ -2,30 +2,28 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.activeUsers = exports.socketIo = void 0;
 const socket_io_1 = require("socket.io");
+const ORIGIN = "https://my-circle.online";
+// const ORIGIN = "http://localhost:5000"
 let activeUsers = [];
 exports.activeUsers = activeUsers;
 let socketIo;
 exports.default = {
     getIo: (server) => {
-        console.log("server", server);
         const io = new socket_io_1.Server(server, {
             pingTimeout: 60000,
             cors: {
-                origin: "https://my-circle.online",
+                origin: ORIGIN,
                 credentials: true,
             },
         });
         io.on('connection', (socket) => {
-            console.log("connection request got");
             exports.socketIo = socketIo = socket;
             socket.on("setup", (newUserId) => {
-                console.log("setup got");
                 const user = activeUsers.find((item) => item.userId === newUserId);
                 if (!user || user.socketId !== socket.id) {
                     const newUser = { userId: newUserId, socketId: socket.id };
                     activeUsers.push(newUser);
                 }
-                console.log("user connected", activeUsers);
                 io.emit("connected", activeUsers);
             });
             socket.on('new-chat', (newChat) => {
@@ -79,7 +77,6 @@ exports.default = {
             });
             socket.on('disconnect', () => {
                 exports.activeUsers = activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
-                console.log("user dis connected", activeUsers);
                 io.emit("connected", activeUsers);
             });
         });

@@ -169,12 +169,7 @@ export default function HomePage() {
                                              })}
                                    </div>
                               </div>
-                              <div className="box flex flex-col items-center mt-28 border  max-w-64 self-center p-5  py-10 rounded-md">
-                                   {/* <img
-                                        src="https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2021/04/Social-Cover-1.jpg"
-                                        alt=""
-                                        className="max-w-64 mb-5 rounded-md"
-                                   /> */}
+                              <div className="box flex flex-col items-center mt-28  max-w-64 self-center p-5  py-10 rounded-md">
                                    <h1 className="text-gray-400">"Connect, Share, Inspire </h1>
                                    <h1 className="text-gray-400">Your Social Oasis Awaits!"</h1>
                               </div>

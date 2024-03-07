@@ -196,7 +196,7 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                     )}
                </section>
                <section className="profile-details grid grid-cols-12 min-h-96">
-                    <section className="left-section col-span-3 shadow-md flex flex-col items-center p-5">
+                    <section className="left-section col-span-12 md:col-span-3 shadow-md flex flex-col items-center p-5">
                          <div className="profile-image w-36 flex justify-center">
                               {userProfile?.profile_img ? (
                                    <img
@@ -255,7 +255,7 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                               <span className="bio">{userProfile?.bio}</span>
                          </div>
                     </section>
-                    <section className="posts-section col-span-9">
+                    <section className="posts-section col-span-12 md:col-span-9">
                          <header className="w-full flex justify-between p-5 relative">
                               <h1 className="p-5 text-lg font-medium">Posts</h1>
                               <div
@@ -266,7 +266,7 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                               </div>
                               {showList && (
                                    <ListGroup
-                                        className="w-48 absolute right-5 top-16"
+                                        className="w-48 absolute right-5 top-16 z-20"
                                         onClick={() => setShowList(!showList)}
                                    >
                                         <div className="shadow-md">

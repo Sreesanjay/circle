@@ -78,7 +78,9 @@ function App() {
      const socket = useRef<Socket | null>(null);
      useEffect(() => {
           if (user) {
-               socket.current = io("https://my-circle.online");
+               socket.current = io("https://my-circle.online",{
+                      transports: ['websocket']
+               });
                console.log(socket.current)
                socket?.current?.emit("setup", user?._id);
                socket?.current?.on("connected", (users) => {

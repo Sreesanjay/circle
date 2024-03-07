@@ -66,7 +66,11 @@ const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 //socket context
 export const SocketContext = createContext<RefObject<Socket> | null>(null);
-
+const host = [
+     "http://localhost:5000",
+     "http://my-circle.online",
+     "https://my-circle.online",
+];
 function App() {
      const dispatch = useAppDispatch();
      const { user } = useAppSelector((state) => state.auth);
@@ -74,8 +78,8 @@ function App() {
      const socket = useRef<Socket | null>(null);
      useEffect(() => {
           if (user) {
-               console.log("connection");
-               socket.current = io("https://my-circle.online");
+               socket.current = io(`${host}`);
+               console.log(socket.current)
                socket?.current?.emit("setup", user?._id);
                socket?.current?.on("connected", (users) => {
                     dispatch(setOnlineUsers(users));
@@ -90,13 +94,6 @@ function App() {
           }
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [user]);
-
-     useEffect(() => {
-          if (socket.current) {
-               console.log(socket.current);
-          }
-     }, []);
-
      return (
           <div className="bg-gray-800 app min-h-screen text-white">
                <SocketContext.Provider value={socket}>

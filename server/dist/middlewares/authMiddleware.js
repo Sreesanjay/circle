@@ -20,6 +20,7 @@ const validateEnv_1 = __importDefault(require("../util/validateEnv"));
 const mongoose_1 = __importDefault(require("mongoose"));
 exports.protect = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.cookies.token;
+    console.log(token);
     if (token) {
         try {
             const decoded = jsonwebtoken_1.default.verify(token, validateEnv_1.default.JWT_ACCESSTOKEN_SECRET);

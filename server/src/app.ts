@@ -9,7 +9,7 @@ import adminRouter from './routes/adminRoute'
 
 const app = express();
 const corsConfig = {
-    origin: "http://localhost:5173",
+    origin: "*",
     credentials: true,
 };
 app.use(morgan('dev'));

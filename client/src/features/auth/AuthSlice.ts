@@ -110,6 +110,7 @@ export const authSlice = createSlice({
                     state.isLoading = true;
                })
                .addCase(signin.fulfilled, (state, action) => {
+                    console.log(action)
                     state.isLoading = false;
                     if (action.payload.token) {
                          state.isSuccess = true;

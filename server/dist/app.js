@@ -13,7 +13,7 @@ const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const adminRoute_1 = __importDefault(require("./routes/adminRoute"));
 const app = (0, express_1.default)();
 const corsConfig = {
-    origin: "http://localhost:5173",
+    origin: "*",
     credentials: true,
 };
 app.use((0, morgan_1.default)('dev'));

@@ -15,10 +15,10 @@ export default {
         const io = new Server(server, {
             pingTimeout: 60000,
             cors: {
-                origin: 'https://my-circle.online',
-                credentials: true,
+                origin: 'https://my-circle.online'
             },
         })
+        console.log(io)
 
         io.on('connection', (socket: Socket) => {
             console.log("connection request got")

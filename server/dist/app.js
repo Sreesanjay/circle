@@ -13,7 +13,7 @@ const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const adminRoute_1 = __importDefault(require("./routes/adminRoute"));
 const app = (0, express_1.default)();
 const corsConfig = {
-    origin: "http://my-circle.online",
+    origin: "https://my-circle.online",
     credentials: true,
 };
 app.use((0, morgan_1.default)('dev'));

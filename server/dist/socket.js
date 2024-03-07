@@ -7,6 +7,7 @@ exports.activeUsers = activeUsers;
 let socketIo;
 exports.default = {
     getIo: (server) => {
+        console.log("server", server);
         const io = new socket_io_1.Server(server, {
             pingTimeout: 60000,
             cors: {
@@ -14,7 +15,6 @@ exports.default = {
                 credentials: true,
             },
         });
-        console.log("io =>", io);
         io.on('connection', (socket) => {
             console.log("connection request got");
             exports.socketIo = socketIo = socket;

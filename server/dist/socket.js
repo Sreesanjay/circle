@@ -11,7 +11,7 @@ exports.default = {
         const io = new socket_io_1.Server(server, {
             pingTimeout: 60000,
             cors: {
-                origin: "https://my-circle.online",
+                origin: "*",
                 credentials: true,
             },
         });

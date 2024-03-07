@@ -149,7 +149,7 @@ exports.uploadPost = (0, express_async_handler_1.default)((req, res, next) => __
  * @access private
  */
 exports.getPosts = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c, _d, _e, _f, _g, _h;
+    var _c, _d, _e, _f, _g, _h, _j;
     const page = (req.query.page && typeof (req.query.page) === "string") ? req.query.page : null;
     const pageSize = 3;
     const interest = yield userProfile_1.default.findOne({ user_id: (_c = req.user) === null || _c === void 0 ? void 0 : _c._id });
@@ -315,7 +315,7 @@ exports.getPosts = (0, express_async_handler_1.default)((req, res, next) => __aw
     const add = yield postSchema_1.default.aggregate([
         {
             $match: {
-                _id: boosted[0].post_id
+                _id: (_g = boosted[0]) === null || _g === void 0 ? void 0 : _g.post_id
             }
         },
         {
@@ -327,7 +327,7 @@ exports.getPosts = (0, express_async_handler_1.default)((req, res, next) => __aw
                 pipeline: [
                     {
                         $match: {
-                            user_id: (_g = req.user) === null || _g === void 0 ? void 0 : _g._id
+                            user_id: (_h = req.user) === null || _h === void 0 ? void 0 : _h._id
                         }
                     },
                     {
@@ -454,7 +454,7 @@ exports.getPosts = (0, express_async_handler_1.default)((req, res, next) => __aw
     if (posts) {
         if (posts.length) {
             const postIds = posts.map(post => post === null || post === void 0 ? void 0 : post._id);
-            yield postSchema_1.default.updateMany({ _id: { $in: postIds } }, { $addToSet: { impressions: (_h = req.user) === null || _h === void 0 ? void 0 : _h._id } });
+            yield postSchema_1.default.updateMany({ _id: { $in: postIds } }, { $addToSet: { impressions: (_j = req.user) === null || _j === void 0 ? void 0 : _j._id } });
         }
         res.status(200).json({
             status: 'ok',
@@ -472,7 +472,7 @@ exports.getPosts = (0, express_async_handler_1.default)((req, res, next) => __aw
 * @access private
 */
 exports.postComment = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _j, _k, _l;
+    var _k, _l, _m;
     const { post_id, reply, content } = req.body;
     const post = yield postSchema_1.default.findById(post_id);
     if (!post) {
@@ -487,7 +487,7 @@ exports.postComment = (0, express_async_handler_1.default)((req, res, next) => _
         }
     }
     const newComment = new commentSchema_1.default({
-        user_id: (_j = req.user) === null || _j === void 0 ? void 0 : _j._id,
+        user_id: (_k = req.user) === null || _k === void 0 ? void 0 : _k._id,
         content,
         reply,
         post_id
@@ -543,10 +543,10 @@ exports.postComment = (0, express_async_handler_1.default)((req, res, next) => _
         },
     ]);
     if (newComment) {
-        const commentedUser = yield userProfile_1.default.findOne({ user_id: (_k = req.user) === null || _k === void 0 ? void 0 : _k._id });
+        const commentedUser = yield userProfile_1.default.findOne({ user_id: (_l = req.user) === null || _l === void 0 ? void 0 : _l._id });
         const newMessage = new notificationSchema_1.default({
             user_id: post.user_id,
-            sender_id: (_l = req.user) === null || _l === void 0 ? void 0 : _l._id,
+            sender_id: (_m = req.user) === null || _m === void 0 ? void 0 : _m._id,
             message: `${commentedUser === null || commentedUser === void 0 ? void 0 : commentedUser.username} commented on your post`
         });
         newMessage.save();
@@ -714,18 +714,18 @@ exports.getReplys = (0, express_async_handler_1.default)((req, res, next) => __a
 * @access private
 */
 exports.addLike = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _m, _o, _p, _q;
+    var _o, _p, _q, _r;
     const id = req.params.id;
     if (!id) {
         res.status(400);
         return next(new Error('post not not found'));
     }
-    const post = yield postSchema_1.default.findOneAndUpdate({ _id: id }, { $push: { likes: (_m = req.user) === null || _m === void 0 ? void 0 : _m._id } }, { new: true });
+    const post = yield postSchema_1.default.findOneAndUpdate({ _id: id }, { $push: { likes: (_o = req.user) === null || _o === void 0 ? void 0 : _o._id } }, { new: true });
     if (post) {
-        const user = yield userProfile_1.default.findOne({ user_id: (_o = req.user) === null || _o === void 0 ? void 0 : _o._id });
+        const user = yield userProfile_1.default.findOne({ user_id: (_p = req.user) === null || _p === void 0 ? void 0 : _p._id });
         const newMessage = new notificationSchema_1.default({
             user_id: post.user_id,
-            sender_id: (_p = req.user) === null || _p === void 0 ? void 0 : _p._id,
+            sender_id: (_q = req.user) === null || _q === void 0 ? void 0 : _q._id,
             message: `${user === null || user === void 0 ? void 0 : user.username} liked your post`
         });
         newMessage.save();
@@ -733,7 +733,7 @@ exports.addLike = (0, express_async_handler_1.default)((req, res, next) => __awa
             status: 'ok',
             message: 'replys fetched',
             post,
-            user_id: (_q = req.user) === null || _q === void 0 ? void 0 : _q._id
+            user_id: (_r = req.user) === null || _r === void 0 ? void 0 : _r._id
         });
     }
     else {
@@ -746,19 +746,19 @@ exports.addLike = (0, express_async_handler_1.default)((req, res, next) => __awa
 * @access private
 */
 exports.disLike = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _r, _s;
+    var _s, _t;
     const id = req.params.id;
     if (!id) {
         res.status(400);
         return next(new Error('post not not found'));
     }
-    const post = yield postSchema_1.default.findOneAndUpdate({ _id: id }, { $pull: { likes: (_r = req.user) === null || _r === void 0 ? void 0 : _r._id } }, { new: true });
+    const post = yield postSchema_1.default.findOneAndUpdate({ _id: id }, { $pull: { likes: (_s = req.user) === null || _s === void 0 ? void 0 : _s._id } }, { new: true });
     if (post) {
         res.status(200).json({
             status: 'ok',
             message: 'replys fetched',
             post,
-            user_id: (_s = req.user) === null || _s === void 0 ? void 0 : _s._id
+            user_id: (_t = req.user) === null || _t === void 0 ? void 0 : _t._id
         });
     }
     else {
@@ -771,14 +771,14 @@ exports.disLike = (0, express_async_handler_1.default)((req, res, next) => __awa
 * @access private
 */
 exports.savePost = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _t;
+    var _u;
     const post_id = req.body.post_id;
     if (!post_id) {
         res.status(400);
         return next(new Error('post not not found'));
     }
     const data = new savedPost_1.default({
-        user_id: (_t = req.user) === null || _t === void 0 ? void 0 : _t._id,
+        user_id: (_u = req.user) === null || _u === void 0 ? void 0 : _u._id,
         post_id: post_id
     });
     const saved = yield data.save();
@@ -799,13 +799,13 @@ exports.savePost = (0, express_async_handler_1.default)((req, res, next) => __aw
 * @access private
 */
 exports.unsavePost = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _u;
+    var _v;
     const post_id = req.params.id;
     if (!post_id) {
         res.status(400);
         return next(new Error('post not not found'));
     }
-    const unsaved = yield savedPost_1.default.findOneAndDelete({ post_id: post_id, user_id: (_u = req.user) === null || _u === void 0 ? void 0 : _u._id });
+    const unsaved = yield savedPost_1.default.findOneAndDelete({ post_id: post_id, user_id: (_v = req.user) === null || _v === void 0 ? void 0 : _v._id });
     if (unsaved) {
         res.status(200).json({
             status: 'ok',

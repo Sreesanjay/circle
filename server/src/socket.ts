@@ -11,6 +11,7 @@ let socketIo: Socket;
 
 export default {
     getIo: (server: HttpServer) => {
+        console.log("server",server)
         const io = new Server(server, {
             pingTimeout: 60000,
             cors: {
@@ -18,7 +19,6 @@ export default {
                 credentials: true,
             },
         })
-        console.log("io =>",io)
         io.on('connection', (socket: Socket) => {
             console.log("connection request got")
             socketIo = socket;

@@ -10,7 +10,7 @@ import ProfileIcon from "../../assets/ProfileIcon";
 import SearchBox from "../SearchBox/SearchBox";
 import "./UserHeader.css";
 import UserHeaderProfile from "./UserHeaderProfile";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { resetCurrentChat } from "../../features/Socket/SocketSlice";
 import { Drawer } from "@mui/material";
@@ -21,6 +21,7 @@ import API from "../../api";
 import { SocketContext } from "../../App";
 
 export default function UserHeader() {
+     const navigate = useNavigate()
      const dispatch = useAppDispatch();
      const socket = useContext(SocketContext);
      const location = useLocation();
@@ -91,9 +92,11 @@ export default function UserHeader() {
      return (
           <section className="user-header px-6 grid grid-cols-6 items-center sticky shadow-sm bg-gray-900">
                <div className="logo col-span-1">
-                    <h1 className="text-4xl md:text-5xl text-primary">
-                         Circle
-                    </h1>
+                    <button onClick={()=>navigate('/')}>
+                         <h1 className="text-4xl md:text-5xl text-primary">
+                              Circle
+                         </h1>
+                    </button>
                </div>
                <div className="right-nav flex justify-end gap-5 col-span-5 md:col-span-5 items-center">
                     <div className="grow hidden sm:flex justify-end">

@@ -276,7 +276,7 @@ export default function PostCard({ post }: { post: IPost }) {
                                    </div>
                               </div>
                          )}
-                         {post.is_boosted && (
+                         {post.is_boosted && user?._id !== post.user_id && (
                               <div
                                    className="boost-action h-12 bg-gray-800 hover:bg-gray-600 rounded-md flex items-center px-3 border bottom-0 justify-between"
                                    onClick={handleClick}

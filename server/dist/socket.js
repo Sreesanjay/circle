@@ -13,10 +13,12 @@ exports.default = {
                 origin: 'https://my-circle.online'
             },
         });
+        console.log("io =>", io);
         io.on('connection', (socket) => {
             console.log("connection request got");
             exports.socketIo = socketIo = socket;
             socket.on("setup", (newUserId) => {
+                console.log("setup got");
                 const user = activeUsers.find((item) => item.userId === newUserId);
                 if (!user || user.socketId !== socket.id) {
                     const newUser = { userId: newUserId, socketId: socket.id };

@@ -86,7 +86,7 @@ export const authSlice = createSlice({
                          localStorage.setItem(
                               "user",
                               JSON.stringify(action.payload.user),
-                              
+
                          );
                          state.user = action.payload.user;
                          localStorage.setItem(
@@ -110,7 +110,6 @@ export const authSlice = createSlice({
                     state.isLoading = true;
                })
                .addCase(signin.fulfilled, (state, action) => {
-                    console.log(action)
                     state.isLoading = false;
                     if (action.payload.token) {
                          state.isSuccess = true;

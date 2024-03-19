@@ -43,7 +43,6 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                          withCredentials: true,
                     });
                     if (response.data) {
-                         console.log(response.data.posts);
                          setPosts(response.data.posts);
                     }
                } catch (error) {

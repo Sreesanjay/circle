@@ -237,39 +237,61 @@ export default function ViewCommunity() {
                     </header>
                     <body className="container grid grid-cols-12 p-5">
                          <section className="discussion-section col-span-12 lg:col-span-8">
-                              <div className="new-discusssion flex items-center gap-3">
+                              {member ? (
+                                   <div className="new-discusssion flex items-center gap-3">
+                                        <div
+                                             className="file-upload-button text-3xl text-primary "
+                                             onClick={() =>
+                                                  setOpenMediaUpload(true)
+                                             }
+                                        >
+                                             <FaFileCirclePlus />
+                                        </div>
+                                        <input type="hidden" />
+                                        <button
+                                             className="new-text-discussion-input w-5/6 h-12 rounded bg-gray-700 flex justify-start items-center px-3 text-slate-500"
+                                             onClick={() =>
+                                                  setNewDiscussion(true)
+                                             }
+                                        >
+                                             Write Something
+                                        </button>
+                                        <div className="send-icon">
+                                             <IconSend size={35} />
+                                        </div>
+                                   </div>
+                              ) : (
+                                   <div className="join-suggestion flex  bg-gray-900/25 text-gray-400 me-5 p-5">
+                                        <h1>
+                                             Join this community to post
+                                             discussions
+                                        </h1>
+                                   </div>
+                              )}
+                              {discussion.length !== 0 ? (
                                    <div
-                                        className="file-upload-button text-3xl text-primary "
-                                        onClick={() => setOpenMediaUpload(true)}
+                                        className="discussions w-full flex flex-col items-center py-5 sm:p-5"
+                                        ref={discussionRef}
                                    >
-                                        <FaFileCirclePlus />
+                                        {discussion?.map((item, index) => {
+                                             return (
+                                                  <DiscussionCard
+                                                       discussion={item}
+                                                       setDiscussion={
+                                                            setDiscussion
+                                                       }
+                                                       key={index}
+                                                       type={"DEFAULT"}
+                                                  />
+                                             );
+                                        })}
                                    </div>
-                                   <input type="hidden" />
-                                   <button
-                                        className="new-text-discussion-input w-5/6 h-12 rounded bg-gray-700 flex justify-start items-center px-3 text-slate-500"
-                                        onClick={() => setNewDiscussion(true)}
-                                   >
-                                        Write Something
-                                   </button>
-                                   <div className="send-icon">
-                                        <IconSend size={35} />
+                              ) : (
+                                   <div className="w-full h-1/2 flex justify-center items-center flex-col">
+                                        <img src="https://png.pngtree.com/svg/20161030/nodata_800056.png" className="w-40" alt="" />
+                                        <h1 className="text-gray-400">No Discussions Yet</h1>
                                    </div>
-                              </div>
-                              <div
-                                   className="discussions w-full flex flex-col items-center py-5 sm:p-5"
-                                   ref={discussionRef}
-                              >
-                                   {discussion?.map((item, index) => {
-                                        return (
-                                             <DiscussionCard
-                                                  discussion={item}
-                                                  setDiscussion={setDiscussion}
-                                                  key={index}
-                                                  type={"DEFAULT"}
-                                             />
-                                        );
-                                   })}
-                              </div>
+                              )}
                          </section>
                          <div className="right-section hidden lg:block sm:col-span-4 bg-gray-900 p-5 rounded-md">
                               <h1 className="text-lg">About</h1>
@@ -322,6 +344,7 @@ export default function ViewCommunity() {
                     setOpenDrawer={setOpenDrawer}
                     community={currentCommunity}
                     setCommunity={setCurrentCommunity}
+                    setUser={setMember}
                />
                <NewRequest
                     openDrawer={openNewRequest}

@@ -107,7 +107,7 @@ function App() {
                          >
                               <Route path="/" element={<HomePage />} />
                               <Route
-                                   path="/profile"
+                                   path="/profile/*"
                                    element={<UserProfilePage />}
                               />
                               <Route

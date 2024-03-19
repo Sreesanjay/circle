@@ -21,6 +21,7 @@ import CloseFriends from "../../components/CloseFriend/CloseFriends";
 import ProfileSection from "../../components/Profile/ProfileSection";
 import { resetUser } from "../../features/user/userSlice";
 import { getUserProfile } from "../../services/userService";
+import { useLocation, useNavigate } from "react-router-dom";
 const PostSection = lazy(
      () => import("../../components/PostSection/PostSection")
 );
@@ -32,12 +33,15 @@ export default function UserProfilePage() {
      const dispatch = useAppDispatch();
      const { userProfile, isLoading, isError, isSuccess, errorMessage } =
           useAppSelector((state) => state.user);
+     const navigate = useNavigate();
 
      const [showModal, setShowModal] = useState(false);
      const [showUploadImage, setshowUploadImage] = useState(false);
      const [showUploadProfile, setshowUploadProfile] = useState(false);
      const [showEditProfImgIcon, setshowEditProfIcon] = useState("hidden");
      const [content, setContent] = useState("PROFILE");
+
+     const location = useLocation();
 
      useEffect(() => {
           if (isError) {
@@ -149,22 +153,31 @@ export default function UserProfilePage() {
                               </div>
                               <div className="right-nav grow ps-7 sm:ps-14 flex">
                                    <div
-                                        className="flex flex-col items-center hover:bg-gray-700 rounded-md p-2 mt-2 sm:me-9"
-                                        onClick={() => setContent("PROFILE")}
+                                        className={`flex flex-col items-center  hover:bg-gray-800 rounded-md p-2 mt-2 sm:me-9 ${location.pathname === '/profile' && 'bg-gray-800'}`}
+                                        onClick={() => {
+                                             navigate("/profile");
+                                             setContent("PROFILE");
+                                        }}
                                    >
                                         <Profile size={28} />
                                         <h3 className="">Profile</h3>
                                    </div>
                                    <div
-                                        className="flex flex-col items-center hover:bg-gray-700 rounded-md p-2 mt-2 sm:me-9"
-                                        onClick={() => setContent("POST")}
+                                        className={`flex flex-col items-center hover:bg-gray-700 rounded-md p-2 mt-2 sm:me-9 ${location.pathname === '/profile/post' && 'bg-gray-800'} `}
+                                        onClick={() => {
+                                             navigate("/profile/post");
+                                             setContent("POST");
+                                        }}
                                    >
                                         <PostIcon size={28} />
                                         <h3 className="">Posts</h3>
                                    </div>
                                    <div
-                                        className="flex flex-col items-center hover:bg-gray-700 rounded-md p-2 mt-2 sm:me-9"
-                                        onClick={() => setContent("SAVED")}
+                                        className={`flex flex-col items-center hover:bg-gray-700 rounded-md p-2 mt-2 sm:me-9  ${location.pathname === '/profile/saved-post' && 'bg-gray-800'}`}
+                                        onClick={() => {
+                                             navigate("/profile/saved-post");
+                                             setContent("SAVED");
+                                        }}
                                    >
                                         <SavedIcon size={28} />
                                         <h3 className="">Saved</h3>

@@ -18,12 +18,12 @@ export default function CommunityCard({
      const [pendings, setPendings] = useState<string[]>([]);
      useEffect(() => {
           setMembers(
-               community.members
+               community?.members
                     ?.filter((item) => item.status === "active")
                     .map((item) => item.user_id)
           );
           setPendings(
-               community.members
+               community?.members
                     ?.filter((item) => item.status === "pending")
                     .map((item) => item.user_id)
           );

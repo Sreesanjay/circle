@@ -86,7 +86,7 @@ export default function PasswordPrivacy() {
                                         Reset Password
                                    </h1>
 
-                                   <form action="" className="w-1/2">
+                                   <form action="" className="sm:w-1/2">
                                         {isError && status === 406 ? (
                                              <Alert
                                                   color="failure"

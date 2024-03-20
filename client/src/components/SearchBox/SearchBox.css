@@ -11,3 +11,10 @@
 .search-box .user-list-search{
   border: 1px solid rgba(0, 0, 0, 0.338);
 }
+.user-list-search{
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+.user-list-search::-webkit-scrollbar{
+  display: none;
+}

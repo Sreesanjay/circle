@@ -56,9 +56,7 @@ export default function ManageCloseFriend() {
                <div className="px-5 sm:ms-64">
                     <div className="header w-full flex justify-between items-center">
                          <Breadcrumb aria-label="Default breadcrumb example">
-                              <Breadcrumb.Item
-                                   icon={LiaUserFriendsSolid}
-                              >
+                              <Breadcrumb.Item icon={LiaUserFriendsSolid}>
                                    Close Friends
                               </Breadcrumb.Item>
                          </Breadcrumb>
@@ -70,19 +68,26 @@ export default function ManageCloseFriend() {
                               setOpenModal={setAddCloseFriends}
                          />
                     </div>
-                    <div className="close-friends py-5 flex gap-3 flex-wrap justify-center sm:justify-start">
-                         {users &&
-                              users.map((user) => {
-                                   return (
-                                        <CloseFriendCard
-                                             user={user}
-                                             removeCloseFriend={
-                                                  removeCloseFriend
-                                             }
-                                        />
-                                   );
-                              })}
-                    </div>
+                    {users.length === 0 ? (
+                         <div className="w-full h-96 flex flex-col justify-center items-center">
+                              <img src="https://icons.veryicon.com/png/o/business/financial-category/no-data-6.png" alt="" className="w-36" />
+                              <h1 className="text-gray-400">No close friends found</h1>
+                         </div>
+                    ) : (
+                         <div className="close-friends py-5 flex gap-3 flex-wrap justify-center sm:justify-start">
+                              {users &&
+                                   users.map((user) => {
+                                        return (
+                                             <CloseFriendCard
+                                                  user={user}
+                                                  removeCloseFriend={
+                                                       removeCloseFriend
+                                                  }
+                                             />
+                                        );
+                                   })}
+                         </div>
+                    )}
                </div>
           </div>
      );

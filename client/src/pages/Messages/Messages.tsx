@@ -162,7 +162,7 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
                                         Messages
                                    </h1>
                                    <div
-                                        className=""
+                                        className="cursor-pointer mb-5"
                                         onClick={() =>
                                              setOpenThreeDot(!openThreedot)
                                         }
@@ -183,12 +183,6 @@ export default function Messages({ socket }: { socket: RefObject<Socket> }) {
                                                        }
                                                   >
                                                        Create Group
-                                                  </ListGroup.Item>
-                                                  <ListGroup.Item>
-                                                       Settings
-                                                  </ListGroup.Item>
-                                                  <ListGroup.Item>
-                                                       Messages
                                                   </ListGroup.Item>
                                              </ListGroup>
                                         </div>

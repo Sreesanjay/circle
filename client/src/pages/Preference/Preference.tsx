@@ -81,18 +81,31 @@ export default function Preference() {
                                         myInterest={myInterest}
                                    />
                               </div>
-                              <section className="my-interest flex gap-3 flex-wrap">
-                                   {myInterest.map((item: IInterest) => {
-                                        if (item) {
-                                             return (
-                                                  <MyInterest
-                                                       interest={item}
-                                                       key={item._id}
-                                                  />
-                                             );
-                                        }
-                                   })}
-                              </section>
+                              {myInterest.length === 0 ? (
+                                   <div className="w-full h-96 flex flex-col justify-center items-center">
+                                        <img
+                                             src="https://icons.veryicon.com/png/o/business/financial-category/no-data-6.png"
+                                             alt=""
+                                             className="w-36"
+                                        />
+                                        <h1 className="text-gray-400">
+                                             No Interests found
+                                        </h1>
+                                   </div>
+                              ) : (
+                                   <section className="my-interest flex gap-3 flex-wrap">
+                                        {myInterest.map((item: IInterest) => {
+                                             if (item) {
+                                                  return (
+                                                       <MyInterest
+                                                            interest={item}
+                                                            key={item._id}
+                                                       />
+                                                  );
+                                             }
+                                        })}
+                                   </section>
+                              )}
                          </div>
                     </section>
                )}

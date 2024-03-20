@@ -258,7 +258,7 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                          <header className="w-full flex justify-between p-5 relative">
                               <h1 className="p-5 text-lg font-medium">Posts</h1>
                               <div
-                                   className=""
+                                   className="cursor-pointer"
                                    onClick={() => setShowList(!showList)}
                               >
                                    <ThreeDot size={35} />
@@ -309,7 +309,7 @@ export default function ProfileView({ socket }: { socket: RefObject<Socket> }) {
                                    }}
                                    className="image-list"
                                    variant="masonry"
-                                   cols={3}
+                                   cols={4}
                                    gap={1}
                               >
                                    {posts &&

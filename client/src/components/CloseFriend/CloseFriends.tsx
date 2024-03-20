@@ -28,8 +28,8 @@ export default function CloseFriends() {
      return (
           <div className="flex gap-3">
                {users.length === 0 && (
-                    <div className="flex flex-col gap-5 text-sm">
-                         <h1>You dont have any close friends</h1>
+                    <div className="flex flex-col gap-5 text-sm w-full pt-5">
+                         <h1 className="text-center">You dont have any close friends</h1>
                          <button
                               className="bg-gray-700 py-2 rounded-md"
                               onClick={() =>

@@ -59,16 +59,27 @@ export default function RecentDiscussions() {
                className=" p-5 sm:p-10 bg-gray-800 h-full overflow-y-scroll"
                ref={discussionRef}
           >
-               {discussion.map((item, index) => {
-                    return (
-                         <DiscussionCard
-                              discussion={item}
-                              setDiscussion={setDiscussion}
-                              key={index}
-                              type={'RECENT'}
+               {discussion.length === 0 ? (
+                    <div className="w-full h-1/2 flex justify-center items-center flex-col">
+                         <img
+                              src="https://png.pngtree.com/svg/20161030/nodata_800056.png"
+                              className="w-40"
+                              alt=""
                          />
-                    );
-               })}
+                         <h1 className="text-gray-400">No Discussions Yet</h1>
+                    </div>
+               ) : (
+                    discussion.map((item, index) => {
+                         return (
+                              <DiscussionCard
+                                   discussion={item}
+                                   setDiscussion={setDiscussion}
+                                   key={index}
+                                   type={"RECENT"}
+                              />
+                         );
+                    })
+               )}
           </div>
      );
 }

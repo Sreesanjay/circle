@@ -430,8 +430,8 @@ exports.getAnalytics = (0, express_async_handler_1.default)((req, res, next) => 
     const total_members = yield membersSchema_1.default.countDocuments({ community_id: id, status: 'active' });
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const discussions_today = yield discussionSchema_1.default.countDocuments({ community_id: id, createdAt: { $gte: today } });
-    const total_discussion = yield discussionSchema_1.default.countDocuments({ community_id: id });
+    const discussions_today = yield discussionSchema_1.default.countDocuments({ community_id: id, createdAt: { $gte: today }, is_delete: false });
+    const total_discussion = yield discussionSchema_1.default.countDocuments({ community_id: id, is_delete: false });
     if (total_members || discussions_today || total_discussion) {
         res.status(200).json({
             status: 'ok',

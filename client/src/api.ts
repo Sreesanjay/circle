@@ -1,9 +1,8 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 // const baseURL = "https://my-circle.online/api"
 const baseURL = "http://localhost:5000/api"
 
 import Cookies from "js-cookie";
-import { toast } from 'react-toastify';
 
 const instance = axios.create({
     baseURL,
@@ -21,22 +20,25 @@ instance.interceptors.response.use(
         if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
-                const refreshToken = localStorage.getItem('refreshToken');
-                if (refreshToken) {
-                    const response = await instance.post('/refresh-token', { refreshToken: JSON.parse(refreshToken) });
-                    const { token } = response.data;
-                    Cookies.set("token", token, { expires: (1 / 1440) * 15 });
-                    return axios(originalRequest);
+                const rToken = localStorage.getItem('refreshToken');
+                if (rToken) {
+                    const refToken = JSON.parse(rToken)
+                    const { refreshToken, expiresAt } = refToken;
+                    if (expiresAt && new Date().getTime() < expiresAt) {
+                        const response = await instance.post('/refresh-token', { refreshToken: refreshToken });
+                        const { token } = response.data;
+                        Cookies.set("token", token, { expires: (1 / 1440) * 15 });
+                        return axios(originalRequest);
+                    } else {
+                        localStorage.removeItem("refreshToken");
+                    }
+
                 } else {
                     localStorage.removeItem('user');
                     localStorage.removeItem('userProfile');
                 }
-            } catch (error) {
-                const err = error as AxiosError<{
-                    message?: string;
-                    status?: string;
-                }>;
-                toast.error(err.response?.data.message)
+            } catch (err) {
+                return Promise.reject(error);
             }
         }
 

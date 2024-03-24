@@ -23,6 +23,7 @@ export const notFound = (req: Request, res: Response) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 export const errorHandler = (err: any, req: Request, res: Response,next: NextFunction) => {
      const statuscode: number = res.statusCode == 200 ? 500 : res.statusCode;
+     console.log(err)
      res.status(statuscode);
      res.json({
           status: "error",

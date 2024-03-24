@@ -18,7 +18,7 @@ export default function DiscoverCommunity() {
      }, [isSuccess, isError, dispatch]);
 
      return (
-          <section className="your-community flex sm:p-5 flex-wrap gap-5 justify-evenly bg-gray-800 min-h-full">
+          <section className="your-community flex sm:p-5 flex-wrap gap-5 justify-evenly sm:justify-start bg-gray-800 min-h-full">
                {community.length === 0 ? (
                     <div className="w-full flex justify-center items-center flex-col">
                          <img

@@ -59,9 +59,14 @@ export const authSlice = createSlice({
                          "user",
                          JSON.stringify(action.payload.user)
                     );
+                    const expirationTime = new Date().getTime() + (3 * 24 * 60 * 60 * 1000); // 3 days in milliseconds
+                    const data = {
+                         refreshToken: action.payload.refreshToken,
+                         expiresAt: expirationTime
+                    };
                     localStorage.setItem(
                          "refreshToken",
-                         JSON.stringify(action.payload.refreshToken)
+                         JSON.stringify(data)
                     );
                     state.user = action.payload.user;
                     Cookies.set("token", action.payload.token, { expires: (1 / 1440) * 15 });
@@ -89,9 +94,14 @@ export const authSlice = createSlice({
 
                          );
                          state.user = action.payload.user;
+                         const expirationTime = new Date().getTime() + (3 * 24 * 60 * 60 * 1000); // 3 days in milliseconds
+                         const data = {
+                              refreshToken: action.payload.refreshToken,
+                              expiresAt: expirationTime
+                         };
                          localStorage.setItem(
                               "refreshToken",
-                              JSON.stringify(action.payload.refreshToken)
+                              JSON.stringify(data)
                          );
                          Cookies.set("token", action.payload.token, { expires: (1 / 1440) * 15 });
                     }
@@ -118,9 +128,14 @@ export const authSlice = createSlice({
                               JSON.stringify(action.payload.user)
                          );
                          state.user = action.payload.user;
+                         const expirationTime = new Date().getTime() + (3 * 24 * 60 * 60 * 1000); // 3 days in milliseconds
+                         const data = {
+                              refreshToken: action.payload.refreshToken,
+                              expiresAt: expirationTime
+                         };
                          localStorage.setItem(
                               "refreshToken",
-                              JSON.stringify(action.payload.refreshToken)
+                              JSON.stringify(data)
                          );
                          Cookies.set("token", action.payload.token, { expires: (1 / 1440) * 15 });
                     }

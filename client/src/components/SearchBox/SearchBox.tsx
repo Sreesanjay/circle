@@ -9,9 +9,11 @@ import { TiStarburst } from "react-icons/ti";
 import { AxiosError } from "axios";
 import API from "../../api";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 
 export default function SearchBox() {
      const [search, setSearch] = useState("");
+     const { user } = useAppSelector((state) => state.auth);
      const navigate = useNavigate();
      const [userData, setUserData] = useState<
           | {
@@ -31,6 +33,7 @@ export default function SearchBox() {
                          { withCredentials: true }
                     );
                     if (response.data) {
+                         console.log(response.data.userData);
                          setUserData(response.data.userData);
                     }
                } catch (error) {
@@ -54,35 +57,42 @@ export default function SearchBox() {
                />
                {userData.length > 0 && (
                     <div className="user-list-search absolute mt-2 py-2 bg-gray-800 w-72 shadow-md cursor-pointer">
-                         {userData.map((user) => {
-                              return (
-                                   <div
-                                        className="user h-12 flex px-3 gap-3 items-center mb-2"
-                                        onClick={() => {
-                                             setSearch("");
-                                             navigate(
-                                                  `/view-profile/${user.user_id}`
-                                             );
-                                        }}
-                                   >
-                                        <img
-                                             src={user.profile_img}
-                                             alt=""
-                                             className="w-11 shadow rounded-md"
-                                        />
-                                        <div className="name leading-none">
-                                             <div className="flex items-center gap-2">
-                                                  <h1>{user.username}</h1>
-                                                  {user.verified.length && (
-                                                       <p className="text-blue-600 text-xl">
-                                                            <TiStarburst />
-                                                       </p>
-                                                  )}
+                         {userData.map((item) => {
+                              if (user?._id !== item.user_id) {
+                                   return (
+                                        <div
+                                             className="user h-12 flex px-3 gap-3 items-center mb-4"
+                                             onClick={() => {
+                                                  setSearch("");
+                                                  navigate(
+                                                       `/view-profile/${item.user_id}`
+                                                  );
+                                             }}
+                                        >
+                                             {item.profile_img ? (
+                                                  <img
+                                                       src={item.profile_img}
+                                                       alt=""
+                                                       className="w-11 shadow rounded-md"
+                                                  />
+                                             ) : (
+                                                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkYvq7zWeYgf2yDxPRExBk-l4hhCzk6FyhWA&usqp=CAU" alt="" className="w-11 rounded-full" />
+                                             )}
+                                             <div className="name leading-none">
+                                                  <div className="flex items-center gap-2">
+                                                       <h1>{item.username}</h1>
+                                                       {item.verified
+                                                            .length && (
+                                                            <p className="text-blue-600 text-xl">
+                                                                 <TiStarburst />
+                                                            </p>
+                                                       )}
+                                                  </div>
+                                                  <small>{item.fullname}</small>
                                              </div>
-                                             <small>{user.fullname}</small>
                                         </div>
-                                   </div>
-                              );
+                                   );
+                              }
                          })}
                     </div>
                )}

@@ -448,8 +448,8 @@ export const getAnalytics: RequestHandler = asyncHandler(
         const total_members = await Members.countDocuments({ community_id: id, status: 'active' });
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const discussions_today = await Discussion.countDocuments({ community_id: id, createdAt: { $gte: today } });
-        const total_discussion = await Discussion.countDocuments({ community_id: id });
+        const discussions_today = await Discussion.countDocuments({ community_id: id, createdAt: { $gte: today }, is_delete: false });
+        const total_discussion = await Discussion.countDocuments({ community_id: id, is_delete: false });
 
         if (total_members || discussions_today || total_discussion) {
             res.status(200).json({

@@ -8,10 +8,12 @@ import { IUserList } from "../../types";
 import { ProfileIconWithText } from "../../assets/Icons";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function FindFriends() {
      const [suggestion, setSuggestion] = useState<IUserList[]>([]);
      const [userList, setUserList] = useState<IUserList[]>([]);
+     const navigate = useNavigate();
      useEffect(() => {
           (async () => {
                try {
@@ -122,7 +124,14 @@ export default function FindFriends() {
                                    {suggestion.map((user) => {
                                         return (
                                              <div className="friend-card bg-gray-900 rounded-md flex flex-col items-center w-56 shadow-md p-3">
-                                                  <div className="header w-32 rounded-md mb-3">
+                                                  <div
+                                                       className="header w-32 rounded-md mb-3"
+                                                       onClick={() =>
+                                                            navigate(
+                                                                 `/view-profile/${user.user_id}`
+                                                            )
+                                                       }
+                                                  >
                                                        {user.profile_img ? (
                                                             <img
                                                                  src={
@@ -199,7 +208,14 @@ export default function FindFriends() {
                          {userList.map((user) => {
                               return (
                                    <div className="friend-card bg-gray-900 rounded-md flex flex-col items-center w-56 shadow-md p-3">
-                                        <div className="header w-32 rounded-md mb-3">
+                                        <div
+                                             className="header w-32 rounded-md mb-3"
+                                             onClick={() =>
+                                                  navigate(
+                                                       `/view-profile/${user.user_id}`
+                                                  )
+                                             }
+                                        >
                                              {user.profile_img ? (
                                                   <img
                                                        src={user.profile_img}

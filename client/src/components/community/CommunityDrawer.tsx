@@ -12,17 +12,23 @@ import EditCommunity from "./EditCommunity";
 import API from "../../api";
 import { toast } from "react-toastify";
 import PopupModal from "../Modal/PopupModal";
-
+type TMember = {
+     user_id: string;
+     status: string;
+     is_admin: boolean;
+} | null;
 export default function CommunityDrawer({
      openDrawer,
      setOpenDrawer,
      community,
      setCommunity,
+     setUser,
 }: {
      openDrawer: boolean;
      setOpenDrawer: Dispatch<SetStateAction<boolean>>;
      community: ICommunity | null;
      setCommunity: Dispatch<SetStateAction<ICommunity | null>>;
+     setUser: Dispatch<SetStateAction<TMember | null>>;
 }) {
      const navigate = useNavigate();
      const [members, setMembers] = useState<userList[] | []>([]);
@@ -83,6 +89,7 @@ export default function CommunityDrawer({
                     current.filter((item) => item.user_id !== id)
                );
                if (id === user?._id) {
+                    setUser(null);
                     setIsUser(false);
                     if (community.privacy === "private") {
                          navigate("/community/recent_discussions");
@@ -94,22 +101,29 @@ export default function CommunityDrawer({
           const response = await API.put(`/community/remove/${community?._id}`);
           if (response.data) {
                setOpenDrawer(false);
-               toast.success('community deleted')
+               toast.success("community deleted");
                navigate("/community/recent_discussions");
           }
      }
 
-     function isDeleteCommunity(){
-          setDeleteComm(true)
+     function isDeleteCommunity() {
+          setDeleteComm(true);
      }
-     
-     function cancelDeletion(){
-          setDeleteComm(false)
+
+     function cancelDeletion() {
+          setDeleteComm(false);
      }
 
      return (
           <div>
-               <PopupModal modalState={deleteComm} message={"Are you sure you want to delete this community?"} posText={"Delete"} negText={"No"} successCallback={deleteCommunity} cancelCallback={cancelDeletion}/>
+               <PopupModal
+                    modalState={deleteComm}
+                    message={"Are you sure you want to delete this community?"}
+                    posText={"Delete"}
+                    negText={"No"}
+                    successCallback={deleteCommunity}
+                    cancelCallback={cancelDeletion}
+               />
                <Drawer
                     anchor={"right"}
                     open={openDrawer}

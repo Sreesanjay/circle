@@ -118,9 +118,15 @@ export default function PostCard({ post }: { post: IPost }) {
                     <div className="header flex gap-3 px-5 py-2 shadow-sm justify-between relative">
                          <div
                               className="flex gap-3 cursor-pointer"
-                              onClick={() =>
-                                   navigate(`/view-profile/${post.user_id}`)
-                              }
+                              onClick={() => {
+                                   if (user?._id === post.user_id) {
+                                        navigate("/profile");
+                                   } else {
+                                        navigate(
+                                             `/view-profile/${post.user_id}`
+                                        );
+                                   }
+                              }}
                          >
                               <div className="profile-img-icon">
                                    {post?.user_details.profile_img ? (
@@ -221,28 +227,29 @@ export default function PostCard({ post }: { post: IPost }) {
                     </div>
                     <div className="caption p-3 flex flex-col items-end">
                          <span
-                              className="w-full text-left text-sm overflow-hidden"
-                              style={{
-                                   height: `${captionExpand ? "auto" : "20px"}`,
-                              }}
+                              className={`w-full text-left text-sm overflow-hidden whitespace-normal ${
+                                   captionExpand ? "h-auto" : "h-5"
+                              }`}
                          >
                               {post.caption}
                          </span>
-                         {captionExpand ? (
-                              <button
-                                   className="text-xs text-slate-400"
-                                   onClick={() => setCaptionExpand(false)}
-                              >
-                                   Read Less
-                              </button>
-                         ) : (
-                              <button
-                                   className="text-xs  text-slate-400"
-                                   onClick={() => setCaptionExpand(true)}
-                              >
-                                   Read More
-                              </button>
-                         )}
+                         {post.caption.length > 70 ? (
+                              captionExpand ? (
+                                   <button
+                                        className="text-xs text-slate-400"
+                                        onClick={() => setCaptionExpand(false)}
+                                   >
+                                        Read Less
+                                   </button>
+                              ) : (
+                                   <button
+                                        className="text-xs  text-slate-400"
+                                        onClick={() => setCaptionExpand(true)}
+                                   >
+                                        Read More
+                                   </button>
+                              )
+                         ) : null}
                     </div>
                     <div className="content p-2 relative">
                          {post.type.includes("image") ? (

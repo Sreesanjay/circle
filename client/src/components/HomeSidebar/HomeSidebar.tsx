@@ -6,11 +6,15 @@ import { IoIosAddCircle } from "react-icons/io";
 import { MdOutlineMessage } from "react-icons/md";
 import { FaPeopleGroup } from "react-icons/fa6";
 import "./HomeSidebar.css";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 export default function HomeSidebar() {
      const [showSidebar, setShowSidebar] = useState("hidden");
      const navigate = useNavigate();
+     const location = useLocation();
+     useEffect(() => {
+          // console.log(location)
+     }, [location]);
      return (
           <Sidebar
                className="home-sidebar md:fixed w-full md:w-min bg-gray-900 text-white"
@@ -27,15 +31,23 @@ export default function HomeSidebar() {
                     <MenuIcon />
                </button>
                <Sidebar.Items
-                    className={`sidebar ${showSidebar} md:block pe-24 ps-5 py-0 md:py-14 bg-gray-900 rounded-md`}
+                    className={`sidebar ${showSidebar} md:block md:w-72  pe-2 ps-5 py-0 md:py-14 bg-gray-900 rounded-md`}
                >
                     <Sidebar.ItemGroup className="h-3/4 flex flex-col justify-around">
-                         <Sidebar.Item icon={MdHome} className="text-xl icon " onClick={() => navigate("/")}>
+                         <Sidebar.Item
+                              icon={MdHome}
+                              className={`text-xl icon ${
+                                   location.pathname === "/" && "active-path"
+                              }`}
+                              onClick={() => navigate("/")}
+                         >
                               Home
                          </Sidebar.Item>
                          <Sidebar.Item
                               icon={FaUserFriends}
-                              className="text-xl icon "
+                              className={`text-xl icon ${
+                                   location.pathname === "/find-friends" && "active-path"
+                              }`}
                               onClick={() => navigate("/find-friends")}
                          >
                               Find Friends
@@ -58,7 +70,9 @@ export default function HomeSidebar() {
                          </Sidebar.Item>
                          <Sidebar.Item
                               icon={IoIosAddCircle}
-                              className="text-xl icon"
+                              className={`text-xl icon ${
+                                   location.pathname === "/create-post" && "active-path"
+                              }`}
                               onClick={() => navigate("/create-post")}
                          >
                               Create

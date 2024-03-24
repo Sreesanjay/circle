@@ -70,47 +70,39 @@ export default function SavedSection() {
                               gap={1}
                          >
                               {savedPosts &&
-                                   savedPosts.map((post: IPost) => (
-                                        <>
-                                             <ImageListItem
-                                                  key={post._id}
-                                                  className=""
+                                   savedPosts.map((post: IPost, index) => (
+                                        <ImageListItem key={index} className="">
+                                             <div
+                                                  className="content p-2 shadow-md"
+                                                  onClick={() =>
+                                                       handleOpenPost(post)
+                                                  }
                                              >
-                                                  <div
-                                                       className="content p-2 shadow-md"
-                                                       onClick={() =>
-                                                            handleOpenPost(post)
-                                                       }
-                                                  >
-                                                       {post.type.includes(
-                                                            "image"
-                                                       ) ? (
-                                                            <img
-                                                                 src={
-                                                                      post?.content
-                                                                 }
-                                                                 className="w-full rounded-md"
-                                                            />
-                                                       ) : (
-                                                            <div className="relative">
-                                                                 <video
-                                                                      className="w-full"
-                                                                      muted
-                                                                 >
-                                                                      <source
-                                                                           src={
-                                                                                post?.content
-                                                                           }
-                                                                           type="video/mp4"
-                                                                      />
-                                                                      Error
-                                                                      Message
-                                                                 </video>
-                                                            </div>
-                                                       )}
-                                                  </div>
-                                             </ImageListItem>
-                                        </>
+                                                  {post.type.includes(
+                                                       "image"
+                                                  ) ? (
+                                                       <img
+                                                            src={post?.content}
+                                                            className="w-full rounded-md"
+                                                       />
+                                                  ) : (
+                                                       <div className="relative">
+                                                            <video
+                                                                 className="w-full"
+                                                                 muted
+                                                            >
+                                                                 <source
+                                                                      src={
+                                                                           post?.content
+                                                                      }
+                                                                      type="video/mp4"
+                                                                 />
+                                                                 Error Message
+                                                            </video>
+                                                       </div>
+                                                  )}
+                                             </div>
+                                        </ImageListItem>
                                    ))}
                          </ImageList>
                     )}

@@ -63,24 +63,35 @@ export default function Post() {
                className="mt-3 post-container overflow-y-auto"
                ref={postContainerRef}
           >
-               {posts &&
+               {posts.length !== 0 ? (
+                    posts &&
                     posts.map((item: IPost, index) => {
                          return <PostCard post={item} key={index} />;
-                    })}
+                    })
+               ) : (
+                    <div className="w-full pt-24 flex justify-center items-center flex-col mb-20">
+                         <img
+                              src="https://png.pngtree.com/svg/20161030/nodata_800056.png"
+                              className="w-40"
+                              alt=""
+                         />
+                         <h1 className="text-gray-400">No Posts Yet</h1>
+                    </div>
+               )}
                {isLoading && (
                     <>
                          <Skeleton
                               variant="rectangular"
-                              sx={{ maxWidth: "50%" }}
+                              sx={{ maxWidth: "100%" }}
                          />
 
                          {/* For other variants, adjust the size with `width` and `height` */}
                          <Skeleton variant="circular" width={60} height={60} />
                          <Skeleton
                               variant="rectangular"
-                              sx={{ maxWidth: "50%" }}
+                              sx={{ maxWidth: "100%" }}
                          />
-                         <Skeleton variant="rounded" sx={{ maxWidth: "50%" }} />
+                         <Skeleton variant="rounded" sx={{ maxWidth: "100%" }} />
                     </>
                )}
           </div>

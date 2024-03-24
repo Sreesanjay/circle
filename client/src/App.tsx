@@ -86,7 +86,6 @@ function App() {
                     socket?.current?.emit("join-room", currentChat?._id);
                }
                return () => {
-                    console.log("disconnected");
                     socket?.current?.disconnect();
                };
           }
@@ -108,7 +107,7 @@ function App() {
                          >
                               <Route path="/" element={<HomePage />} />
                               <Route
-                                   path="/profile"
+                                   path="/profile/*"
                                    element={<UserProfilePage />}
                               />
                               <Route

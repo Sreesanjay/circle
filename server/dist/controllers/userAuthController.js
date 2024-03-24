@@ -208,7 +208,6 @@ exports.googleAuth = (0, express_async_handler_1.default)((req, res, next) => __
 }));
 exports.signin = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
-    console.log(req.body);
     if (!email || !password) {
         res.status(400);
         return next(Error("Invlalid Credentials"));

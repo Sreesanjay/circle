@@ -5,8 +5,8 @@ interface User {
     userId: string;
     socketId: string
 }
-// const ORIGIN = "https://my-circle.online"
-const ORIGIN = "http://localhost:5000"
+const ORIGIN = "https://my-circle.online"
+// const ORIGIN = "http://localhost:5000"
 let activeUsers: User[] = [];
 let socketIo: Socket;
 

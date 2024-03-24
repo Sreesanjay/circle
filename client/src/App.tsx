@@ -66,8 +66,8 @@ const SignupPage = lazy(() => import("./pages/user/SignupPage"));
 const SigninPage = lazy(() => import("./pages/user/SigninPage"));
 //socket context
 export const SocketContext = createContext<RefObject<Socket> | null>(null);
-// const HOST = "https://my-circle.online"
-const HOST = "http://localhost:5000";
+const HOST = "https://my-circle.online"
+// const HOST = "http://localhost:5000";
 function App() {
      const dispatch = useAppDispatch();
      const { user } = useAppSelector((state) => state.auth);

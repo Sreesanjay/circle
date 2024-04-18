@@ -7,8 +7,8 @@ import "dotenv/config";
 import userRouter from "./routes/userRoute"
 import adminRouter from './routes/adminRoute'
 const app = express();
-const ORIGIN = "https://my-circle.online"
-// const ORIGIN = "http://localhost:5173"
+// const ORIGIN = "https://my-circle.online"
+const ORIGIN = "http://localhost:5173"
 
 const corsConfig = {
     origin: ORIGIN,

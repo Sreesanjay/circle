@@ -146,7 +146,7 @@ export default function ViewCommunity() {
                     onClick={() => setShowDropDown("hidden")}
                >
                     <div
-                         className={`left-side-bar fixed bg-gray-900 w-full sm:w-auto 2xl:w-96  pt-5 px-3`}
+                         className={`left-side-bar fixed overflow-y-scroll bg-gray-900 w-full sm:w-auto 2xl:w-96  pt-5 px-3`}
                     >
                          <h1 className="mb-8 text-2xl">Community</h1>
                          <div

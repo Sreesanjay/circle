@@ -64,6 +64,11 @@ export const getUserList: RequestHandler = asyncHandler(
                     }
                 },
                 {
+                    $match: {
+                        "user.is_blocked": false
+                    }
+                },
+                {
                     $project: {
                         user_id: 1,
                         username: 1,
@@ -118,6 +123,11 @@ export const getUserList: RequestHandler = asyncHandler(
                 {
                     $unwind: {
                         path: '$user'
+                    }
+                },
+                {
+                    $match: {
+                        "user.is_blocked": false
                     }
                 },
                 {

@@ -17,16 +17,18 @@ export default function CommunityCard({
      const [members, setMembers] = useState<string[]>([]);
      const [pendings, setPendings] = useState<string[]>([]);
      useEffect(() => {
-          setMembers(
-               community?.members
-                    ?.filter((item) => item.status === "active")
-                    .map((item) => item.user_id)
-          );
-          setPendings(
-               community?.members
-                    ?.filter((item) => item.status === "pending")
-                    .map((item) => item.user_id)
-          );
+          if (community?.members.length) {
+               setMembers(
+                    community?.members
+                         ?.filter((item) => item.status === "active")
+                         .map((item) => item.user_id)
+               );
+               setPendings(
+                    community?.members
+                         ?.filter((item) => item.status === "pending")
+                         .map((item) => item.user_id)
+               );
+          }
      }, [community.members]);
 
      return (
@@ -53,7 +55,7 @@ export default function CommunityCard({
                          {community.community_name}
                     </h1>
                     <div className="stat">
-                         <h1 className="text-center">
+                         <h1 className="text-center text-sm text-slate-400">
                               {members?.length} Members
                          </h1>
                     </div>

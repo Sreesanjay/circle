@@ -17,7 +17,7 @@ export default function Communities() {
      );
      const [showNewCommunity, setShowNewCommunity] = useState(false);
      return (
-          <div className="grid grid-cols-12">
+          <div className="grid grid-cols-12 overflow-y-hidden">
                <NewCommunity
                     showModal={showNewCommunity}
                     setShowModal={setShowNewCommunity}
@@ -35,14 +35,14 @@ export default function Communities() {
                     </button>
                     <h1
                          className={`${
-                              showSidebar === 'block' ? 'hidden' : 'block'
+                              showSidebar === "block" ? "hidden" : "block"
                          } sm:hidden text-xl mt-2`}
                     >
                          Community
                     </h1>
                </div>
                <section
-                    className={`sidebar col-span-12 sm:col-span-3  bg-gray-900 flex flex-col p-5 py-8 ${showSidebar} sm:block`}
+                    className={`sidebar col-span-12 sm:col-span-3 bg-gray-900 flex flex-col p-5 py-8 ${showSidebar} sm:block`}
                >
                     <h1 className="text-2xl mb-10">Community</h1>
                     {/* <div className="search my-5">
@@ -108,7 +108,7 @@ export default function Communities() {
                          </button>
                     </div>
                </section>
-               <section className="page-body col-span-12 sm:col-span-9 bg-blue-700">
+               <section className="page-body col-span-12 sm:col-span-9 bg-blue-700 overflow-y-scroll">
                     {currentTab === "RECENT_DISCUSSIONS" ? (
                          <RecentDiscussions />
                     ) : currentTab === "DISCOVER" ? (

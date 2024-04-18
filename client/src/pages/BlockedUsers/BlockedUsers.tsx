@@ -6,6 +6,7 @@ import useHandleError from "../../util/usehandleError";
 import { AxiosError } from "axios";
 import API from "../../api";
 import { Breadcrumb } from "flowbite-react";
+import { ProfileIconWithText } from "../../assets/Icons";
 export default function BlockedUsers() {
      const [userList, setUserList] = useState<IUserList[]>([]);
      const handleError = useHandleError();
@@ -84,11 +85,20 @@ export default function BlockedUsers() {
                                    userList.map((user) => {
                                         return (
                                              <div className="user-card rounded-md shadow-md  w-40 p-2 flex flex-col items-center justify-center bg-gray-900">
-                                                  <img
-                                                       src={user.profile_img}
-                                                       alt=""
-                                                       className="rounded-md mb-2"
-                                                  />
+                                                  {user.profile_img ? (
+                                                       <img
+                                                            src={
+                                                                 user.profile_img
+                                                            }
+                                                            alt=""
+                                                            className="rounded-md mb-2"
+                                                       />
+                                                  ) : (
+                                                       <ProfileIconWithText
+                                                            email={user.username}
+                                                            size="large"
+                                                       />
+                                                  )}
                                                   <h1>{user.username}</h1>
                                                   <button
                                                        className="mt-5 mb-2 bg-primary hover:bg-primary-hover px-3 py-1 rounded-md text-white"

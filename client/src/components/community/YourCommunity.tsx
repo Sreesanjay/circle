@@ -17,7 +17,7 @@ export default function YourCommunity() {
      }, [isSuccess, isError, dispatch]);
 
      return (
-          <section className="your-community flex p-5 flex-wrap gap-5 justify-evenly bg-gray-800 min-h-full">
+          <section className="your-community flex p-5 flex-wrap justify-center sm:justify-start gap-10 bg-gray-800 min-h-full">
                {myCommunity.length === 0 ? (
                     <div className="w-full flex justify-center items-center flex-col">
                          <img

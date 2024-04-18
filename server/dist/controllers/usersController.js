@@ -69,6 +69,11 @@ exports.getUserList = (0, express_async_handler_1.default)((req, res, next) => _
                 }
             },
             {
+                $match: {
+                    "user.is_blocked": false
+                }
+            },
+            {
                 $project: {
                     user_id: 1,
                     username: 1,
@@ -123,6 +128,11 @@ exports.getUserList = (0, express_async_handler_1.default)((req, res, next) => _
             {
                 $unwind: {
                     path: '$user'
+                }
+            },
+            {
+                $match: {
+                    "user.is_blocked": false
                 }
             },
             {
